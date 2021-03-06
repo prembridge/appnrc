@@ -91,11 +91,18 @@ class MyWidget extends StatelessWidget {
 }
 
 class Homepage extends StatefulWidget {
+  final String selectedMonth;
+  final String selectedYear;
+
+  const Homepage({Key key, this.selectedMonth, this.selectedYear})
+      : super(key: key);
   @override
   _HomepageState createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
+  bool viewVisible = false;
+
   SharedPreferences preferences;
   final _formKey = GlobalKey<FormBuilderState>();
   Future<void> postForm(Datum prevData) async {
@@ -138,8 +145,8 @@ class _HomepageState extends State<Homepage> {
             "Gathering_Status": prevData.fieldData.gatheringStatus,
             "New_BPT": x['New_BPT'],
             "Bel_Added": x['Bel_Added'],
-            "Reporting_Month": prevData.fieldData.reportingMonth,
-            "Reporting_Year": prevData.fieldData.reportingYear,
+            "Reporting_Month": widget.selectedMonth.trim(),
+            "Reporting_Year": widget.selectedYear,
             "Un_Habitation": prevData.fieldData.unHabitation,
             "Average_Attendance": x['Average_Attendance'],
             "Year_of_Start": prevData.fieldData.yearOfStart,
@@ -151,12 +158,20 @@ class _HomepageState extends State<Homepage> {
             "fk_Report_id_New": ""
           }
         });
-
+        log(raw);
         request.body = raw;
         request.headers.addAll(headers);
         http.StreamedResponse response = await request.send();
 
         if (response.statusCode == 200) {
+          var res = await response.stream.bytesToString();
+          //var responses =res
+          // print(responses);
+          var x = json.decode(res);
+          print(x);
+          final prefs = await SharedPreferences.getInstance();
+          final String recordId = x['response']['recordId'];
+          prefs.setString('recordId', recordId);
           print("Sent");
         } else {
           print(response.reasonPhrase);
@@ -165,6 +180,12 @@ class _HomepageState extends State<Homepage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void hideWidget() {
+    setState(() {
+      viewVisible = true;
+    });
   }
 
   int pomodoro = 0;
@@ -247,8 +268,8 @@ class _HomepageState extends State<Homepage> {
                       .map((e) => SingleChildScrollView(
                             child: Container(
                               color: Colors.blueGrey,
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height,
+                              // width: MediaQuery.of(context).size.width,
+                              // height: MediaQuery.of(context).size.height,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
 
@@ -258,17 +279,44 @@ class _HomepageState extends State<Homepage> {
                                     children: [
                                       CircleAvatar(
                                         backgroundImage:
-                                            AssetImage('assets/images/cp.png'),
+                                            AssetImage('assets/images/fin.png'),
                                         radius: 40,
                                       ),
                                     ],
                                   ),
-                                  new Text(
-                                    'ID 123..',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  ),
+                                  SizedBox(height: 45),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            "Last Enter Month & year Report:",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          (e.fieldData.reportingMonth),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          (e.fieldData.reportingYear)
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
+                                      ]),
+                                  SizedBox(height: 10),
                                   new Container(
                                       child: Row(
                                     children: [
@@ -376,7 +424,8 @@ class _HomepageState extends State<Homepage> {
                                             child: Container(
                                           height: 15,
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               SizedBox(width: 15),
                                               Text("District:",
@@ -587,13 +636,15 @@ class _HomepageState extends State<Homepage> {
                                                       new FormBuilderTextField(
                                                     name: "Bel_Added",
                                                     autocorrect: true,
-                                                    keyboardType:TextInputType.number,
+                                                    keyboardType:
+                                                        TextInputType.number,
                                                     decoration:
                                                         new InputDecoration(
                                                       enabledBorder:
                                                           OutlineInputBorder(
                                                         borderSide: BorderSide(
-                                                            color:Colors.white),
+                                                            color:
+                                                                Colors.white),
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
@@ -678,27 +729,32 @@ class _HomepageState extends State<Homepage> {
                                                                 MaterialPageRoute(
                                                                     builder: (context) => Savepage())
                                                             ); */
-
+                                              hideWidget();
                                               postForm(e);
                                             },
                                           ),
                                           SizedBox(width: 50),
                                           GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            Mediapage()));
-                                              },
-                                              child: new Text(
-                                                'Media.',
-                                                style: new TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20,
-                                                ),
-                                              )),
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Mediapage(
+                                                            data: e,
+                                                          )));
+                                            },
+                                            child: Visibility(
+                                                visible: viewVisible,
+                                                child: new Text(
+                                                  'Media.',
+                                                  style: new TextStyle(
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20,
+                                                  ),
+                                                )),
+                                          )
                                         ]),
                                   )
                                 ],

@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/App/Sign_in/Login.dart';
 //import 'package:flutter_app/App/Sign_in/Homepage.dart';
 
 import 'package:flutter_lock_screen/flutter_lock_screen.dart';
 //import 'Homepage.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'selectmonth.dart';
+
 void main() {
   runApp(MaterialApp(
     home: passcodepage(
@@ -27,6 +30,20 @@ class passcodepage extends StatefulWidget {
 
 class _passcodepageState extends State<passcodepage> {
   bool isFingerprint = false;
+  bool isRegistred;
+  @override
+  void initState() {
+    super.initState();
+    getAppStaate();
+  }
+
+  Future<void> getAppStaate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      isRegistred = prefs.getBool("isRegistered");
+    });
+  }
 
   Future<Null> biometrics() async {
     final LocalAuthentication auth = new LocalAuthentication();
@@ -55,8 +72,7 @@ class _passcodepageState extends State<passcodepage> {
         title: "This is Screet ",
         passLength: myPass.length,
         fingerPrintImage: "assets/images/fin.png",
-        bgImage: "assets/images/cp.png",
-
+        bgImage: "assets/images/fin.png",
         showFingerPass: true,
         fingerFunction: biometrics,
         numColor: Colors.blue,
@@ -78,8 +94,10 @@ class _passcodepageState extends State<passcodepage> {
         onSuccess: () {
           Navigator.of(context).pushReplacement(
               new MaterialPageRoute(builder: (BuildContext context) {
-                return selectmonth();
-              }));
+            return isRegistred == null || !isRegistred
+                ? Selectmonth()
+                : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
+          }));
         });
   }
 }

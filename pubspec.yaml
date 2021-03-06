@@ -24,20 +24,26 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
+  exif: ^1.0.3
   flutter_form_builder: ^4.2.0
   flutter_lock_screen: ^1.0.8
   flutter_swiper: ^1.1.6
+  geolocator: ^6.2.0
   http: ^0.12.2
-  image_picker: ^0.6.7+21
+  image_picker: ^0.6.7+22
   imei_plugin: ^1.2.0
   infinity_page_view: ^1.0.0
-  keyboard_visibility: ^0.5.6
   local_auth: ^0.6.3+4
-  shared_preferences: ^0.5.12+4
+  path_provider: ^2.0.1
+  shared_preferences: ^2.0.3
+  toast: ^0.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+dependency_overrides:
+  intl: ^0.17.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
@@ -48,8 +54,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+     - assets/images/fin.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

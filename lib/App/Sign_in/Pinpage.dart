@@ -58,6 +58,7 @@ class _PinpageState extends State<Pinpage> {
 
     setState(() {
       authorized = authenticated ? "Autherized success" : "Failed to authenticate";
+      print(authorized);
     });
   }
 

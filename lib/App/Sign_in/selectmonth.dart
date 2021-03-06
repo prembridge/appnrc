@@ -8,9 +8,6 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-String _email = '';
-String _year = '';
-
 // try {
 //   log('testing......');
 //
@@ -64,14 +61,20 @@ String _year = '';
 //   return null;
 // }
 
-class selectmonth extends StatefulWidget {
+class Selectmonth extends StatefulWidget {
   @override
-  _selectmonthState createState() => _selectmonthState();
+  _SelectmonthState createState() => _SelectmonthState();
 }
 
-class _selectmonthState extends State<selectmonth> {
+class _SelectmonthState extends State<Selectmonth> {
   //Future<Album> futureAlbum;
-  int _value = 1;
+  //int _value = 1;
+  String _email = '';
+  String _years = '';
+  String _months = '';
+
+  String _selectedMonthValue;
+  String _selectedYearValue;
   @override
   void initState() {
     // TODO: implement initState
@@ -81,12 +84,51 @@ class _selectmonthState extends State<selectmonth> {
 
   _loadCounter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var value = prefs.getString('AppMonth');
-    print("Appmonth..$value");
+    //var value = prefs.getString('AppMonth');
+    //print("Appmonth..$value");
     setState(() {
       _email = (prefs.getString('AppMonth'));
-      _year = (prefs.getString('AppYear'));
+      _years = (prefs.getString('app_dropdown_y_list'));
+      _months = (prefs.getString('app_dropdown_m_list'));
     });
+  }
+
+  List<DropdownMenuItem<String>> monthsDropDownItems() {
+    if (_months.contains(',')) {
+      return _months
+          .split(',')
+          .map((e) => DropdownMenuItem(
+                value: e,
+                child: Text(e),
+              ))
+          .toList();
+    } else {
+      return [
+        DropdownMenuItem(
+          value: _months,
+          child: Text(_months),
+        )
+      ];
+    }
+  }
+
+  List<DropdownMenuItem<String>> yearDropDownItems() {
+    if (_years.contains(',')) {
+      return _years
+          .split(',')
+          .map((e) => DropdownMenuItem(
+                value: e,
+                child: Text(e),
+              ))
+          .toList();
+    } else {
+      return [
+        DropdownMenuItem(
+          value: _years,
+          child: Text(_years),
+        )
+      ];
+    }
   }
 
   @override
@@ -100,23 +142,25 @@ class _selectmonthState extends State<selectmonth> {
           Container(
             child: Column(
               children: [
+                Text("Please Select Month & Year To Enter Current  report",
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
                 Row(
                   children: [
                     Container(
                       padding: EdgeInsets.all(20.0),
                       child: DropdownButton(
-                          value: _value,
-                          items: [
-                            DropdownMenuItem(
-                              child: new Text(_email),
-                              value: 1,
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _value = value;
-                            });
-                          }),
+                        value: _selectedMonthValue,
+                        items: monthsDropDownItems(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedMonthValue = value;
+                          });
+                        },
+                        hint: Text("Select Month"),
+                      ),
                     ),
                     SizedBox(
                       width: 40,
@@ -124,18 +168,15 @@ class _selectmonthState extends State<selectmonth> {
                     Container(
                       padding: EdgeInsets.all(20.0),
                       child: DropdownButton(
-                          value: _value,
-                          items: [
-                            DropdownMenuItem(
-                              child: Text(_year),
-                              value: 1,
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _value = value;
-                            });
-                          }),
+                        value: _selectedYearValue,
+                        items: yearDropDownItems(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedYearValue = value;
+                          });
+                        },
+                        hint: Text("Select Month"),
+                      ),
                     )
                   ],
                 ),
@@ -147,11 +188,20 @@ class _selectmonthState extends State<selectmonth> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Homepage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Homepage(
+                                  selectedMonth: _selectedMonthValue,
+                                  selectedYear: _selectedYearValue,
+                                )));
                   },
-                  child: PrimaryButton(
-                    btnText: "Ok",
+                  child: Visibility(
+                    visible: _selectedMonthValue != null &&
+                        _selectedYearValue != null,
+                    child: PrimaryButton(
+                      btnText: "Ok",
+                    ),
                   ),
                 ),
               ],
