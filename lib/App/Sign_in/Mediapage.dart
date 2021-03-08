@@ -239,28 +239,27 @@ class _MediapageState extends State<Mediapage> {
               child: new Column(
                 children: <Widget>[
                   Row(
-                    children:[
-                  new IconButton(
-                      icon: Icon(
-                        Icons.add_a_photo_outlined,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      onPressed: () async {
-                        await getImage(true, 'family');
-                      }),
-                  new IconButton(
-                      icon: Icon(
-                        Icons.photo,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      onPressed: () async {
-                        await getImage(false, 'family');
-                      }),
-
-                  ],
-              ),
+                    children: [
+                      new IconButton(
+                          icon: Icon(
+                            Icons.add_a_photo_outlined,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            await getImage(true, 'family');
+                          }),
+                      new IconButton(
+                          icon: Icon(
+                            Icons.photo,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            await getImage(false, 'family');
+                          }),
+                    ],
+                  ),
                   new Text('family'),
                   _familyImage == null
                       ? Container()
@@ -277,29 +276,28 @@ class _MediapageState extends State<Mediapage> {
               color: Colors.deepOrange,
               child: new Column(
                 children: <Widget>[
-              Row(
-              children:[
-                  new IconButton(
-                      icon: Icon(
-                        Icons.add_a_photo_outlined,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      onPressed: () async {
-                        await getImage(true, 'community');
-                      }),
-                new IconButton(
-                    icon: Icon(
-                      Icons.photo,
-                      size: 40,
-                      color: Colors.black,
-                    ),
-                    onPressed: () async {
-                      await getImage(false, 'community');
-                    }),
-
-              ],
-              ),
+                  Row(
+                    children: [
+                      new IconButton(
+                          icon: Icon(
+                            Icons.add_a_photo_outlined,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            await getImage(true, 'community');
+                          }),
+                      new IconButton(
+                          icon: Icon(
+                            Icons.photo,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            await getImage(false, 'community');
+                          }),
+                    ],
+                  ),
                   new Text('Community'),
                   _communityImage == null
                       ? Container()
@@ -316,29 +314,28 @@ class _MediapageState extends State<Mediapage> {
               color: Colors.blue,
               child: new Column(
                 children: <Widget>[
-              Row(
-              children:[
-                  new IconButton(
-                      icon: Icon(
-                        Icons.add_a_photo_outlined,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      onPressed: () async {
-                        await getImage(true, 'gathering');
-                      }),
-                new IconButton(
-                    icon: Icon(
-                      Icons.photo,
-                      size: 40,
-                      color: Colors.black,
-                    ),
-                    onPressed: () async {
-                      await getImage(false, 'gathering');
-                    }),
-
-              ],
-              ),
+                  Row(
+                    children: [
+                      new IconButton(
+                          icon: Icon(
+                            Icons.add_a_photo_outlined,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            await getImage(true, 'gathering');
+                          }),
+                      new IconButton(
+                          icon: Icon(
+                            Icons.photo,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            await getImage(false, 'gathering');
+                          }),
+                    ],
+                  ),
                   new Text('Gathering'),
                   _gatheringImage == null
                       ? Container()
