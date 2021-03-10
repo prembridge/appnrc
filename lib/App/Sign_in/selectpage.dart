@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/App/Sign_in/passcodesetpage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pinpage.dart';
@@ -10,8 +11,18 @@ class selectpage extends StatefulWidget {
 }
 
 class _selectpageState extends State<selectpage> {
+  bool isPinSet;
+  Future<void> getAppStaate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      isPinSet = prefs.getBool("isPinSet");
+    });
+  }
+
   @override
   void initState() {
+    getAppStaate();
     super.initState();
   }
 
@@ -64,6 +75,23 @@ class _selectpageState extends State<selectpage> {
                     ),
                   );
                 },
+                /* isPinSet == null || isPinSet
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => passcodepage(),
+                          ),
+                        );
+                      }
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => passcodsetepage(),
+                          ),
+                        );
+                      }, */
                 child: PrimaryButton(
                   btnText: "Select passcode password",
                 ),

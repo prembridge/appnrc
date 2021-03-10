@@ -19,12 +19,12 @@ class _PinpageState extends State<Pinpage> {
   bool _canCheckBiometric;
   List<BiometricType> _availableBiometric;
   String authorized = "Not authorized";
-  bool isRegistred;
+  bool isFirstime;
   Future<void> getAppStaate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      isRegistred = prefs.getBool("isRegistered");
+      isFirstime = prefs.getBool("isFirstime");
     });
   }
 
@@ -75,7 +75,7 @@ class _PinpageState extends State<Pinpage> {
     });
     if (authenticated) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => !isRegistred ? Selectmonth() : Loginpage()));
+          builder: (_) => isFirstime ? Selectmonth() : Loginpage()));
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import './App/Sign_in/Registionpage.dart';
 import 'App/Sign_in/selectpage.dart';
 import 'App/Sign_in/sign_in page.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isRegistred;
+  bool isFirstime;
   @override
   void initState() {
     super.initState();
@@ -28,15 +29,8 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      isRegistred = prefs.getBool("isRegistered");
+      isFirstime = prefs.getBool("isFirstime");
     });
-    /* Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => Loginpage(),
-        ),
-      );
-    }); */
   }
 
   @override
@@ -46,23 +40,20 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.brown,
       ),
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: isRegistred == null || !isRegistred
-            ? Registionpage()
-            : selectpage(),
+      home: SplashScreen(
+        seconds: 4,
+        navigateAfterSeconds: new Scaffold(
+          resizeToAvoidBottomInset: false,
+          body:
+              isFirstime == null || isFirstime ? Registionpage() : selectpage(),
+        ),
+        title: new Text('Welcome In SplashScreen'),
+        image: new Image.asset('assets/images/village.jpg'),
+        backgroundColor: Colors.white,
+        styleTextUnderTheLoader: new TextStyle(),
+        photoSize: 200.0,
+        loaderColor: Colors.brown,
       ),
-    );
-  }
-}
-
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text("Splash screen"),
     );
   }
 }

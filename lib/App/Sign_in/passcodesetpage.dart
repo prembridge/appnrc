@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/App/Sign_in/Login.dart';
+import 'package:flutter_app/App/Sign_in/passcodepage.dart';
 //import 'package:flutter_app/App/Sign_in/Homepage.dart';
 
 import 'package:flutter_lock_screen/flutter_lock_screen.dart';
@@ -11,39 +12,21 @@ import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'selectmonth.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: passcodepage(
-      title: "Deneme",
-    ),
-  ));
-}
-
-class passcodepage extends StatefulWidget {
-  passcodepage({Key key, this.title}) : super(key: key);
+class passcodsetepage extends StatefulWidget {
+  passcodsetepage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _passcodepageState createState() => new _passcodepageState();
+  _passcodsetepageState createState() => new _passcodsetepageState();
 }
 
-class _passcodepageState extends State<passcodepage> {
+class _passcodsetepageState extends State<passcodsetepage> {
   bool isFingerprint;
-  bool isFirstime;
-  bool isPinSet;
+
   @override
   void initState() {
     super.initState();
-    getAppStaate();
-  }
-
-  Future<void> getAppStaate() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      isFirstime = prefs.getBool("isFirstime");
-    });
   }
 
   Future<Null> biometrics() async {
@@ -70,7 +53,7 @@ class _passcodepageState extends State<passcodepage> {
   Widget build(BuildContext context) {
     var myPass = [1, 2, 3, 4];
     return LockScreen(
-        title: "Enter Pin",
+        title: "Set Pin",
         passLength: myPass.length,
         // fingerPrintImage: "assets/images/fin.png",
         bgImage: "assets/images/fin.png",
@@ -91,13 +74,14 @@ class _passcodepageState extends State<passcodepage> {
 
           return true;
         },
-        onSuccess: () {
+        onSuccess: () async {
           Navigator.of(context).pushReplacement(
               new MaterialPageRoute(builder: (BuildContext context) {
-            return isFirstime
-                ? Selectmonth()
-                : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
+            return passcodepage();
           }));
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          prefs.setBool("isPinSet", true);
         });
   }
 }
@@ -110,12 +94,12 @@ class _passcodepageState extends State<passcodepage> {
 //
 // const storedPasscode = '123456';
 //
-// class passcodepage extends StatefulWidget {
+// class passcodsetepage extends StatefulWidget {
 //   @override
-//   _passcodepageState createState() => _passcodepageState();
+//   _passcodsetepageState createState() => _passcodsetepageState();
 // }
 //
-// class _passcodepageState extends State<passcodepage> {
+// class _passcodsetepageState extends State<passcodsetepage> {
 //
 //   final StreamController<bool> _verificationNotifier = StreamController<bool>.broadcast();
 //

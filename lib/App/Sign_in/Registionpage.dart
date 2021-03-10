@@ -82,8 +82,6 @@ Future<Album> fetchAlbum(String appMobileNumber, String appPassword) async {
       var responses = result['response'];
       var datavalue = responses['data'];
 
-
-
       var rec = datavalue[0]['fieldData']['Rec_id'];
       var remobile = datavalue[0]['fieldData']['Mobile'];
       var respass = datavalue[0]['fieldData']['App_password'];
@@ -279,8 +277,6 @@ class _RegistionpageState extends State<Registionpage> {
     // futureAlbum = fetchAlbum();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     Future<bool> checkUserInDatabase(Map<String, dynamic> value) async {
@@ -359,7 +355,8 @@ class _RegistionpageState extends State<Registionpage> {
             print(responseimei.reasonPhrase);
           }
           // return albumFromJson(request.body);
-          await prefs.setBool("isRegistered", true);
+
+          await prefs.setBool("isFirstime", true);
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => Loginpage()));
         } else {
@@ -378,8 +375,7 @@ class _RegistionpageState extends State<Registionpage> {
       ),
       body: Container(
           color: Colors.white,
-          child:
-            FormBuilder(
+          child: FormBuilder(
             key: _formKey,
             child: Column(
               children: [

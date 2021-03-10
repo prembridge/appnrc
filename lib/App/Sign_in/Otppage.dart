@@ -12,75 +12,6 @@ Album albumFromJson(String str) => Album.fromJson(json.decode(str));
 
 String albumToJson(Album data) => json.encode(data.toJson());
 
-Future<Album> fetchAlbum(String appMobileNumber) async {
-  try {
-    log('testing......');
-    final http.Response token = await http.post(
-      'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-      },
-    );
-    log('token...:$token');
-
-    Map<String, dynamic> responsetoke = jsonDecode(token.body);
-    var result = responsetoke['response'];
-    var tokenresult = result['token'];
-
-    log('result...in field:$tokenresult');
-
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $tokenresult'
-    };
-
-    var raw = jsonEncode({
-      "query": [
-        {"App_otp": appMobileNumber}
-      ]
-    });
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/_find'));
-    request.body = raw;
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      var res = await response.stream.bytesToString();
-      var result = jsonDecode(res);
-      var responses = result['response'];
-      var datavalue = responses['data'];
-      print(datavalue);
-      var rec = datavalue[0]['fieldData']['App_otp'];
-      var Appmonth = datavalue[0]['fieldData']['App_month_list'];
-      var Appyear = datavalue[0]['fieldData']['App_year_list'];
-      var contact = datavalue[0]['fieldData']['Contact_Primary_key'];
-      var appDropDownMList = datavalue[0]['fieldData']['App_month_list_drop'];
-      var appDropDownYList = datavalue[0]['fieldData']['App_year_list_drop'];
-      print("AppMoth...$Appmonth");
-      print("Appyear....$Appyear");
-      print("contact...$contact");
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('AppMonth', Appmonth);
-      prefs.setString("AppYear", Appyear);
-      prefs.setString("contact", contact);
-      prefs.setString('stringValue', rec);
-      prefs.setString('app_dropdown_m_list', appDropDownMList);
-      prefs.setString('app_dropdown_y_list', appDropDownYList);
-      print("data recotp ....:$rec");
-
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
-
 class Album {
   Album({
     this.dataInfo,
@@ -220,26 +151,100 @@ class Otppage extends StatefulWidget {
 
 class _OtppageState extends State<Otppage> {
   Album _user;
+  bool isFirstime;
+  bool isOTPCorrect = false;
   Future<Album> futureAlbum;
+  Future<void> getAppStaate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      isFirstime = prefs.getBool("isFirstime");
+    });
+  }
 
   final TextEditingController _appMobileNumbercontroller =
       TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //futureAlbum = fetchAlbum();
+    getAppStaate();
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (value == null) {
-    //   print("loading"); // show a progress indicator
-    //   return CircularProgressIndicator();
-    // } else {
-    //   print(value); // I need the path here
-    //
-    // }
+    Future<bool> fetchAlbum(String appMobileNumber) async {
+      try {
+        log('testing......');
+        final http.Response token = await http.post(
+          'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+          },
+        );
+        log('token...:$token');
+
+        Map<String, dynamic> responsetoke = jsonDecode(token.body);
+        var result = responsetoke['response'];
+        var tokenresult = result['token'];
+
+        log('result...in field:$tokenresult');
+
+        var headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $tokenresult'
+        };
+
+        var raw = jsonEncode({
+          "query": [
+            {"App_otp": appMobileNumber}
+          ]
+        });
+        var request = http.Request(
+            'POST',
+            Uri.parse(
+                'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/_find'));
+        request.body = raw;
+        request.headers.addAll(headers);
+        http.StreamedResponse response = await request.send();
+        if (response.statusCode == 200) {
+          var res = await response.stream.bytesToString();
+          var result = jsonDecode(res);
+          var responses = result['response'];
+          var datavalue = responses['data'];
+          print(datavalue);
+          var rec = datavalue[0]['fieldData']['App_otp'];
+          var Appmonth = datavalue[0]['fieldData']['App_month_list'];
+          var Appyear = datavalue[0]['fieldData']['App_year_list'];
+          var contact = datavalue[0]['fieldData']['Contact_Primary_key'];
+          var appDropDownMList =
+              datavalue[0]['fieldData']['App_month_list_drop'];
+          var appDropDownYList =
+              datavalue[0]['fieldData']['App_year_list_drop'];
+          print("AppMoth...$Appmonth");
+          print("Appyear....$Appyear");
+          print("contact...$contact");
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('AppMonth', Appmonth);
+          await prefs.setString("AppYear", Appyear);
+          await prefs.setString("contact", contact);
+          await prefs.setString('stringValue', rec);
+          await prefs.setString('app_dropdown_m_list', appDropDownMList);
+          await prefs.setString('app_dropdown_y_list', appDropDownYList);
+          print("data recotp ....:$rec");
+
+          // print(await response.stream.bytesToString());
+          return true;
+        } else {
+          print(response.reasonPhrase);
+          return false;
+        }
+      } catch (e) {
+        log(e);
+        return false;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('OTP verification page'),
@@ -269,7 +274,7 @@ class _OtppageState extends State<Otppage> {
                         borderSide: BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      hintText: 'ENter OTP..',
+                      hintText: 'Enter OTP..',
                     ),
                   ),
                 ),
@@ -288,24 +293,20 @@ class _OtppageState extends State<Otppage> {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    //Return String
-                    final stringValue = prefs.getString('stringValue');
-                    print("value:$stringValue");
                     final String appMobileNumber =
                         _appMobileNumbercontroller.text;
                     print('appMobileNumber:$appMobileNumber');
-                    bool isRegistred = prefs.getBool("isRegistered");
-                    if (stringValue == appMobileNumber) {
-                      Navigator.push(
+                    final bool user = await fetchAlbum(appMobileNumber);
+                    if (user) {
+                      return Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              !isRegistred ? selectpage() : Selectmonth(),
+                              isFirstime ? selectpage() : Selectmonth(),
                         ),
                       );
                     } else {
-                      showDialog(
+                      await showDialog(
                         context: context,
                         builder: (context) => new AlertDialog(
                           title: new Text("please enrter Vaild OTP.."),
@@ -320,10 +321,10 @@ class _OtppageState extends State<Otppage> {
                         ),
                       );
                     }
-                    final Album user = await fetchAlbum(appMobileNumber);
-                    setState(() {
+
+                    /*  setState(() {
                       _user = user;
-                    });
+                    }); */
                   },
                   child: PrimaryButton(
                     btnText: "Ok",

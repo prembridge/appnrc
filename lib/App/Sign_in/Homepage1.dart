@@ -105,82 +105,6 @@ class _HomepageState extends State<Homepage> {
 
   SharedPreferences preferences;
   final _formKey = GlobalKey<FormBuilderState>();
-  Future<void> postForm(Datum prevData) async {
-    try {
-      log('testing......');
-      final http.Response token = await http.post(
-        'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-        },
-      );
-      log('token...:$token');
-
-      Map<String, dynamic> responsetoke = jsonDecode(token.body);
-      var result = responsetoke['response'];
-      var tokenresult = result['token'];
-
-      log('result...in field:$tokenresult');
-
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenresult'
-      };
-
-      if (_formKey.currentState.saveAndValidate()) {
-        var x = _formKey.currentState.value;
-
-        var request = http.Request(
-            'POST',
-            Uri.parse(
-                'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records'));
-        var raw = jsonEncode({
-          "fieldData": {
-            "State": prevData.fieldData.state,
-            "District": prevData.fieldData.district,
-            "Block": prevData.fieldData.block,
-            "Colony": prevData.fieldData.colony,
-            "Village": prevData.fieldData.village,
-            "Gathering_Status": prevData.fieldData.gatheringStatus,
-            "New_BPT": x['New_BPT'],
-            "Bel_Added": x['Bel_Added'],
-            "Reporting_Month": widget.selectedMonth.trim(),
-            "Reporting_Year": widget.selectedYear,
-            "Un_Habitation": prevData.fieldData.unHabitation,
-            "Average_Attendance": x['Average_Attendance'],
-            "Year_of_Start": prevData.fieldData.yearOfStart,
-            "Pin": prevData.fieldData.pin,
-            "Habitation": prevData.fieldData.habitation,
-            "Town": "",
-            "Full_Name": prevData.fieldData.fullName,
-            "fk_Contact_Id": prevData.fieldData.fkContactId,
-            "fk_Report_id_New": ""
-          }
-        });
-        log(raw);
-        request.body = raw;
-        request.headers.addAll(headers);
-        http.StreamedResponse response = await request.send();
-
-        if (response.statusCode == 200) {
-          var res = await response.stream.bytesToString();
-          //var responses =res
-          // print(responses);
-          var x = json.decode(res);
-          print(x);
-          final prefs = await SharedPreferences.getInstance();
-          final String recordId = x['response']['recordId'];
-          prefs.setString('recordId', recordId);
-          print("Sent");
-        } else {
-          print(response.reasonPhrase);
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
   void hideWidget() {
     setState(() {
@@ -202,12 +126,107 @@ class _HomepageState extends State<Homepage> {
   }
 
   void init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("isFirstime", false);
     futureAlbum = await fetchAlbum();
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    void showDialogOfSuccess() async {
+      return await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Successfully Saved"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("OK"),
+            )
+          ],
+        ),
+      );
+    }
+
+    Future<void> postForm(Datum prevData) async {
+      try {
+        log('testing......');
+        final http.Response token = await http.post(
+          'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+          },
+        );
+        log('token...:$token');
+
+        Map<String, dynamic> responsetoke = jsonDecode(token.body);
+        var result = responsetoke['response'];
+        var tokenresult = result['token'];
+
+        log('result...in field:$tokenresult');
+
+        var headers = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $tokenresult'
+        };
+
+        if (_formKey.currentState.saveAndValidate()) {
+          var x = _formKey.currentState.value;
+
+          var request = http.Request(
+              'POST',
+              Uri.parse(
+                  'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records'));
+          var raw = jsonEncode({
+            "fieldData": {
+              "State": prevData.fieldData.state,
+              "District": prevData.fieldData.district,
+              "Block": prevData.fieldData.block,
+              "Colony": prevData.fieldData.colony,
+              "Village": prevData.fieldData.village,
+              "Gathering_Status": prevData.fieldData.gatheringStatus,
+              "New_BPT": x['New_BPT'],
+              "Bel_Added": x['Bel_Added'],
+              "Reporting_Month": widget.selectedMonth.trim(),
+              "Reporting_Year": widget.selectedYear,
+              "Un_Habitation": prevData.fieldData.unHabitation,
+              "Average_Attendance": x['Average_Attendance'],
+              "Year_of_Start": prevData.fieldData.yearOfStart,
+              "Pin": prevData.fieldData.pin,
+              "Habitation": prevData.fieldData.habitation,
+              "Town": "",
+              "Full_Name": prevData.fieldData.fullName,
+              "fk_Contact_Id": prevData.fieldData.fkContactId,
+              "fk_Report_id_New": ""
+            }
+          });
+          log(raw);
+          request.body = raw;
+          request.headers.addAll(headers);
+          http.StreamedResponse response = await request.send();
+
+          if (response.statusCode == 200) {
+            var res = await response.stream.bytesToString();
+            //var responses =res
+            // print(responses);
+            var x = json.decode(res);
+            print(x);
+            final prefs = await SharedPreferences.getInstance();
+            final String recordId = x['response']['recordId'];
+            prefs.setString('recordId', recordId);
+            print("Sent");
+            showDialogOfSuccess();
+          } else {
+            print(response.reasonPhrase);
+          }
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+
     Widget pageIndex() {
       if (controller.hasClients) {
         return Text(
