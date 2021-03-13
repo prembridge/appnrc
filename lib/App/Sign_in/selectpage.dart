@@ -67,20 +67,12 @@ class _selectpageState extends State<selectpage> {
           Column(
             children: <Widget>[
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => passcodepage(),
-                    ),
-                  );
-                },
-                /* isPinSet == null || isPinSet
+                onTap: isPinSet == null || !isPinSet
                     ? () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => passcodepage(),
+                            builder: (context) => passcodsetepage(),
                           ),
                         );
                       }
@@ -88,10 +80,10 @@ class _selectpageState extends State<selectpage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => passcodsetepage(),
+                            builder: (context) => passcodepage(),
                           ),
                         );
-                      }, */
+                      },
                 child: PrimaryButton(
                   btnText: "Select passcode password",
                 ),

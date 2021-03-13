@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,7 @@ class _passcodepageState extends State<passcodepage> {
   bool isFingerprint;
   bool isFirstime;
   bool isPinSet;
+  var myPass;
   @override
   void initState() {
     super.initState();
@@ -40,9 +42,11 @@ class _passcodepageState extends State<passcodepage> {
 
   Future<void> getAppStaate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    var pin = prefs.getString('pin');
+    var pinO = jsonDecode(pin);
     setState(() {
       isFirstime = prefs.getBool("isFirstime");
+      myPass = pinO["pin"];
     });
   }
 
@@ -68,37 +72,40 @@ class _passcodepageState extends State<passcodepage> {
 
   @override
   Widget build(BuildContext context) {
-    var myPass = [1, 2, 3, 4];
-    return LockScreen(
-        title: "Enter Pin",
-        passLength: myPass.length,
-        // fingerPrintImage: "assets/images/fin.png",
-        bgImage: "assets/images/fin.png",
-        showFingerPass: false,
-        numColor: Colors.blue,
-        fingerVerify: false,
-        borderColor: Colors.white,
-        showWrongPassDialog: true,
-        wrongPassContent: "Wrong pass please try again.",
-        wrongPassTitle: "Opps!",
-        wrongPassCancelButtonText: "Cancel",
-        passCodeVerify: (passcode) async {
-          for (int i = 0; i < myPass.length; i++) {
-            if (passcode[i] != myPass[i]) {
-              return false;
-            }
-          }
+    return myPass != null
+        ? LockScreen(
+            title: "Enter Pin",
+            passLength: myPass.length,
+            // fingerPrintImage: "assets/images/fin.png",
+            bgImage: "assets/images/fin.png",
+            showFingerPass: false,
+            numColor: Colors.blue,
+            fingerVerify: false,
+            borderColor: Colors.white,
+            showWrongPassDialog: true,
+            wrongPassContent: "Wrong pass please try again.",
+            wrongPassTitle: "Opps!",
+            wrongPassCancelButtonText: "Cancel",
+            passCodeVerify: (passcode) async {
+              for (int i = 0; i < myPass.length; i++) {
+                if (passcode[i] != myPass[i]) {
+                  return false;
+                }
+              }
 
-          return true;
-        },
-        onSuccess: () {
-          Navigator.of(context).pushReplacement(
-              new MaterialPageRoute(builder: (BuildContext context) {
-            return isFirstime
-                ? Selectmonth()
-                : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
-          }));
-        });
+              return true;
+            },
+            onSuccess: () {
+              Navigator.of(context).pushReplacement(
+                  new MaterialPageRoute(builder: (BuildContext context) {
+                return isFirstime
+                    ? Selectmonth()
+                    : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
+              }));
+            })
+        : Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }
 

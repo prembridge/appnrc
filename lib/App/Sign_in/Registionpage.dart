@@ -24,105 +24,93 @@ Future<void> initPlatformState() async {
     platformImei =
         await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
     List<String> multiImei = await ImeiPlugin.getImeiMulti();
-    print(multiImei);
-    idunique = await ImeiPlugin.getId();
   } on PlatformException {
     platformImei = 'Failed to get platform version.';
   }
-
-  // If the widget was removed from the tree while the asynchronous platform
-  // message was in flight, we want to discard the reply rather than calling
-  // setState to update our non-existent appearance.
-  // if (!mounted) return;
-
-  // setState(() {
-  //   _platformImei = platformImei;
-  //   uniqueId = idunique;
-  // });
 }
 
-Future<Album> fetchAlbum(String appMobileNumber, String appPassword) async {
-  try {
-    log('testing......');
-    final http.Response token = await http.post(
-      'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-      },
-    );
-    log('token...:$token');
-
-    Map<String, dynamic> responsetoke = jsonDecode(token.body);
-    var result = responsetoke['response'];
-    var tokenresult = result['token'];
-
-    log('result...in field:$tokenresult');
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $tokenresult'
-    };
-
-    var raw = jsonEncode({
-      "query": [
-        {"App_mobile_number": appMobileNumber, "App_password": appPassword}
-      ]
-    });
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/_find'));
-    request.body = raw;
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var res = await response.stream.bytesToString();
-      var result = jsonDecode(res);
-      var responses = result['response'];
-      var datavalue = responses['data'];
-
-      var rec = datavalue[0]['fieldData']['Rec_id'];
-      var remobile = datavalue[0]['fieldData']['Mobile'];
-      var respass = datavalue[0]['fieldData']['App_password'];
-
-      print("data recotp ....:$rec");
-      print("remobile rec....:$remobile");
-      print("respass rec....:$respass");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setInt('getvalue', remobile);
-      prefs.setString('pass', respass);
-
-      var headerss = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenresult'
-      };
-
-      var raww = jsonEncode({
-        "fieldData": {"App_mobile_imei_number": platformImei}
-      });
-
-      var requestimei = http.Request(
-          'PATCH',
-          Uri.parse(
-              'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/records/$rec'));
-      requestimei.body = raww;
-      requestimei.headers.addAll(headerss);
-      http.StreamedResponse responseimei = await requestimei.send();
-      if (responseimei.statusCode == 200) {
-        print(await responseimei.stream.bytesToString());
-      } else {
-        print(responseimei.reasonPhrase);
-      }
-      return albumFromJson(request.body);
-    } else {
-      print(response.reasonPhrase);
-    }
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
+// Future<Album> fetchAlbum(String appMobileNumber, String appPassword) async {
+//   try {
+//     log('testing......');
+//     final http.Response token = await http.post(
+//       'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+//       headers: <String, String>{
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+//       },
+//     );
+//     log('token...:$token');
+//
+//     Map<String, dynamic> responsetoke = jsonDecode(token.body);
+//     var result = responsetoke['response'];
+//     var tokenresult = result['token'];
+//
+//     log('result...in field:$tokenresult');
+//     var headers = {
+//       'Content-Type': 'application/json',
+//       'Authorization': 'Bearer $tokenresult'
+//     };
+//
+//     var raw = jsonEncode({
+//       "query": [
+//         {"App_mobile_number": appMobileNumber, "App_password": appPassword}
+//       ]
+//     });
+//     var request = http.Request(
+//         'POST',
+//         Uri.parse(
+//             'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/_find'));
+//     request.body = raw;
+//     request.headers.addAll(headers);
+//     http.StreamedResponse response = await request.send();
+//
+//     if (response.statusCode == 200) {
+//       var res = await response.stream.bytesToString();
+//       var result = jsonDecode(res);
+//       var responses = result['response'];
+//       var datavalue = responses['data'];
+//
+//       var rec = datavalue[0]['fieldData']['Rec_id'];
+//       var remobile = datavalue[0]['fieldData']['Mobile'];
+//       var respass = datavalue[0]['fieldData']['App_password'];
+//
+//       print("data recotp ....:$rec");
+//       print("remobile rec....:$remobile");
+//       print("respass rec....:$respass");
+//       SharedPreferences prefs = await SharedPreferences.getInstance();
+//       prefs.setInt('getvalue', remobile);
+//       prefs.setString('pass', respass);
+//
+//       var headerss = {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer $tokenresult'
+//       };
+//
+//       var raww = jsonEncode({
+//         "fieldData": {"App_mobile_imei_number": platformImei}
+//       });
+//
+//       var requestimei = http.Request(
+//           'PATCH',
+//           Uri.parse(
+//               'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/records/$rec'));
+//       requestimei.body = raww;
+//       requestimei.headers.addAll(headerss);
+//       http.StreamedResponse responseimei = await requestimei.send();
+//       if (responseimei.statusCode == 200) {
+//         print(await responseimei.stream.bytesToString());
+//       } else {
+//         print(responseimei.reasonPhrase);
+//       }
+//       return albumFromJson(request.body);
+//     } else {
+//       print(response.reasonPhrase);
+//     }
+//   } catch (e) {
+//     print(e);
+//     return null;
+//   }
+// }
 
 class Album {
   Album({
@@ -331,8 +319,8 @@ class _RegistionpageState extends State<Registionpage> {
           print("remobile rec....:$remobile");
           print("respass rec....:$respass");
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setInt('getvalue', remobile);
-          prefs.setString('pass', respass);
+          await prefs.setInt('getvalue', remobile);
+          await prefs.setString('pass', respass);
 
           var headerss = {
             'Content-Type': 'application/json',
@@ -342,6 +330,7 @@ class _RegistionpageState extends State<Registionpage> {
           var raww = jsonEncode({
             "fieldData": {"App_mobile_imei_number": platformImei}
           });
+          await prefs.setString('imei', platformImei);
           var requestimei = http.Request(
               'PATCH',
               Uri.parse(

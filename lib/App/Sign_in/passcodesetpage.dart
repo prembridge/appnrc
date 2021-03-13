@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,7 +53,8 @@ class _passcodsetepageState extends State<passcodsetepage> {
 
   @override
   Widget build(BuildContext context) {
-    var myPass = [1, 2, 3, 4];
+    var myPass = [0, 0, 0, 0];
+/* {"pin":[]} */
     return LockScreen(
         title: "Set Pin",
         passLength: myPass.length,
@@ -66,12 +69,11 @@ class _passcodsetepageState extends State<passcodsetepage> {
         wrongPassTitle: "Opps!",
         wrongPassCancelButtonText: "Cancel",
         passCodeVerify: (passcode) async {
-          for (int i = 0; i < myPass.length; i++) {
-            if (passcode[i] != myPass[i]) {
-              return false;
-            }
-          }
-
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          myPass = passcode;
+          String listToSting = jsonEncode({"pin": myPass});
+          await prefs.setString('pin', listToSting);
+          await prefs.setBool("isPinSet", true);
           return true;
         },
         onSuccess: () async {
@@ -79,9 +81,6 @@ class _passcodsetepageState extends State<passcodsetepage> {
               new MaterialPageRoute(builder: (BuildContext context) {
             return passcodepage();
           }));
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-
-          prefs.setBool("isPinSet", true);
         });
   }
 }

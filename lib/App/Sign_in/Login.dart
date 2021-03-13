@@ -247,14 +247,18 @@ class _LoginpageState extends State<Loginpage> {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $tokenresult'
         };
-
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        var imei = prefs.getString('imei');
         var raw = jsonEncode({
           "query": [
             {
               "App_mobile_number": value['phone'],
-              "App_password": value['password']
+              "App_password": value['password'],
+              "App_mobile_imei_number": imei
             }
-          ]
+          ],
+          "script": "apites",
+          "script.param": "${value['phone']},${value['password']},$imei"
         });
         var request = http.Request(
             'POST',
@@ -381,7 +385,6 @@ class _LoginpageState extends State<Loginpage> {
                 )
               ],
             ),
-
           ),
         ));
   }

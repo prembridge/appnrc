@@ -102,15 +102,9 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   bool viewVisible = false;
-
+  bool showNext = false;
   SharedPreferences preferences;
   final _formKey = GlobalKey<FormBuilderState>();
-
-  void hideWidget() {
-    setState(() {
-      viewVisible = true;
-    });
-  }
 
   int pomodoro = 0;
   Welcome futureAlbum;
@@ -128,6 +122,7 @@ class _HomepageState extends State<Homepage> {
   void init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isFirstime", false);
+
     futureAlbum = await fetchAlbum();
     setState(() {});
   }
@@ -135,6 +130,9 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     void showDialogOfSuccess() async {
+      setState(() {
+        showNext = true;
+      });
       return await showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -218,6 +216,10 @@ class _HomepageState extends State<Homepage> {
             prefs.setString('recordId', recordId);
             print("Sent");
             showDialogOfSuccess();
+            _formKey.currentState.reset();
+            setState(() {
+              viewVisible = true;
+            });
           } else {
             print(response.reasonPhrase);
           }
@@ -254,19 +256,16 @@ class _HomepageState extends State<Homepage> {
             Center(child: pageIndex()),
             IconButton(
                 icon: Icon(Icons.arrow_forward_ios),
-                onPressed: () {
-                  print(pageChanged);
-                  /*  int getIndex() {
-                    var x = futureAlbum.response.dataInfo.totalRecordCount >
-                        controller.nextPage();
-                  } */
+                onPressed: showNext
+                    ? () {
+                        print(pageChanged);
 
-                  controller.nextPage(
-                      curve: Curves.bounceOut,
-                      duration: Duration(microseconds: 250));
-
-                  //controller.animateToPage
-                })
+                        controller.jumpToPage(pageChanged);
+                        controller.nextPage(
+                            curve: Curves.bounceOut,
+                            duration: Duration(microseconds: 250));
+                      }
+                    : null)
           ],
         ),
         body: futureAlbum != null
@@ -277,11 +276,13 @@ class _HomepageState extends State<Homepage> {
                 child: PageView(
                   pageSnapping: true,
                   controller: controller,
+                  physics: showNext ? null : NeverScrollableScrollPhysics(),
                   onPageChanged: (index) {
                     setState(() {
                       pageChanged = index;
+                      viewVisible = false;
+                      showNext = false;
                     });
-                    _formKey.currentState.reset();
                   },
                   children: futureAlbum.response.data
                       .map((e) => SingleChildScrollView(
@@ -655,6 +656,9 @@ class _HomepageState extends State<Homepage> {
                                                       new FormBuilderTextField(
                                                     name: "Bel_Added",
                                                     autocorrect: true,
+                                                    validator:
+                                                        FormBuilderValidators
+                                                            .required(context),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     decoration:
@@ -679,6 +683,9 @@ class _HomepageState extends State<Homepage> {
                                                   width: 130.0,
                                                   child:
                                                       new FormBuilderTextField(
+                                                    validator:
+                                                        FormBuilderValidators
+                                                            .required(context),
                                                     name: "New_BPT",
                                                     autocorrect: true,
                                                     keyboardType:
@@ -706,6 +713,9 @@ class _HomepageState extends State<Homepage> {
                                                       new FormBuilderTextField(
                                                     name: "Average_Attendance",
                                                     autocorrect: true,
+                                                    validator:
+                                                        FormBuilderValidators
+                                                            .required(context),
                                                     keyboardType:
                                                         TextInputType.number,
                                                     decoration:
@@ -744,11 +754,6 @@ class _HomepageState extends State<Homepage> {
                                                   fontSize: 20,
                                                 )),
                                             onTap: () {
-                                              /*  Navigator.push(context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) => Savepage())
-                                                            ); */
-                                              hideWidget();
                                               postForm(e);
                                             },
                                           ),
