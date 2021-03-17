@@ -5,12 +5,15 @@ import 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'dart:async';
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/App/models/response_model.dart';
 import 'package:exif/exif.dart';
+import 'package:location_permissions/location_permissions.dart';
 
 class Mediapage extends StatefulWidget {
+  /// Constructs a [LocationPermitionScreen] for the supplied [Permission].
+  // const Mediapage({this.permission, this.onTaped});
+
   final Datum data;
 
   const Mediapage({Key key, this.data}) : super(key: key);
@@ -19,8 +22,24 @@ class Mediapage extends StatefulWidget {
 }
 
 class _MediapageState extends State<Mediapage> {
+  ServiceStatus serviceStatus;
+  bool locationServiceon = false;
   String latitudeData = "";
   String longtitudeData = "";
+  @override
+  void initState() {
+    super.initState();
+
+    _listenForPermissionStatus();
+  }
+
+  void _listenForPermissionStatus() async {
+    PermissionStatus permission =
+        await LocationPermissions().requestPermissions();
+    serviceStatus = await LocationPermissions().checkServiceStatus();
+    log(serviceStatus.index.toString());
+    setState(() {});
+  }
 
   File _leaderImage;
   File _familyImage;
@@ -174,231 +193,210 @@ class _MediapageState extends State<Mediapage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Mediapage'),
       ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: GridView(
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          children: <Widget>[
-            Card(
-              elevation: 10,
-              color: Colors.blue,
-              child: Container(
-                child: new Column(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        new IconButton(
-                            icon: Icon(
-                              Icons.add_a_photo_outlined,
-                              size: 40,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              await getImage(true, 'leaders');
-                            }),
-                        new IconButton(
-                            icon: Icon(
-                              Icons.photo,
-                              size: 40,
-                              color: Colors.black,
-                            ),
-                            onPressed: () async {
-                              await getImage(false, 'leaders');
-                            }),
+      body: serviceStatus?.index == 2
+          ? Container(
+              padding: EdgeInsets.all(10),
+              child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                children: <Widget>[
+                  Card(
+                    elevation: 10,
+                    color: Colors.blue,
+                    child: Container(
+                      child: new Column(
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              new IconButton(
+                                  icon: Icon(
+                                    Icons.add_a_photo_outlined,
+                                    size: 40,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () async {
+                                    await getImage(true, 'leaders');
+                                  }),
+                              new IconButton(
+                                  icon: Icon(
+                                    Icons.photo,
+                                    size: 40,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () async {
+                                    await getImage(false, 'leaders');
+                                  }),
+                            ],
+                          ),
+                          new Text('Leaders'),
+                          _leaderImage == null
+                              ? Container()
+                              : Image.file(
+                                  _leaderImage,
+                                  height: 100,
+                                  width: 100,
+                                ),
+                        ],
+                      ),
+
+                      //child: [Text("YOUR TEXT")],
+                    ),
+                  ),
+                  Card(
+                    elevation: 10,
+                    color: Colors.deepOrange,
+                    child: new Column(
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            new IconButton(
+                                icon: Icon(
+                                  Icons.add_a_photo_outlined,
+                                  size: 40,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () async {
+                                  await getImage(true, 'family');
+                                }),
+                            new IconButton(
+                                icon: Icon(
+                                  Icons.photo,
+                                  size: 40,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () async {
+                                  await getImage(false, 'family');
+                                }),
+                          ],
+                        ),
+                        new Text('family'),
+                        _familyImage == null
+                            ? Container()
+                            : Image.file(
+                                _familyImage,
+                                height: 100,
+                                width: 100,
+                              ),
                       ],
                     ),
-                    new Text('Leaders'),
-                    _leaderImage == null
-                        ? Container()
-                        : Image.file(
-                            _leaderImage,
-                            height: 100,
-                            width: 100,
-                          ),
-                  ],
-                ),
-
-                //child: [Text("YOUR TEXT")],
-              ),
-            ),
-            Card(
-              elevation: 10,
-              color: Colors.deepOrange,
-              child: new Column(
-                children: <Widget>[
-                  Row(
-                    children: [
-                      new IconButton(
-                          icon: Icon(
-                            Icons.add_a_photo_outlined,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          onPressed: () async {
-                            await getImage(true, 'family');
-                          }),
-                      new IconButton(
-                          icon: Icon(
-                            Icons.photo,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          onPressed: () async {
-                            await getImage(false, 'family');
-                          }),
-                    ],
                   ),
-                  new Text('family'),
-                  _familyImage == null
-                      ? Container()
-                      : Image.file(
-                          _familyImage,
-                          height: 100,
-                          width: 100,
+                  Card(
+                    elevation: 10,
+                    color: Colors.deepOrange,
+                    child: new Column(
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            new IconButton(
+                                icon: Icon(
+                                  Icons.add_a_photo_outlined,
+                                  size: 40,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () async {
+                                  await getImage(true, 'community');
+                                }),
+                            new IconButton(
+                                icon: Icon(
+                                  Icons.photo,
+                                  size: 40,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () async {
+                                  await getImage(false, 'community');
+                                }),
+                          ],
                         ),
+                        new Text('Community'),
+                        _communityImage == null
+                            ? Container()
+                            : Image.file(
+                                _communityImage,
+                                height: 100,
+                                width: 100,
+                              ),
+                      ],
+                    ),
+                  ),
+                  Card(
+                    elevation: 10,
+                    color: Colors.blue,
+                    child: new Column(
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            new IconButton(
+                                icon: Icon(
+                                  Icons.add_a_photo_outlined,
+                                  size: 40,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () async {
+                                  await getImage(true, 'gathering');
+                                }),
+                            new IconButton(
+                                icon: Icon(
+                                  Icons.photo,
+                                  size: 40,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () async {
+                                  await getImage(false, 'gathering');
+                                }),
+                          ],
+                        ),
+                        new Text('Gathering'),
+                        _gatheringImage == null
+                            ? Container()
+                            : Image.file(
+                                _gatheringImage,
+                                height: 100,
+                                width: 100,
+                              ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      child: new FlatButton(
+                    onPressed: () async {
+                      _communityImage != null
+                          ? await uploadimage(
+                              'Image_community', _communityImage)
+                          : null;
+                      _familyImage != null
+                          ? await uploadimage('Image_family', _familyImage)
+                          : null;
+                      _leaderImage != null
+                          ? await uploadimage('Image_leader', _leaderImage)
+                          : null;
+                      _gatheringImage != null
+                          ? await uploadimage(
+                              'Image_gathering', _gatheringImage)
+                          : null;
+                      await saveLatitudeLogitude();
+                    },
+                    child: new Text(
+                      "save",
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                  )),
                 ],
               ),
-            ),
-            Card(
-              elevation: 10,
-              color: Colors.deepOrange,
-              child: new Column(
-                children: <Widget>[
-                  Row(
-                    children: [
-                      new IconButton(
-                          icon: Icon(
-                            Icons.add_a_photo_outlined,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          onPressed: () async {
-                            await getImage(true, 'community');
-                          }),
-                      new IconButton(
-                          icon: Icon(
-                            Icons.photo,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          onPressed: () async {
-                            await getImage(false, 'community');
-                          }),
-                    ],
-                  ),
-                  new Text('Community'),
-                  _communityImage == null
-                      ? Container()
-                      : Image.file(
-                          _communityImage,
-                          height: 100,
-                          width: 100,
-                        ),
-                ],
+            )
+          : Container(
+              child: Center(
+                child: Text("Please Switch On GPS"),
               ),
             ),
-            Card(
-              elevation: 10,
-              color: Colors.blue,
-              child: new Column(
-                children: <Widget>[
-                  Row(
-                    children: [
-                      new IconButton(
-                          icon: Icon(
-                            Icons.add_a_photo_outlined,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          onPressed: () async {
-                            await getImage(true, 'gathering');
-                          }),
-                      new IconButton(
-                          icon: Icon(
-                            Icons.photo,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          onPressed: () async {
-                            await getImage(false, 'gathering');
-                          }),
-                    ],
-                  ),
-                  new Text('Gathering'),
-                  _gatheringImage == null
-                      ? Container()
-                      : Image.file(
-                          _gatheringImage,
-                          height: 100,
-                          width: 100,
-                        ),
-                ],
-              ),
-            ),
-            Container(
-                child: new FlatButton(
-              onPressed: () async {
-                _communityImage != null
-                    ? await uploadimage('Image_community', _communityImage)
-                    : null;
-                _familyImage != null
-                    ? await uploadimage('Image_family', _familyImage)
-                    : null;
-                _leaderImage != null
-                    ? await uploadimage('Image_leader', _leaderImage)
-                    : null;
-                _gatheringImage != null
-                    ? await uploadimage('Image_gathering', _gatheringImage)
-                    : null;
-                await saveLatitudeLogitude();
-              },
-              child: new Text(
-                "save",
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-            )),
-            // new Text((latitudeData)),
-            // SizedBox(
-            //   width: 10,
-            // ),
-            // new Text((longtitudeData))
-            // IconButton(icon: Icon(Icons.web,size: 40,color: Colors.black,),
-            //     onPressed:(){
-            //       getImage(false);
-            //     }),
-            // IconButton(icon: Icon(Icons.add_a_photo_outlined ,size: 40,color: Colors.black,),
-            //     onPressed:(){
-            //       getImage(true);
-            //     }),
-            //_image==null?Container():Image.file(_image,height: 100,width: 100,),
-          ],
-        ),
-      ),
-      // child:Container(
-      //   child: new FlatButton(
-      //     onPressed: () {
-      //       /*...*/
-      //     },
-      //     child: Text(
-      //       "Flat Button",
-      //     ),
-      //   ),
-      // )
     );
   }
 }
