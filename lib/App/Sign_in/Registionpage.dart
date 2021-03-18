@@ -29,88 +29,6 @@ Future<void> initPlatformState() async {
   }
 }
 
-// Future<Album> fetchAlbum(String appMobileNumber, String appPassword) async {
-//   try {
-//     log('testing......');
-//     final http.Response token = await http.post(
-//       'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-//       headers: <String, String>{
-//         'Content-Type': 'application/json',
-//         'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-//       },
-//     );
-//     log('token...:$token');
-//
-//     Map<String, dynamic> responsetoke = jsonDecode(token.body);
-//     var result = responsetoke['response'];
-//     var tokenresult = result['token'];
-//
-//     log('result...in field:$tokenresult');
-//     var headers = {
-//       'Content-Type': 'application/json',
-//       'Authorization': 'Bearer $tokenresult'
-//     };
-//
-//     var raw = jsonEncode({
-//       "query": [
-//         {"App_mobile_number": appMobileNumber, "App_password": appPassword}
-//       ]
-//     });
-//     var request = http.Request(
-//         'POST',
-//         Uri.parse(
-//             'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/_find'));
-//     request.body = raw;
-//     request.headers.addAll(headers);
-//     http.StreamedResponse response = await request.send();
-//
-//     if (response.statusCode == 200) {
-//       var res = await response.stream.bytesToString();
-//       var result = jsonDecode(res);
-//       var responses = result['response'];
-//       var datavalue = responses['data'];
-//
-//       var rec = datavalue[0]['fieldData']['Rec_id'];
-//       var remobile = datavalue[0]['fieldData']['Mobile'];
-//       var respass = datavalue[0]['fieldData']['App_password'];
-//
-//       print("data recotp ....:$rec");
-//       print("remobile rec....:$remobile");
-//       print("respass rec....:$respass");
-//       SharedPreferences prefs = await SharedPreferences.getInstance();
-//       prefs.setInt('getvalue', remobile);
-//       prefs.setString('pass', respass);
-//
-//       var headerss = {
-//         'Content-Type': 'application/json',
-//         'Authorization': 'Bearer $tokenresult'
-//       };
-//
-//       var raww = jsonEncode({
-//         "fieldData": {"App_mobile_imei_number": platformImei}
-//       });
-//
-//       var requestimei = http.Request(
-//           'PATCH',
-//           Uri.parse(
-//               'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/records/$rec'));
-//       requestimei.body = raww;
-//       requestimei.headers.addAll(headerss);
-//       http.StreamedResponse responseimei = await requestimei.send();
-//       if (responseimei.statusCode == 200) {
-//         print(await responseimei.stream.bytesToString());
-//       } else {
-//         print(responseimei.reasonPhrase);
-//       }
-//       return albumFromJson(request.body);
-//     } else {
-//       print(response.reasonPhrase);
-//     }
-//   } catch (e) {
-//     print(e);
-//     return null;
-//   }
-// }
 
 class Album {
   Album({
@@ -251,6 +169,7 @@ class Registionpage extends StatefulWidget {
 
 class _RegistionpageState extends State<Registionpage> {
   Album _user;
+  bool _isHidden = true;
   final TextEditingController _appMobileNumbercontroller =
       TextEditingController();
   final TextEditingController _appPasswordcontroller = TextEditingController();
@@ -267,6 +186,8 @@ class _RegistionpageState extends State<Registionpage> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     Future<bool> checkUserInDatabase(Map<String, dynamic> value) async {
       try {
         log('testing......');
@@ -346,8 +267,21 @@ class _RegistionpageState extends State<Registionpage> {
           // return albumFromJson(request.body);
 
           await prefs.setBool("isFirstime", true);
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Loginpage()));
+          var isShown = await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Welcome"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text("OK"),
+                      )
+                    ],
+                  ));
+          if (isShown)
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Loginpage()));
         } else {
           print(response.reasonPhrase);
           Toast.show("Check your Credentials", context, duration: 3);
@@ -380,6 +314,7 @@ class _RegistionpageState extends State<Registionpage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Mobile No.",
+                      prefixIcon: Icon(Icons.phone),
                     ),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(context),
@@ -393,11 +328,19 @@ class _RegistionpageState extends State<Registionpage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FormBuilderTextField(
-                    obscureText: true,
+                    obscureText: _isHidden,
                     name: "password",
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Password",
+                      suffix: InkWell(
+                        onTap: _togglePasswordView,
+                        child: Icon(
+                          _isHidden
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
                     ),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(context),
@@ -406,8 +349,8 @@ class _RegistionpageState extends State<Registionpage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
-                  alignment: Alignment.topRight,
-                  child: RaisedButton(
+                  width: width / 2,
+                  child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState.saveAndValidate()) {
                         var _value = _formKey.currentState.value;
@@ -424,5 +367,10 @@ class _RegistionpageState extends State<Registionpage> {
             ),
           )),
     );
+  }
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 }

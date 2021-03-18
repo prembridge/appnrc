@@ -299,7 +299,7 @@ class _HomepageState extends State<Homepage> {
                                     children: [
                                       CircleAvatar(
                                         backgroundImage:
-                                            AssetImage('assets/images/fin.png'),
+                                            AssetImage('assets/images/pro.png'),
                                         radius: 40,
                                       ),
                                     ],
@@ -673,7 +673,7 @@ class _HomepageState extends State<Homepage> {
                                                                 Radius.circular(
                                                                     20)),
                                                       ),
-                                                      hintText:
+                                                      labelText:
                                                           'Total Believers',
                                                     ),
                                                   ),
@@ -702,7 +702,8 @@ class _HomepageState extends State<Homepage> {
                                                                 Radius.circular(
                                                                     20)),
                                                       ),
-                                                      hintText: 'Total Baptism',
+                                                      labelText:
+                                                          'Total Baptism',
                                                     ),
                                                   ),
                                                 ),
@@ -730,7 +731,8 @@ class _HomepageState extends State<Homepage> {
                                                                 Radius.circular(
                                                                     20)),
                                                       ),
-                                                      hintText: 'Avg Attadance',
+                                                      labelText:
+                                                          'Avg Attadance',
                                                     ),
                                                   ),
                                                 ),
@@ -786,7 +788,6 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ))
                       .toList(),
-
                 ))
             : Container(
                 child: Center(

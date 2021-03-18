@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.teal,
       ),
       home: SplashScreen(
         seconds: 4,
@@ -48,8 +48,8 @@ class _MyAppState extends State<MyApp> {
           body:
               isFirstime == null || isFirstime ? Registionpage() : selectpage(),
         ),
-        title: new Text('Welcome In SplashScreen'),
-        image: new Image.asset('assets/images/village.jpg'),
+        title: new Text('Welcome TO NRCApp'),
+        image: new Image.asset('assets/images/cp.jpg'),
         backgroundColor: Colors.white,
         styleTextUnderTheLoader: new TextStyle(),
         photoSize: 200.0,

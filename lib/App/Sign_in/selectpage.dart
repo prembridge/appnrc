@@ -61,9 +61,7 @@ class _selectpageState extends State<selectpage> {
               // ),
             ],
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
           Column(
             children: <Widget>[
               GestureDetector(
@@ -84,8 +82,11 @@ class _selectpageState extends State<selectpage> {
                           ),
                         );
                       },
-                child: PrimaryButton(
-                  btnText: "Select passcode password",
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PrimaryButton(
+                    btnText: "Select passcode password",
+                  ),
                 ),
               ),
             ],
@@ -100,8 +101,11 @@ class _selectpageState extends State<selectpage> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Pinpage()));
                 },
-                child: PrimaryButton(
-                  btnText: "Select finger print to authenticate",
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PrimaryButton(
+                    btnText: "Select finger print to authenticate",
+                  ),
                 ),
               ),
             ],

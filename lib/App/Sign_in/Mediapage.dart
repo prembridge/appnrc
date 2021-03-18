@@ -208,7 +208,7 @@ class _MediapageState extends State<Mediapage> {
                 children: <Widget>[
                   Card(
                     elevation: 10,
-                    color: Colors.blue,
+                    color: Colors.lightGreenAccent,
                     child: Container(
                       child: new Column(
                         children: <Widget>[
@@ -250,7 +250,7 @@ class _MediapageState extends State<Mediapage> {
                   ),
                   Card(
                     elevation: 10,
-                    color: Colors.deepOrange,
+                    color: Colors.lightGreen,
                     child: new Column(
                       children: <Widget>[
                         Row(
@@ -288,7 +288,7 @@ class _MediapageState extends State<Mediapage> {
                   ),
                   Card(
                     elevation: 10,
-                    color: Colors.deepOrange,
+                    color: Colors.tealAccent,
                     child: new Column(
                       children: <Widget>[
                         Row(
@@ -326,7 +326,7 @@ class _MediapageState extends State<Mediapage> {
                   ),
                   Card(
                     elevation: 10,
-                    color: Colors.blue,
+                    color: Colors.teal,
                     child: new Column(
                       children: <Widget>[
                         Row(
@@ -394,7 +394,7 @@ class _MediapageState extends State<Mediapage> {
             )
           : Container(
               child: Center(
-                child: Text("Please Switch On GPS"),
+                child: Text("Please Switch On your Location "),
               ),
             ),
     );

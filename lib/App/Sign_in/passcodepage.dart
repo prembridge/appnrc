@@ -77,7 +77,7 @@ class _passcodepageState extends State<passcodepage> {
             title: "Enter Pin",
             passLength: myPass.length,
             // fingerPrintImage: "assets/images/fin.png",
-            bgImage: "assets/images/fin.png",
+            bgImage: "assets/images/cp.jpg",
             showFingerPass: false,
             numColor: Colors.blue,
             fingerVerify: false,

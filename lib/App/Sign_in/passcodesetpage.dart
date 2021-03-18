@@ -59,7 +59,7 @@ class _passcodsetepageState extends State<passcodsetepage> {
         title: "Set Pin",
         passLength: myPass.length,
         // fingerPrintImage: "assets/images/fin.png",
-        bgImage: "assets/images/fin.png",
+        bgImage: "assets/images/cp.jpg",
         showFingerPass: false,
         numColor: Colors.blue,
         fingerVerify: false,

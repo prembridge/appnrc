@@ -345,7 +345,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.blueGrey, borderRadius: BorderRadius.circular(50)),
+        color: Theme.of(context).accentColor,
+        borderRadius: BorderRadius.circular(50),
+      ),
       padding: EdgeInsets.all(20),
       child: Center(
         child: Text(
