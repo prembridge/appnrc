@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
               isFirstime == null || isFirstime ? Registionpage() : selectpage(),
         ),
         title: new Text('Welcome TO NRCApp'),
-        image: new Image.asset('assets/images/cp.jpg'),
+        image: new Image.asset('assets/images/Logo.png'),
         backgroundColor: Colors.white,
         styleTextUnderTheLoader: new TextStyle(),
         photoSize: 200.0,

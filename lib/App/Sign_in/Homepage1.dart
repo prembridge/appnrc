@@ -129,6 +129,8 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     void showDialogOfSuccess() async {
       setState(() {
         showNext = true;
@@ -241,558 +243,401 @@ class _HomepageState extends State<Homepage> {
       );
     }
 
-    return Scaffold(
-        // resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text('homepage'),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  controller.previousPage(
-                      curve: Curves.bounceOut,
-                      duration: Duration(microseconds: 250));
-                }),
-            Center(child: pageIndex()),
-            IconButton(
-                icon: Icon(Icons.arrow_forward_ios),
-                onPressed: showNext
-                    ? () {
-                        print(pageChanged);
+    return LayoutBuilder(builder: (context, constraints) {
+      final height = constraints.maxHeight;
+      final width = constraints.maxWidth;
+      return (Scaffold(
+          // resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: Text('homepage'),
+            actions: [
+              IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    controller.previousPage(
+                        curve: Curves.bounceOut,
+                        duration: Duration(microseconds: 250));
+                  }),
+              Center(child: pageIndex()),
+              IconButton(
+                  icon: Icon(Icons.arrow_forward_ios),
+                  onPressed: showNext
+                      ? () {
+                          print(pageChanged);
 
-                        controller.jumpToPage(pageChanged);
-                        controller.nextPage(
-                            curve: Curves.bounceOut,
-                            duration: Duration(microseconds: 250));
-                      }
-                    : null)
-          ],
-        ),
-        body: futureAlbum != null
-            ? Container(
-                color: Colors.blueGrey,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: PageView(
-                  pageSnapping: true,
-                  controller: controller,
-                  physics: showNext ? null : NeverScrollableScrollPhysics(),
-                  onPageChanged: (index) {
-                    setState(() {
-                      pageChanged = index;
-                      viewVisible = false;
-                      showNext = false;
-                    });
-                  },
-                  children: futureAlbum.response.data
-                      .map((e) => SingleChildScrollView(
-                            child: Container(
-                              color: Colors.blueGrey,
-                              // width: MediaQuery.of(context).size.width,
-                              // height: MediaQuery.of(context).size.height,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-
-                                /// crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Column(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage('assets/images/pro.png'),
-                                        radius: 40,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 45),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          child: Text(
-                                            "Last Enter Month & year Report:",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          (e.fieldData.reportingMonth),
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          (e.fieldData.reportingYear)
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                      ]),
-                                  SizedBox(height: 10),
-                                  new Container(
-                                      child: Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Addnewpage()));
-                                        },
-                                        child: new Text('Add New',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                      ),
-                                    ],
-                                  )),
-                                  new Container(
-                                    color: Colors.white,
-                                    height: 450,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text("Type:",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black)),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              e.fieldData.gatheringStatus,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
-                                            ),
-                                            SizedBox(width: 15),
-                                            Text("Name:",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black)),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              e.fieldData.fullName,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
-                                            ),
-                                            SizedBox(width: 15),
-                                            Text("Year of Start:",
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black)),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              (e.fieldData.yearOfStart)
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 20),
-                                        Center(
-                                            child: Container(
-                                          //mainAxisAlignment: MainAxisAlignment.center,
-                                          height: 40,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                          controller.jumpToPage(pageChanged);
+                          controller.nextPage(
+                              curve: Curves.bounceOut,
+                              duration: Duration(microseconds: 250));
+                        }
+                      : null)
+            ],
+          ),
+          body: futureAlbum != null
+              ? Container(
+                  color: Colors.blueGrey,
+                  child: PageView(
+                    pageSnapping: true,
+                    controller: controller,
+                    physics: showNext ? null : NeverScrollableScrollPhysics(),
+                    onPageChanged: (index) {
+                      setState(() {
+                        pageChanged = index;
+                        viewVisible = false;
+                        showNext = false;
+                      });
+                    },
+                    children: futureAlbum.response.data
+                        .map((e) => SingleChildScrollView(
+                              child: Container(
+                                height: height,
+                                width: width,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          child: Column(
                                             children: [
-                                              Text("State:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.state,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          height: 15,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(width: 15),
-                                              Text("District:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.district,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text("Block:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.block,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(width: 15),
-                                              Text("Colony:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.colony,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text("Village:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.village,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(width: 15),
-                                              Text("Habitation:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.habitation,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text("UN.Habitation:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                e.fieldData.unHabitation,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 8),
-                                        Center(
-                                            child: Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(width: 15),
-                                              Text("PIN:",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                (e.fieldData.pin).toString(),
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        SizedBox(height: 30),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              new Text(
-                                                (e.fieldData.belAdded)
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                              SizedBox(width: 150),
-                                              new Text(
-                                                (e.fieldData.newBpt).toString(),
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                              SizedBox(width: 150),
-                                              new Text(
-                                                (e.fieldData.averageAttendance)
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          // padding: const EdgeInsets.only(bottom:150),
-                                          child: FormBuilder(
-                                            key: _formKey,
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 130.0,
-                                                  child:
-                                                      new FormBuilderTextField(
-                                                    name: "Bel_Added",
-                                                    autocorrect: true,
-                                                    validator:
-                                                        FormBuilderValidators
-                                                            .required(context),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        new InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20)),
-                                                      ),
-                                                      labelText:
-                                                          'Total Believers',
+                                              Expanded(
+                                                  flex: 2,
+                                                  child: Container(
+                                                    child: CircleAvatar(
+                                                      backgroundImage: AssetImage(
+                                                          'assets/images/pro.png'),
+                                                      radius: 40,
                                                     ),
+                                                  )),
+                                              Expanded(
+                                                child: Container(
+                                                  width: width,
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Container(
+                                                          width: width / 4,
+                                                          child: ElevatedButton(
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          Addnewpage(),
+                                                                ),
+                                                              );
+                                                            },
+                                                            child:
+                                                                Text("Add New"),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Text(
+                                                            "Last Enter Month & year Report :-",
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  width / 35,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text(
+                                                          ('${e.fieldData.reportingMonth} ${e.fieldData.reportingYear} '),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 35,
+                                                          ),
+                                                        ),
+                                                      ]),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 9,
+                                        child: Container(
+                                          color: Colors.white,
+                                          child: Column(
+                                            children: [
+                                              Expanded(
+                                                  child: Container(
+                                                padding: EdgeInsets.all(20.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "Type :- ${e.fieldData.gatheringStatus}",
+                                                      style: TextStyle(
+                                                        fontSize: width / 30,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      "Name :- ${e.fieldData.fullName}",
+                                                      style: TextStyle(
+                                                        fontSize: width / 30,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      "Year Of Start :- ${e.fieldData.yearOfStart}",
+                                                      style: TextStyle(
+                                                        fontSize: width / 30,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
+                                              Expanded(
+                                                  flex: 6,
+                                                  child: Container(
+                                                    // width: width,
+                                                    padding: EdgeInsets.all(
+                                                        width / 25),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "State :- ${e.fieldData.state}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "District :- ${e.fieldData.district}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Block :- ${e.fieldData.block}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Colony :- ${e.fieldData.colony}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Village :- ${e.fieldData.village}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Habitation :- ${e.fieldData.habitation}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Un.Habitation :- ${e.fieldData.unHabitation}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "PIN :- ${e.fieldData.pin.toString()}",
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                width / 30,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        FormBuilder(
+                                                          key: _formKey,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              TextInputWidget(
+                                                                labeltext:
+                                                                    "Total Believers",
+                                                                name:
+                                                                    "Bel_Added",
+                                                                prevData:
+                                                                    "${e.fieldData.belAdded}",
+                                                                height: height,
+                                                                width: width,
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 10),
+                                                              TextInputWidget(
+                                                                labeltext:
+                                                                    "Total Baptism",
+                                                                name: "New_BPT",
+                                                                prevData:
+                                                                    "${e.fieldData.newBpt}",
+                                                                height: height,
+                                                                width: width,
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 10),
+                                                              TextInputWidget(
+                                                                labeltext:
+                                                                    "Average Attendance",
+                                                                name:
+                                                                    "Average_Attendance",
+                                                                prevData:
+                                                                    "${e.fieldData.averageAttendance}",
+                                                                height: height,
+                                                                width: width,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ))
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          width: width,
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: <Widget>[
+                                                Container(
+                                                  padding: EdgeInsets.all(
+                                                      width / 40),
+                                                  child: ElevatedButton(
+                                                    child: new Text('SAVE',
+                                                        style: new TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: width / 25,
+                                                        )),
+                                                    onPressed: () {
+                                                      postForm(e);
+                                                    },
                                                   ),
                                                 ),
-                                                SizedBox(width: 10),
-                                                Container(
-                                                  width: 130.0,
-                                                  child:
-                                                      new FormBuilderTextField(
-                                                    validator:
-                                                        FormBuilderValidators
-                                                            .required(context),
-                                                    name: "New_BPT",
-                                                    autocorrect: true,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        new InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20)),
+                                                Visibility(
+                                                  visible: viewVisible,
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(
+                                                        width / 40),
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Mediapage(
+                                                                          data:
+                                                                              e,
+                                                                        )));
+                                                      },
+                                                      child: new Text(
+                                                        "MEDIA",
+                                                        style: new TextStyle(
+                                                          fontSize: width / 25,
+                                                        ),
                                                       ),
-                                                      labelText:
-                                                          'Total Baptism',
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                Container(
-                                                  width: 130.0,
-                                                  child:
-                                                      new FormBuilderTextField(
-                                                    name: "Average_Attendance",
-                                                    autocorrect: true,
-                                                    validator:
-                                                        FormBuilderValidators
-                                                            .required(context),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        new InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                Colors.white),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20)),
-                                                      ),
-                                                      labelText:
-                                                          'Avg Attadance',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          GestureDetector(
-                                            child: new Text('Save',
-                                                style: new TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20,
-                                                )),
-                                            onTap: () {
-                                              postForm(e);
-                                            },
-                                          ),
-                                          SizedBox(width: 50),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Mediapage(
-                                                            data: e,
-                                                          )));
-                                            },
-                                            child: Visibility(
-                                                visible: viewVisible,
-                                                child: new Text(
-                                                  'Media.',
-                                                  style: new TextStyle(
-                                                    color: Colors.red,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                  ),
-                                                )),
-                                          )
-                                        ]),
-                                  )
-                                ],
+                                                )
+                                              ]),
+                                        ))
+                                  ],
+                                ),
                               ),
-                            ),
-                          ))
-                      .toList(),
-                ))
-            : Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ));
+                            ))
+                        .toList(),
+                  ))
+              : Container(child: Center(child: CircularProgressIndicator()))));
+    });
+  }
+}
+
+class TextInputWidget extends StatelessWidget {
+  final String prevData;
+
+  final String labeltext;
+  final String name;
+  final double height;
+  final double width;
+  const TextInputWidget({
+    Key key,
+    this.prevData,
+    this.labeltext,
+    this.name,
+    this.height,
+    this.width,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Text(
+            prevData,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Container(
+            width: width / 4,
+            height: height / 15,
+            child: new FormBuilderTextField(
+              name: name,
+              autocorrect: true,
+              validator: FormBuilderValidators.required(context),
+              keyboardType: TextInputType.number,
+              decoration: new InputDecoration(
+                border: OutlineInputBorder(),
+                labelStyle: TextStyle(fontSize: width / 35),
+                labelText: labeltext,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

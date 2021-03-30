@@ -271,10 +271,12 @@ class _RegistionpageState extends State<Registionpage> {
               barrierDismissible: false,
               context: context,
               builder: (context) => AlertDialog(
-                    title: Text("Welcome"),
+                    title: new Image.asset('assets/images/sus.png'),
+
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
+
                         child: Text("OK"),
                       )
                     ],
@@ -297,15 +299,19 @@ class _RegistionpageState extends State<Registionpage> {
         title: Text('Registration page'),
       ),
       body: Container(
+
           color: Colors.white,
-          child: FormBuilder(
+
+        child: FormBuilder(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  " Continue To Register",
-                  style: TextStyle(fontSize: 30.0),
-                ),
+                // Text(
+                //   "  Register..",
+                //   style: TextStyle(fontSize: 30.0),
+                // ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FormBuilderTextField(
@@ -337,8 +343,8 @@ class _RegistionpageState extends State<Registionpage> {
                         onTap: _togglePasswordView,
                         child: Icon(
                           _isHidden
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                       ),
                     ),
@@ -349,6 +355,7 @@ class _RegistionpageState extends State<Registionpage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
+
                   width: width / 2,
                   child: ElevatedButton(
                     onPressed: () async {
@@ -360,7 +367,7 @@ class _RegistionpageState extends State<Registionpage> {
                         Toast.show("Vlidation failed", context);
                       }
                     },
-                    child: Text("Register"),
+                    child: Text("Register",style: TextStyle(fontSize: 20.0, height:2)),
                   ),
                 )
               ],

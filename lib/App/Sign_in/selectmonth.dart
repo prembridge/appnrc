@@ -154,10 +154,13 @@ class _SelectmonthState extends State<Selectmonth> {
                       child: DropdownButton(
                         value: _selectedMonthValue,
                         items: monthsDropDownItems(),
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() {
                             _selectedMonthValue = value;
                           });
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString('selMonth', value);
                         },
                         hint: Text("Select Month"),
                       ),
@@ -170,12 +173,15 @@ class _SelectmonthState extends State<Selectmonth> {
                       child: DropdownButton(
                         value: _selectedYearValue,
                         items: yearDropDownItems(),
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() {
                             _selectedYearValue = value;
                           });
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString('selYear', value);
                         },
-                        hint: Text("Select Month"),
+                        hint: Text("Select Year"),
                       ),
                     )
                   ],

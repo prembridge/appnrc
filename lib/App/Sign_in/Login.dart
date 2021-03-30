@@ -13,7 +13,6 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:toast/toast.dart';
 
-
 class Loginpage extends StatefulWidget {
   @override
   _LoginpageState createState() => _LoginpageState();
@@ -22,6 +21,7 @@ class Loginpage extends StatefulWidget {
 class _LoginpageState extends State<Loginpage> {
   bool _isHidden = true;
   Future<Album> futureAlbum;
+  bool isSending = false;
   Album _user;
   final TextEditingController _appMobileNumbercontroller =
       TextEditingController();
@@ -40,6 +40,9 @@ class _LoginpageState extends State<Loginpage> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     Future<bool> checkUserInDatabase(Map<String, dynamic> value) async {
+      setState(() {
+        isSending = true;
+      });
       try {
         log('testing......');
         final http.Response token = await http.post(
@@ -100,33 +103,16 @@ class _LoginpageState extends State<Loginpage> {
           await prefs.setString('pass', respass);
           await prefs.setString("otp", otp);
 
-          // var headerss = {
-          //   'Content-Type': 'application/json',
-          //   'Authorization': 'Bearer $tokenresult'
-          // };
-          //
-          // var raww = jsonEncode({
-          //   "fieldData": {"App_mobile_imei_number": platformImei}
-          // });
-          // var requestimei = http.Request(
-          //     'PATCH',
-          //     Uri.parse(
-          //         'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Monthly_dis_app/records/$rec'));
-          // requestimei.body = raww;
-          // requestimei.headers.addAll(headerss);
-          // http.StreamedResponse responseimei = await requestimei.send();
-          // if (responseimei.statusCode == 200) {
-          //   print(await responseimei.stream.bytesToString());
-          // } else {
-          //   print(responseimei.reasonPhrase);
-          // }
-          //return albumFromJson(request.body);
           await prefs.setBool("isloging", true);
+
+          setState(() {
+            isSending = false;
+          });
           var isShown = await showDialog(
               barrierDismissible: false,
               context: context,
               builder: (context) => AlertDialog(
-                    title: Text("Welcome"),
+                    title: new Image.asset('assets/images/sus.png'),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
@@ -140,9 +126,15 @@ class _LoginpageState extends State<Loginpage> {
         } else {
           print(response.reasonPhrase);
           Toast.show("Check your Credentials", context, duration: 3);
+          setState(() {
+            isSending = false;
+          });
         }
         return true;
       } catch (e) {
+        setState(() {
+          isSending = false;
+        });
         return false;
       }
     }
@@ -191,9 +183,7 @@ class _LoginpageState extends State<Loginpage> {
                       suffix: InkWell(
                         onTap: _togglePasswordView,
                         child: Icon(
-                          _isHidden
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _isHidden ? Icons.visibility_off : Icons.visibility,
                         ),
                       ),
                     ),
@@ -206,23 +196,27 @@ class _LoginpageState extends State<Loginpage> {
                   width: width / 2,
                   padding: EdgeInsets.all(10.0),
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState.saveAndValidate()) {
-                        var _value = _formKey.currentState.value;
-                        var x = await checkUserInDatabase(_value);
-                        print(x);
-                      } else {
-                        Toast.show("Vlidation failed", context);
-                      }
-                    },
-                    child: Text("Login"),
+                    onPressed: !isSending
+                        ? () async {
+                            if (_formKey.currentState.saveAndValidate()) {
+                              var _value = _formKey.currentState.value;
+                              var x = await checkUserInDatabase(_value);
+                              print(x);
+                            } else {
+                              Toast.show("Vlidation failed", context);
+                            }
+                          }
+                        : null,
+                    child:
+                        isSending ? CircularProgressIndicator() : Text("Login"),
                   ),
-                )
+                ),
               ],
             ),
           ),
         ));
   }
+
   void _togglePasswordView() {
     setState(() {
       _isHidden = !_isHidden;

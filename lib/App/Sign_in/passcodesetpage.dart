@@ -63,6 +63,7 @@ class _passcodsetepageState extends State<passcodsetepage> {
         showFingerPass: false,
         numColor: Colors.blue,
         fingerVerify: false,
+        
         borderColor: Colors.white,
         showWrongPassDialog: true,
         wrongPassContent: "Wrong pass please try again.",

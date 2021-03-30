@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/App/models/response_model.dart';
 import 'package:exif/exif.dart';
 import 'package:location_permissions/location_permissions.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Mediapage extends StatefulWidget {
   /// Constructs a [LocationPermitionScreen] for the supplied [Permission].
@@ -26,6 +27,8 @@ class _MediapageState extends State<Mediapage> {
   bool locationServiceon = false;
   String latitudeData = "";
   String longtitudeData = "";
+  bool isUploading = false;
+  bool isOneImageSelected = false;
   @override
   void initState() {
     super.initState();
@@ -37,8 +40,41 @@ class _MediapageState extends State<Mediapage> {
     PermissionStatus permission =
         await LocationPermissions().requestPermissions();
     serviceStatus = await LocationPermissions().checkServiceStatus();
-    log(serviceStatus.index.toString());
-    setState(() {});
+    var gpsLocation = await _determinePosition();
+
+    setState(() {
+      latitudeData = gpsLocation.altitude.toString();
+      longtitudeData = gpsLocation.longitude.toString();
+    });
+    log('GPS Latitude: $latitudeData  GPS Longitude: $longtitudeData');
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        // Permissions are denied forever, handle appropriately.
+        return Future.error(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
+
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
   }
 
   File _leaderImage;
@@ -55,22 +91,21 @@ class _MediapageState extends State<Mediapage> {
     Future<File> selectCameraOrGalerry(File image) async {
       if (isCamera) {
         var x = await _image.getImage(source: ImageSource.camera);
-        var bytes = await x.readAsBytes();
-        var tags = await readExifFromBytes(bytes);
-        List<dynamic> gpsLat = tags['GPS GPSLatitude'].values;
-        List<dynamic> gpsLon = tags['GPS GPSLongitude'].values;
-        latitudeData = convertDegreesToDD(gpsLat[0].numerator,
-            gpsLat[1].numerator, gpsLat[2].numerator, gpsLat[2].denominator);
-        longtitudeData = convertDegreesToDD(gpsLon[0].numerator,
-            gpsLon[1].numerator, gpsLon[2].numerator, gpsLon[2].denominator);
-        return File(x.path);
+        if (x != null) {
+          var gpsLocation = await _determinePosition();
+          setState(() {
+            latitudeData = gpsLocation.altitude.toString();
+            longtitudeData = gpsLocation.longitude.toString();
+          });
+          return File(x.path);
+        } else {
+          return null;
+        }
       } else {
         var x = await _image.getImage(source: ImageSource.gallery);
         var bytes = await x.readAsBytes();
         var tags = await readExifFromBytes(bytes);
-        /*  tags.forEach((key, value) {
-          print('$key  ${value.printable}');
-        }); */
+
         List<dynamic> gpsLat = tags['GPS GPSLatitude'].values;
         List<dynamic> gpsLon = tags['GPS GPSLongitude'].values;
         latitudeData = convertDegreesToDD(gpsLat[0].numerator,
@@ -85,9 +120,11 @@ class _MediapageState extends State<Mediapage> {
     switch (type) {
       case 'leaders':
         var x = await selectCameraOrGalerry(_leaderImage);
+
         setState(() {
           _leaderImage = x;
         });
+
         break;
       case 'family':
         var x = await selectCameraOrGalerry(_familyImage);
@@ -108,6 +145,14 @@ class _MediapageState extends State<Mediapage> {
         });
         break;
       default:
+    }
+    if (_communityImage != null ||
+        _familyImage != null ||
+        _gatheringImage != null ||
+        _leaderImage != null) {
+      setState(() {
+        isOneImageSelected = true;
+      });
     }
   }
 
@@ -151,6 +196,7 @@ class _MediapageState extends State<Mediapage> {
   }
 
   Future<bool> saveLatitudeLogitude() async {
+    log('GPS Latitude: $latitudeData  GPS Longitude: $longtitudeData');
     final http.Response token = await http.post(
       'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
       headers: <String, String>{
@@ -194,209 +240,340 @@ class _MediapageState extends State<Mediapage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('Mediapage'),
-      ),
-      body: serviceStatus?.index == 2
-          ? Container(
-              padding: EdgeInsets.all(10),
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                children: <Widget>[
-                  Card(
-                    elevation: 10,
-                    color: Colors.lightGreenAccent,
-                    child: Container(
-                      child: new Column(
-                        children: <Widget>[
-                          Row(
-                            children: [
-                              new IconButton(
-                                  icon: Icon(
-                                    Icons.add_a_photo_outlined,
-                                    size: 40,
-                                    color: Colors.black,
+    return LayoutBuilder(builder: (context, constraints) {
+      final height = constraints.maxHeight;
+      final width = constraints.maxWidth;
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('Mediapage'),
+        ),
+        body: serviceStatus?.index == 2
+            ? Column(children: [
+                Expanded(
+                  flex: 10,
+                  child: GridView(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.78,
+                    ),
+                    children: <Widget>[
+                      Card(
+                        elevation: 10,
+                        color: Colors.lightGreenAccent,
+                        child: Container(
+                          child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                          icon: Icon(
+                                            Icons.add_a_photo_outlined,
+                                            size: 40,
+                                            color: Colors.black,
+                                          ),
+                                          onPressed: () async {
+                                            await getImage(true, 'leaders');
+                                          }),
+                                      Text("Camera")
+                                    ],
                                   ),
-                                  onPressed: () async {
-                                    await getImage(true, 'leaders');
-                                  }),
-                              new IconButton(
-                                  icon: Icon(
-                                    Icons.photo,
-                                    size: 40,
-                                    color: Colors.black,
+                                  Text(
+                                    "OR",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  onPressed: () async {
-                                    await getImage(false, 'leaders');
-                                  }),
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                          icon: Icon(
+                                            Icons.photo,
+                                            size: 40,
+                                            color: Colors.black,
+                                          ),
+                                          onPressed: () async {
+                                            await getImage(false, 'leaders');
+                                          }),
+                                      Text("Gallery")
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              new Text(
+                                'Leaders',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: width / 30,
+                                ),
+                              ),
+                              _leaderImage == null
+                                  ? Container()
+                                  : Image.file(
+                                      _leaderImage,
+                                      height: 100,
+                                      width: 100,
+                                    ),
                             ],
                           ),
-                          new Text('Leaders'),
-                          _leaderImage == null
-                              ? Container()
-                              : Image.file(
-                                  _leaderImage,
-                                  height: 100,
-                                  width: 100,
-                                ),
-                        ],
-                      ),
 
-                      //child: [Text("YOUR TEXT")],
-                    ),
-                  ),
-                  Card(
-                    elevation: 10,
-                    color: Colors.lightGreen,
-                    child: new Column(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            new IconButton(
-                                icon: Icon(
-                                  Icons.add_a_photo_outlined,
-                                  size: 40,
-                                  color: Colors.black,
+                          //child: [Text("YOUR TEXT")],
+                        ),
+                      ),
+                      Card(
+                        elevation: 10,
+                        color: Colors.lightGreen,
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.add_a_photo_outlined,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          await getImage(true, 'family');
+                                        }),
+                                    Text("Camera")
+                                  ],
                                 ),
-                                onPressed: () async {
-                                  await getImage(true, 'family');
-                                }),
-                            new IconButton(
-                                icon: Icon(
-                                  Icons.photo,
-                                  size: 40,
-                                  color: Colors.black,
+                                Text(
+                                  "OR",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                onPressed: () async {
-                                  await getImage(false, 'family');
-                                }),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.photo,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          await getImage(false, 'family');
+                                        }),
+                                    Text("Gallery")
+                                  ],
+                                ),
+                              ],
+                            ),
+                            new Text(
+                              'family',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: width / 30,
+                              ),                           ),
+                            _familyImage == null
+                                ? Container()
+                                : Image.file(
+                                    _familyImage,
+                                    height: 100,
+                                    width: 100,
+                                  ),
                           ],
                         ),
-                        new Text('family'),
-                        _familyImage == null
-                            ? Container()
-                            : Image.file(
-                                _familyImage,
-                                height: 100,
-                                width: 100,
+                      ),
+                      Card(
+                        elevation: 10,
+                        color: Colors.tealAccent,
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.add_a_photo_outlined,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          await getImage(true, 'community');
+                                        }),
+                                    Text("Gallery")
+                                  ],
+                                ),
+                                Text(
+                                  "OR",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.photo,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          await getImage(false, 'community');
+                                        }),
+                                    Text("Camera")
+                                  ],
+                                ),
+                              ],
+                            ),
+                            new Text(
+                              'Community',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: width / 30,
                               ),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    elevation: 10,
-                    color: Colors.tealAccent,
-                    child: new Column(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            new IconButton(
-                                icon: Icon(
-                                  Icons.add_a_photo_outlined,
-                                  size: 40,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  await getImage(true, 'community');
-                                }),
-                            new IconButton(
-                                icon: Icon(
-                                  Icons.photo,
-                                  size: 40,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  await getImage(false, 'community');
-                                }),
+                            ),
+                            _communityImage == null
+                                ? Container()
+                                : Image.file(
+                                    _communityImage,
+                                    height: 100,
+                                    width: 100,
+                                  ),
                           ],
                         ),
-                        new Text('Community'),
-                        _communityImage == null
-                            ? Container()
-                            : Image.file(
-                                _communityImage,
-                                height: 100,
-                                width: 100,
+                      ),
+                      Card(
+                        elevation: 10,
+                        color: Colors.teal,
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    new IconButton(
+                                        icon: Icon(
+                                          Icons.add_a_photo_outlined,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          await getImage(true, 'gathering');
+                                        }),
+                                    Text("Camera")
+                                  ],
+                                ),
+                                Text(
+                                  "OR",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.photo,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                        onPressed: () async {
+                                          await getImage(false, 'gathering');
+                                        }),
+                                    Text("Gallery")
+                                  ],
+                                ),
+                              ],
+                            ),
+                            new Text(
+                              'Gathering',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: width / 30,
                               ),
-                      ],
-                    ),
-                  ),
-                  Card(
-                    elevation: 10,
-                    color: Colors.teal,
-                    child: new Column(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            new IconButton(
-                                icon: Icon(
-                                  Icons.add_a_photo_outlined,
-                                  size: 40,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  await getImage(true, 'gathering');
-                                }),
-                            new IconButton(
-                                icon: Icon(
-                                  Icons.photo,
-                                  size: 40,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () async {
-                                  await getImage(false, 'gathering');
-                                }),
+                            ),
+                            _gatheringImage == null
+                                ? Container()
+                                : Image.file(
+                                    _gatheringImage,
+                                    height: 100,
+                                    width: 100,
+                                  ),
                           ],
                         ),
-                        new Text('Gathering'),
-                        _gatheringImage == null
-                            ? Container()
-                            : Image.file(
-                                _gatheringImage,
-                                height: 100,
-                                width: 100,
-                              ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Container(
-                      child: new FlatButton(
-                    onPressed: () async {
-                      _communityImage != null
-                          ? await uploadimage(
-                              'Image_community', _communityImage)
-                          : null;
-                      _familyImage != null
-                          ? await uploadimage('Image_family', _familyImage)
-                          : null;
-                      _leaderImage != null
-                          ? await uploadimage('Image_leader', _leaderImage)
-                          : null;
-                      _gatheringImage != null
-                          ? await uploadimage(
-                              'Image_gathering', _gatheringImage)
-                          : null;
-                      await saveLatitudeLogitude();
-                    },
-                    child: new Text(
-                      "save",
-                      style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                  )),
-                ],
+                ),
+                Expanded(
+                  flex: 0,
+                  child: isOneImageSelected
+                      ? ElevatedButton(
+                          onPressed: !isUploading
+                              ? () async {
+                                  setState(() {
+                                    isUploading = true;
+                                  });
+                                  _communityImage != null
+                                      ? await uploadimage(
+                                          'Image_community', _communityImage)
+                                      : null;
+                                  _familyImage != null
+                                      ? await uploadimage(
+                                          'Image_family', _familyImage)
+                                      : null;
+                                  _leaderImage != null
+                                      ? await uploadimage(
+                                          'Image_leader', _leaderImage)
+                                      : null;
+                                  _gatheringImage != null
+                                      ? await uploadimage(
+                                          'Image_gathering', _gatheringImage)
+                                      : null;
+                                  var sent = await saveLatitudeLogitude();
+                                  if (sent) {
+                                    setState(() {
+                                      isUploading = false;
+                                    });
+                                    await showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text("Success"),
+                                            content: Text("Sent !!"),
+                                          );
+                                        });
+                                    setState(() {
+                                      _communityImage = null;
+                                      _familyImage = null;
+                                      _gatheringImage = null;
+                                      _leaderImage = null;
+
+                                      isOneImageSelected = false;
+                                    });
+                                  }
+                                }
+                              : null,
+                          child: !isUploading
+                              ? Text(
+                                  "SAVE",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                )
+                              : CircularProgressIndicator(),
+                        )
+                      : Container(),
+                ),
+              ])
+            : Container(
+                child: Center(
+                  child: Text("Please Switch On your Location "),
+                ),
               ),
-            )
-          : Container(
-              child: Center(
-                child: Text("Please Switch On your Location "),
-              ),
-            ),
-    );
+      );
+    });
   }
 }
