@@ -345,12 +345,15 @@ class _HomepageState extends State<Homepage> {
                                                             ),
                                                           ),
                                                         ),
-                                                        SizedBox(width: 8),
+                                                        //SizedBox(width:5),
                                                         Text(
                                                           ('${e.fieldData.reportingMonth} ${e.fieldData.reportingYear} '),
                                                           style: TextStyle(
                                                             fontSize:
                                                                 width / 35,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .bold,
                                                           ),
                                                         ),
                                                       ]),

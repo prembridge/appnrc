@@ -272,7 +272,7 @@ class _RegistionpageState extends State<Registionpage> {
               context: context,
               builder: (context) => AlertDialog(
                     title: new Image.asset('assets/images/sus.png'),
-
+                  content:Center(child: Text("Registration successful ")),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
@@ -355,9 +355,14 @@ class _RegistionpageState extends State<Registionpage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
-
+                  height: height/9,
                   width: width / 2,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+
+                      side: BorderSide(color: Colors.black, width: 1),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState.saveAndValidate()) {
                         var _value = _formKey.currentState.value;
@@ -367,7 +372,7 @@ class _RegistionpageState extends State<Registionpage> {
                         Toast.show("Vlidation failed", context);
                       }
                     },
-                    child: Text("Register",style: TextStyle(fontSize: 20.0, height:2)),
+                    child: Text("Register",style: TextStyle(fontSize: 20.0, height:1.5)),
                   ),
                 )
               ],

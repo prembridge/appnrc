@@ -138,11 +138,14 @@ class _SelectmonthState extends State<Selectmonth> {
         title: Text(" Select Month and year"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             child: Column(
+
               children: [
-                Text("Please Select Month & Year To Enter Current  report",
+                Text("Please Select Month & "
+                    "Year To Enter Current  report",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -162,7 +165,10 @@ class _SelectmonthState extends State<Selectmonth> {
                               await SharedPreferences.getInstance();
                           prefs.setString('selMonth', value);
                         },
-                        hint: Text("Select Month"),
+                        hint: Text("Select Month", style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                       ),
                     ),
                     SizedBox(
@@ -181,7 +187,11 @@ class _SelectmonthState extends State<Selectmonth> {
                               await SharedPreferences.getInstance();
                           prefs.setString('selYear', value);
                         },
-                        hint: Text("Select Year"),
+                        hint: Text("Select Year",
+         style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: Colors.black)),
                       ),
                     )
                   ],

@@ -33,8 +33,10 @@ class _selectpageState extends State<selectpage> {
         title: Text('select page'),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Column(
+
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(bottom: 20),

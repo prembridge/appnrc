@@ -254,6 +254,7 @@ class _OtppageState extends State<Otppage> {
       body: Container(
         color: Colors.white,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Column(
               children: <Widget>[
@@ -288,8 +289,15 @@ class _OtppageState extends State<Otppage> {
             ),
             SizedBox(height: 20),
             Container(
+              height: height/12,
               width: width / 2,
+
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+
+                  side: BorderSide(color: Colors.black, width: 1),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                ),
                 onPressed: () async {
                   final String appMobileNumber =
                       _appMobileNumbercontroller.text;
@@ -320,7 +328,7 @@ class _OtppageState extends State<Otppage> {
                     );
                   }
                 },
-                child: Text("OK"),
+                child: Text("OK",style: TextStyle(fontSize: 20.0, height:1.5)),
               ),
             ),
           ],

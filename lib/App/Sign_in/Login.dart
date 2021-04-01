@@ -113,6 +113,7 @@ class _LoginpageState extends State<Loginpage> {
               context: context,
               builder: (context) => AlertDialog(
                     title: new Image.asset('assets/images/sus.png'),
+                content:Center(child: Text("Login successful ")),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
@@ -148,6 +149,7 @@ class _LoginpageState extends State<Loginpage> {
           child: FormBuilder(
             key: _formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   " Continue To login",
@@ -193,9 +195,15 @@ class _LoginpageState extends State<Loginpage> {
                   ),
                 ),
                 Container(
+                  height: height/9,
                   width: width / 2,
                   padding: EdgeInsets.all(10.0),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+
+                      side: BorderSide(color: Colors.black, width: 1),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
                     onPressed: !isSending
                         ? () async {
                             if (_formKey.currentState.saveAndValidate()) {
@@ -208,7 +216,7 @@ class _LoginpageState extends State<Loginpage> {
                           }
                         : null,
                     child:
-                        isSending ? CircularProgressIndicator() : Text("Login"),
+                        isSending ? CircularProgressIndicator() : Text("Login" ,style: TextStyle(fontSize: 20.0, height:1.5)),
                   ),
                 ),
               ],

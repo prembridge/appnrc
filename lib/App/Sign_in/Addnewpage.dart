@@ -125,6 +125,7 @@ class Addnewpage extends StatefulWidget {
 }
 
 class _AddnewpageState extends State<Addnewpage> {
+  String dropdownValue = 'MC';
   Album _user;
   final TextEditingController _typecontroller = TextEditingController();
   final TextEditingController _avgcontroller = TextEditingController();
@@ -218,7 +219,7 @@ class _AddnewpageState extends State<Addnewpage> {
               "Block": block,
               "Colony": colony,
               "Village": village,
-              "Gathering_Status": type,
+              "Gathering_Status": dropdownValue,
               "New_BPT": newBpt,
               "Bel_Added": belAdded,
               "Reporting_Month": monthOfStart,
@@ -285,17 +286,35 @@ class _AddnewpageState extends State<Addnewpage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                child: new FormBuilderTextField(
-                                  controller: _typecontroller,
-                                  validator:
-                                      FormBuilderValidators.required(context),
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: "Type",
-                                  ),
+                                  alignment: Alignment.bottomLeft,
+                                  child:  DropdownButton<String>(
+                                  value: dropdownValue,
+                                  underline: Container(),
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue;
+                                    });
+                                  },
+                                  items: <String>['MC', 'PC', 'HC', 'AV','AC']
+                                      .map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
 
-                                  //hintText: 'Type',
-                                ),
+                                )
+                                // child: new FormBuilderTextField(
+                                //   controller: _typecontroller,
+                                //   validator:
+                                //       FormBuilderValidators.required(context),
+                                //   decoration: InputDecoration(
+                                //     border: OutlineInputBorder(),
+                                //     labelText: "Type",
+                                //   ),
+                                //
+                                //   //hintText: 'Type',
+                                // ),
                               ),
                             ),
                             SizedBox(height: 5),

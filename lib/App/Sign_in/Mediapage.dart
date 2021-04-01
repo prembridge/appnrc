@@ -404,7 +404,7 @@ class _MediapageState extends State<Mediapage> {
                                         onPressed: () async {
                                           await getImage(true, 'community');
                                         }),
-                                    Text("Gallery")
+                                    Text("Camera")
                                   ],
                                 ),
                                 Text(
@@ -422,7 +422,7 @@ class _MediapageState extends State<Mediapage> {
                                         onPressed: () async {
                                           await getImage(false, 'community');
                                         }),
-                                    Text("Camera")
+                                    Text("Gallery")
                                   ],
                                 ),
                               ],
