@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:imei_plugin/imei_plugin.dart';
+import 'package:location_permissions/location_permissions.dart';
+import 'package:permission_handler/permission_handler.dart' as per;
 import 'dart:developer';
 import 'Login.dart';
 import 'dart:convert';
-import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+import 'package:splashscreen/splashscreen.dart';
 
 Album albumFromJson(String str) => Album.fromJson(json.decode(str));
 
@@ -24,11 +28,18 @@ Future<void> initPlatformState() async {
     platformImei =
         await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
     List<String> multiImei = await ImeiPlugin.getImeiMulti();
+    Map<per.Permission, per.PermissionStatus> statuses = await [
+      per.Permission.location,
+      per.Permission.storage,
+      per.Permission.camera,
+      per.Permission.phone,
+      per.Permission.mediaLibrary
+    ].request();
+    log(statuses.toString());
   } on PlatformException {
     platformImei = 'Failed to get platform version.';
   }
 }
-
 
 class Album {
   Album({
@@ -270,16 +281,50 @@ class _RegistionpageState extends State<Registionpage> {
           var isShown = await showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (context) => AlertDialog(
-                    title: new Image.asset('assets/images/sus.png'),
-                  content:Center(child: Text("Registration successful ")),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-
-                        child: Text("OK"),
-                      )
-                    ],
+              builder: (context) => Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      // stops:12,
+                      colors: [
+                        Color(0xFF9798CB),
+                        Color(0xFFDDACD3),
+                        Color(0xFFF48F9F),
+                      ],
+                    )),
+                    child: SplashScreen(
+                      seconds: 4,
+                      navigateAfterSeconds: new Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        body: Loginpage(),
+                      ),
+                      title: new Text(
+                        'Registration successful',
+                        style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      image: new Image.asset('assets/images/sus.png'),
+                      //backgroundColor: Color(0xFF9798CB),
+                      gradientBackground: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        // stops:12,
+                        colors: [
+                          Color(0xFF9798CB),
+                          Color(0xFFDDACD3),
+                          Color(0xFFF48F9F),
+                        ],
+                      ),
+                      styleTextUnderTheLoader: new TextStyle(),
+                      photoSize: 200.0,
+                      loaderColor: Colors.brown,
+                    ),
                   ));
           if (isShown)
             Navigator.of(context).pushReplacement(
@@ -296,13 +341,33 @@ class _RegistionpageState extends State<Registionpage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registration page'),
+        backgroundColor: Color(0xFF9798CB),
+        title: Text(
+          'Registration page',
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
       body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            // stops:12,
+            colors: [
+              Color(0xFF9798CB),
+              Color(0xFFDDACD3),
+              Color(0xFFF48F9F),
+            ],
+          )),
+          // color: Colors.white,
 
-          color: Colors.white,
-
-        child: FormBuilder(
+          child: FormBuilder(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -342,9 +407,7 @@ class _RegistionpageState extends State<Registionpage> {
                       suffix: InkWell(
                         onTap: _togglePasswordView,
                         child: Icon(
-                          _isHidden
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                          _isHidden ? Icons.visibility_off : Icons.visibility,
                         ),
                       ),
                     ),
@@ -355,13 +418,13 @@ class _RegistionpageState extends State<Registionpage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
-                  height: height/9,
+                  height: height / 9,
                   width: width / 2,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-
                       side: BorderSide(color: Colors.black, width: 1),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
                     ),
                     onPressed: () async {
                       if (_formKey.currentState.saveAndValidate()) {
@@ -372,7 +435,16 @@ class _RegistionpageState extends State<Registionpage> {
                         Toast.show("Vlidation failed", context);
                       }
                     },
-                    child: Text("Register",style: TextStyle(fontSize: 20.0, height:1.5)),
+                    child: Text(
+                      "Register",
+                      style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -380,6 +452,7 @@ class _RegistionpageState extends State<Registionpage> {
           )),
     );
   }
+
   void _togglePasswordView() {
     setState(() {
       _isHidden = !_isHidden;

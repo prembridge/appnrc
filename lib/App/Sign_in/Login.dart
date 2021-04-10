@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_app/App/Sign_in/passcodepage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:google_fonts/google_fonts.dart';
 //import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:splashscreen/splashscreen.dart';
 import 'Forgotpassword.dart';
 import 'Otppage.dart';
 import 'package:http/http.dart' as http;
@@ -111,16 +113,56 @@ class _LoginpageState extends State<Loginpage> {
           var isShown = await showDialog(
               barrierDismissible: false,
               context: context,
-              builder: (context) => AlertDialog(
-                    title: new Image.asset('assets/images/sus.png'),
-                content:Center(child: Text("Login successful ")),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: Text("OK"),
-                      )
+              builder: (context) => Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      // stops:12,
+                      colors: [
+                        Color(0xFF9798CB),
+                        Color(0xFFDDACD3),
+                        Color(0xFFF48F9F),
+                      ],
+                    )
+                ),
+                child: SplashScreen(
+                  seconds: 4,
+                  navigateAfterSeconds: new Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    body: Otppage() ,
+                  ),
+                  title: new Text('Login successful',style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,),
+                  ),),
+                  image: new Image.asset('assets/images/sus.png'),
+                  //backgroundColor: Color(0xFF9798CB),
+                  gradientBackground: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    // stops:12,
+                    colors: [
+                      Color(0xFF9798CB),
+                      Color(0xFFDDACD3),
+                      Color(0xFFF48F9F),
                     ],
-                  ));
+                  ),
+                  styleTextUnderTheLoader: new TextStyle(),
+                  photoSize: 200.0,
+                  loaderColor: Colors.brown,
+
+                  //     title: new Image.asset('assets/images/sus.png'),
+                  // content:Center(child: Text("Login successful ")),
+                  //     actions: [
+                  //       TextButton(
+                  //         onPressed: () => Navigator.of(context).pop(true),
+                  //         child: Text("OK"),
+                  //       )
+                  //     ],
+                    ),
+              ));
           if (isShown)
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Otppage()));
@@ -142,10 +184,27 @@ class _LoginpageState extends State<Loginpage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Login page'),
+          title: Text('Login page',
+            style: GoogleFonts.montserrat(
+            textStyle: TextStyle(color: Colors.white,
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,),
+        ),),
+          backgroundColor: Color(0xFF9798CB),
         ),
         body: Container(
-          color: Colors.white,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                // stops:12,
+                colors: [
+                  Color(0xFF9798CB),
+                  Color(0xFFDDACD3),
+                  Color(0xFFF48F9F),
+                ],
+              )
+          ),
           child: FormBuilder(
             key: _formKey,
             child: Column(
@@ -153,7 +212,11 @@ class _LoginpageState extends State<Loginpage> {
               children: [
                 Text(
                   " Continue To login",
-                  style: TextStyle(fontSize: 30.0),
+                  style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(color: Colors.black,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -216,7 +279,11 @@ class _LoginpageState extends State<Loginpage> {
                           }
                         : null,
                     child:
-                        isSending ? CircularProgressIndicator() : Text("Login" ,style: TextStyle(fontSize: 20.0, height:1.5)),
+                        isSending ? CircularProgressIndicator() : Text("Login" , style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(color: Colors.white,
+                            fontSize: 23.0,
+                            fontWeight: FontWeight.bold,),
+                        ),),
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'Homepage1.dart';
 import 'dart:async';
@@ -133,97 +134,140 @@ class _SelectmonthState extends State<Selectmonth> {
 
   @override
   Widget build(BuildContext context) {
+    // {
+    //   "dates":[{"year":2021,"month":[""]}]
+    // }
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Select Month and year"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            child: Column(
-
-              children: [
-                Text("Please Select Month & "
-                    "Year To Enter Current  report",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
-                Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(20.0),
-                      child: DropdownButton(
-                        value: _selectedMonthValue,
-                        items: monthsDropDownItems(),
-                        onChanged: (value) async {
-                          setState(() {
-                            _selectedMonthValue = value;
-                          });
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.setString('selMonth', value);
-                        },
-                        hint: Text("Select Month", style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black)),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(20.0),
-                      child: DropdownButton(
-                        value: _selectedYearValue,
-                        items: yearDropDownItems(),
-                        onChanged: (value) async {
-                          setState(() {
-                            _selectedYearValue = value;
-                          });
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          prefs.setString('selYear', value);
-                        },
-                        hint: Text("Select Year",
-         style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Colors.black)),
-                      ),
-                    )
-                  ],
-                ),
-              ],
+        title: Text(
+          " Select Month and year",
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Container(
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Homepage(
-                                  selectedMonth: _selectedMonthValue,
-                                  selectedYear: _selectedYearValue,
-                                )));
-                  },
-                  child: Visibility(
-                    visible: _selectedMonthValue != null &&
-                        _selectedYearValue != null,
-                    child: PrimaryButton(
-                      btnText: "Ok",
+        ),
+        backgroundColor: Color(0xFF9798CB),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          // stops:12,
+          colors: [
+            Color(0xFF9798CB),
+            Color(0xFFDDACD3),
+            Color(0xFFF48F9F),
+          ],
+        )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  Center(
+                    child: Text(
+                      "Please Select Month & "
+                      "Year To Enter Current  report",
+                      style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(20.0),
+                        child: DropdownButton(
+                          value: _selectedMonthValue,
+                          items: monthsDropDownItems(),
+                          onChanged: (value) async {
+                            setState(() {
+                              _selectedMonthValue = value;
+                            });
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.setString('selMonth', value);
+                          },
+                          hint: Text(
+                            "Select Month",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(20.0),
+                        child: DropdownButton(
+                          value: _selectedYearValue,
+                          items: yearDropDownItems(),
+                          onChanged: (value) async {
+                            setState(() {
+                              _selectedYearValue = value;
+                            });
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.setString('selYear', value);
+                          },
+                          hint: Text(
+                            "Select Year",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            Container(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Homepage(
+                                    selectedMonth: _selectedMonthValue,
+                                    selectedYear: _selectedYearValue,
+                                  )));
+                    },
+                    child: Visibility(
+                      visible: _selectedMonthValue != null &&
+                          _selectedYearValue != null,
+                      child: PrimaryButton(
+                        btnText: "Ok",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/Homepage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'Login.dart';
@@ -275,7 +276,18 @@ class _AddnewpageState extends State<Addnewpage> {
           title: Text('Add New'),
         ),
         body: Container(
-            color: Colors.white,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  // stops:12,
+                  colors: [
+                    Color(0xFF9798CB),
+                    Color(0xFFDDACD3),
+                    Color(0xFFF48F9F),
+                  ],
+                )
+            ),
             child: selMonth != null && selYear != null
                 ? Scrollbar(
                     child: SingleChildScrollView(
@@ -578,7 +590,11 @@ class _AddnewpageState extends State<Addnewpage> {
                                     _user = user;
                                   });
                                 },
-                                child: Text("Save"),
+                                child: Text("Save",style: GoogleFonts.montserrat(
+                                  textStyle: TextStyle(color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,),
+                                ),),
                               ),
                             ),
                           ],

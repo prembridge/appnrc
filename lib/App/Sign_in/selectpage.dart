@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/passcodesetpage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pinpage.dart';
 import 'passcodepage.dart';
@@ -30,89 +31,138 @@ class _selectpageState extends State<selectpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('select page'),
+        title: Text('select page',style: GoogleFonts.openSans(
+          textStyle: TextStyle(color: Colors.white,
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,),
+        ),),
+        backgroundColor: Color(0xFF9798CB),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Column(
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              // stops:12,
+              colors: [
+                Color(0xFF9798CB),
+                Color(0xFFDDACD3),
+                Color(0xFFF48F9F),
+              ],
+            )
+        ),
+        child: Column(
 
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                child: Text(
-                  ' Login To Continue',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    ' Login To Continue',
+
+                    style: GoogleFonts.montserrat(
+                      textStyle: TextStyle(color: Colors.black,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,),
+                    ),
+
                   ),
                 ),
-              ),
-              // inputTextdata(
-              //   hint: 'MobileNum...',
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              // inputTextdata(
-              //   hint: 'Password..',
-              // ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: isPinSet == null || !isPinSet
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => passcodsetepage(),
-                          ),
-                        );
-                      }
-                    : () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => passcodepage(),
-                          ),
-                        );
-                      },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PrimaryButton(
-                    btnText: "Select passcode password",
+                // inputTextdata(
+                //   hint: 'MobileNum...',
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // inputTextdata(
+                //   hint: 'Password..',
+                // ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Column(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: isPinSet == null || !isPinSet
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => passcodsetepage(),
+                            ),
+                          );
+                        }
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => passcodepage(),
+                            ),
+                          );
+                        },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Color(0xFF9798CB),
+                        side: BorderSide(color: Colors.black, width: 1),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      ),
+                      child:Text( "Select passcode password",
+                      style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(color: Colors.white,
+                          fontSize: 23.0,
+                          fontWeight: FontWeight.bold,),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Pinpage()));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PrimaryButton(
-                    btnText: "Select finger print to authenticate",
+                )],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Or",
+              style: GoogleFonts.montserrat(
+          textStyle: TextStyle(color: Colors.black,
+          fontSize: 20.0,
+         fontWeight: FontWeight.bold,),
+         ),
+            ),
+            Column(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Pinpage()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shadowColor: Color(0xFF9798CB),
+                        side: BorderSide(color: Colors.black, width: 1),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      ),
+                      child:Text ("Select finger print to authenticate", style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,),
+                      ),),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

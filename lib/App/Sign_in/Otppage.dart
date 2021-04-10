@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/selectmonth.dart';
 import 'package:flutter_app/App/Sign_in/selectpage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:developer';
@@ -249,10 +250,26 @@ class _OtppageState extends State<Otppage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('OTP verification page'),
+        title: Text('OTP verification page',style: GoogleFonts.montserrat(
+          textStyle: TextStyle(color: Colors.white,
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,),
+        ),),
+        backgroundColor: Color(0xFF9798CB),
       ),
       body: Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              // stops:12,
+              colors: [
+                Color(0xFF9798CB),
+                Color(0xFFDDACD3),
+                Color(0xFFF48F9F),
+              ],
+            )
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -262,10 +279,10 @@ class _OtppageState extends State<Otppage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Login To Continue..',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.openSans(
+                      textStyle: TextStyle(color: Colors.black,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ),
@@ -328,7 +345,11 @@ class _OtppageState extends State<Otppage> {
                     );
                   }
                 },
-                child: Text("OK",style: TextStyle(fontSize: 20.0, height:1.5)),
+                child: Text("OK",style: GoogleFonts.montserrat(
+                  textStyle: TextStyle(color: Colors.white,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,),
+                ),),
               ),
             ),
           ],
