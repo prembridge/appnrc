@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/App/models/home2_model.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -10,26 +11,26 @@ import 'package:exif/exif.dart';
 import 'package:location_permissions/location_permissions.dart';
 import 'package:geolocator/geolocator.dart';
 
-class Mediapage extends StatefulWidget {
-  /// Constructs a [LocationPermitionScreen] for the supplied [Permission].
-  // const Mediapage({this.permission, this.onTaped});
-
-  const Mediapage({Key key}) : super(key: key);
+class Mediapage2 extends StatefulWidget {
+  final FieldData fieldData;
+  final String recordId;
+  const Mediapage2({Key key, this.fieldData, this.recordId}) : super(key: key);
   @override
-  _MediapageState createState() => _MediapageState();
+  _Mediapage2State createState() => _Mediapage2State();
 }
 
-class _MediapageState extends State<Mediapage> {
+class _Mediapage2State extends State<Mediapage2> {
   ServiceStatus serviceStatus;
   bool locationServiceon = false;
   String latitudeData = "";
   String longtitudeData = "";
   bool isUploading = false;
   bool isOneImageSelected = false;
+  int noOfImagesUploadeed = 0;
   @override
   void initState() {
     super.initState();
-
+    print(widget.recordId);
     _listenForPermissionStatus();
   }
 
@@ -115,7 +116,7 @@ class _MediapageState extends State<Mediapage> {
     }
 
     switch (type) {
-      case 'leaders':
+      case 'Leader_image':
         var x = await selectCameraOrGalerry(_leaderImage);
 
         setState(() {
@@ -123,19 +124,19 @@ class _MediapageState extends State<Mediapage> {
         });
 
         break;
-      case 'family':
+      case 'Family_image':
         var x = await selectCameraOrGalerry(_familyImage);
         setState(() {
           _familyImage = x;
         });
         break;
-      case 'community':
+      case 'Community_image':
         var x = await selectCameraOrGalerry(_communityImage);
         setState(() {
           _communityImage = x;
         });
         break;
-      case 'gathering':
+      case 'Gathering_image':
         var x = await selectCameraOrGalerry(_gatheringImage);
         setState(() {
           _gatheringImage = x;
@@ -176,18 +177,32 @@ class _MediapageState extends State<Mediapage> {
     };
     /*   final prefs = await SharedPreferences.getInstance(); */
     final path = file.absolute.path;
-    final prefs = await SharedPreferences.getInstance();
-    final recordId = prefs.getString('recordId');
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_report_app/records/$recordId/containers/$type'));
+    // final prefs = await SharedPreferences.getInstance();
+    // final recordId = prefs.getString('recordId');
+    // var request = http.MultipartRequest('POST', Uri.parse('https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Media_storage_monthly_report/records/20742/containers/Leader_image'));
+// request.files.add(await http.MultipartFile.fromPath('upload', '/C:/Users/jacob/OneDrive/Pictures/gen1.jpg'));
+// request.headers.addAll(headers);
+// http.StreamedResponse response = await request.send();
+// if (response.statusCode == 200) {
+//   print(await response.stream.bytesToString());
+// }
+// else {
+//   print(response.reasonPhrase);
+// }
+    //
+    //
+    var request = http.MultipartRequest('POST', Uri.parse(
+        // 'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_report_app/records/$recordId/containers/$type'));
+        'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Media_storage_monthly_report/records/${widget.recordId}/containers/$type'));
     request.files.add(await http.MultipartFile.fromPath('upload', path));
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
+      noOfImagesUploadeed = noOfImagesUploadeed + 1;
     } else {
+      print(response.statusCode);
+      print("========================");
       print(response.reasonPhrase);
     }
   }
@@ -215,14 +230,14 @@ class _MediapageState extends State<Mediapage> {
     final prefs = await SharedPreferences.getInstance();
     final recordId = prefs.getString('recordId');
     var raw = jsonEncode({
-      "fieldData": {"lat": latitudeData, "log": longtitudeData}
+      "fieldData": {"Latitude": latitudeData, "Longitude": longtitudeData}
     });
 
     log(raw);
     var request = http.Request(
         'PATCH',
         Uri.parse(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records/$recordId'));
+            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Media_storage_monthly_report/records/${widget.recordId}'));
     request.body = raw;
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
@@ -243,7 +258,13 @@ class _MediapageState extends State<Mediapage> {
       return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Mediapage'),
+          leading: IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              Navigator.of(context).pop(noOfImagesUploadeed);
+            },
+          ),
+          title: Text('Mediapage2'),
         ),
         body: serviceStatus?.index == 2
             ? Container(
@@ -268,75 +289,84 @@ class _MediapageState extends State<Mediapage> {
                       ),
                       children: <Widget>[
                         Card(
-                          elevation: 10,
-                          color: Colors.lightGreenAccent,
-                          child: Container(
-                            child: new Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.add_a_photo_outlined,
-                                              size: 40,
-                                              color: Colors.black,
-                                            ),
-                                            onPressed: () async {
-                                              await getImage(true, 'leaders');
-                                            }),
-                                        Text("Camera")
-                                      ],
-                                    ),
-                                    Text(
-                                      "OR",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.photo,
-                                              size: 40,
-                                              color: Colors.black,
-                                            ),
-                                            onPressed: () async {
-                                              await getImage(false, 'leaders');
-                                            }),
-                                        Text("Gallery")
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                new Text(
-                                  'Leaders',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: width / 30,
-                                  ),
-                                ),
-                                _leaderImage == null
-                                    ? Container()
-                                    : Image.file(
-                                        _leaderImage,
-                                        height: 100,
-                                        width: 100,
+                            elevation: 10,
+                            color: Colors.deepPurple,
+                            child: Container(
+                              child: new Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          IconButton(
+                                              icon: Icon(
+                                                Icons.add_a_photo_outlined,
+                                                size: 40,
+                                                color: Colors.black,
+                                              ),
+                                              onPressed: () async {
+                                                await getImage(
+                                                    true, 'Leader_image');
+                                              }),
+                                          Text("Camera")
+                                        ],
                                       ),
-                              ],
-                            ),
+                                      Text(
+                                        "OR",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Column(
+                                        children: [
+                                          IconButton(
+                                              icon: Icon(
+                                                Icons.photo,
+                                                size: 40,
+                                                color: Colors.black,
+                                              ),
+                                              onPressed: () async {
+                                                await getImage(
+                                                    false, 'Leader_image');
+                                              }),
+                                          Text("Gallery")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  new Text(
+                                    'Leaders',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: width / 10,
+                                    ),
+                                  ),
+                                  widget.fieldData.leaderImage == ""
+                                      ? _leaderImage == null
+                                          ? Container()
+                                          : Image.file(
+                                              _leaderImage,
+                                              height: 100,
+                                              width: 100,
+                                            )
+                                      : Image.network(
+                                          widget.fieldData.leaderImage,
+                                          height: 100,
+                                          width: 100,
+                                        ),
+                                ],
+                              ),
 
-                            //child: [Text("YOUR TEXT")],
-                          ),
-                        ),
+                              //child: [Text("YOUR TEXT")],
+                            )),
                         Card(
                           elevation: 10,
-                          color: Colors.lightGreen,
+                          color: Colors.purple,
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -353,7 +383,8 @@ class _MediapageState extends State<Mediapage> {
                                             color: Colors.black,
                                           ),
                                           onPressed: () async {
-                                            await getImage(true, 'family');
+                                            await getImage(
+                                                true, 'Family_image');
                                           }),
                                       Text("Camera")
                                     ],
@@ -372,7 +403,8 @@ class _MediapageState extends State<Mediapage> {
                                             color: Colors.black,
                                           ),
                                           onPressed: () async {
-                                            await getImage(false, 'family');
+                                            await getImage(
+                                                false, 'Family_image');
                                           }),
                                       Text("Gallery")
                                     ],
@@ -386,10 +418,16 @@ class _MediapageState extends State<Mediapage> {
                                   fontSize: width / 30,
                                 ),
                               ),
-                              _familyImage == null
-                                  ? Container()
-                                  : Image.file(
-                                      _familyImage,
+                              widget.fieldData.familyImage == ""
+                                  ? _familyImage == null
+                                      ? Container()
+                                      : Image.file(
+                                          _familyImage,
+                                          height: 100,
+                                          width: 100,
+                                        )
+                                  : Image.network(
+                                      widget.fieldData.familyImage,
                                       height: 100,
                                       width: 100,
                                     ),
@@ -398,7 +436,7 @@ class _MediapageState extends State<Mediapage> {
                         ),
                         Card(
                           elevation: 10,
-                          color: Colors.tealAccent,
+                          color: Colors.purpleAccent,
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -415,7 +453,8 @@ class _MediapageState extends State<Mediapage> {
                                             color: Colors.black,
                                           ),
                                           onPressed: () async {
-                                            await getImage(true, 'community');
+                                            await getImage(
+                                                true, 'Community_image');
                                           }),
                                       Text("Camera")
                                     ],
@@ -434,7 +473,8 @@ class _MediapageState extends State<Mediapage> {
                                             color: Colors.black,
                                           ),
                                           onPressed: () async {
-                                            await getImage(false, 'community');
+                                            await getImage(
+                                                false, 'Community_image');
                                           }),
                                       Text("Gallery")
                                     ],
@@ -448,10 +488,16 @@ class _MediapageState extends State<Mediapage> {
                                   fontSize: width / 30,
                                 ),
                               ),
-                              _communityImage == null
-                                  ? Container()
-                                  : Image.file(
-                                      _communityImage,
+                              widget.fieldData.communityImage == ""
+                                  ? _communityImage == null
+                                      ? Container()
+                                      : Image.file(
+                                          _communityImage,
+                                          height: 100,
+                                          width: 100,
+                                        )
+                                  : Image.network(
+                                      widget.fieldData.communityImage,
                                       height: 100,
                                       width: 100,
                                     ),
@@ -460,7 +506,7 @@ class _MediapageState extends State<Mediapage> {
                         ),
                         Card(
                           elevation: 10,
-                          color: Colors.teal,
+                          color: Colors.deepPurpleAccent,
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -477,7 +523,8 @@ class _MediapageState extends State<Mediapage> {
                                             color: Colors.black,
                                           ),
                                           onPressed: () async {
-                                            await getImage(true, 'gathering');
+                                            await getImage(
+                                                true, 'Gathering_image');
                                           }),
                                       Text("Camera")
                                     ],
@@ -496,7 +543,8 @@ class _MediapageState extends State<Mediapage> {
                                             color: Colors.black,
                                           ),
                                           onPressed: () async {
-                                            await getImage(false, 'gathering');
+                                            await getImage(
+                                                false, 'Gathering_image');
                                           }),
                                       Text("Gallery")
                                     ],
@@ -510,10 +558,16 @@ class _MediapageState extends State<Mediapage> {
                                   fontSize: width / 30,
                                 ),
                               ),
-                              _gatheringImage == null
-                                  ? Container()
-                                  : Image.file(
-                                      _gatheringImage,
+                              widget.fieldData.gatheringImage == ""
+                                  ? _gatheringImage == null
+                                      ? Container()
+                                      : Image.file(
+                                          _gatheringImage,
+                                          height: 100,
+                                          width: 100,
+                                        )
+                                  : Image.network(
+                                      widget.fieldData.gatheringImage,
                                       height: 100,
                                       width: 100,
                                     ),
@@ -534,19 +588,19 @@ class _MediapageState extends State<Mediapage> {
                                     });
                                     _communityImage != null
                                         ? await uploadimage(
-                                            'Image_community', _communityImage)
+                                            'Community_image', _communityImage)
                                         : null;
                                     _familyImage != null
                                         ? await uploadimage(
-                                            'Image_family', _familyImage)
+                                            'Family_image', _familyImage)
                                         : null;
                                     _leaderImage != null
                                         ? await uploadimage(
-                                            'Image_leader', _leaderImage)
+                                            'Leader_image', _leaderImage)
                                         : null;
                                     _gatheringImage != null
                                         ? await uploadimage(
-                                            'Image_gathering', _gatheringImage)
+                                            'Gathering_image', _gatheringImage)
                                         : null;
                                     var sent = await saveLatitudeLogitude();
                                     if (sent) {

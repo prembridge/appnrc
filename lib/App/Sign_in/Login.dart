@@ -211,7 +211,7 @@ class _LoginpageState extends State<Loginpage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  " Continue To login",
+                  " Continue to login",
                   style: GoogleFonts.montserrat(
                     textStyle: TextStyle(color: Colors.black,
                       fontSize: 25.0,

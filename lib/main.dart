@@ -64,16 +64,16 @@ class _MyAppState extends State<MyApp> {
                 : selectpage(),
           ),
           title: new Text(
-            'Welcome TO NRCApp',
+            'NRC',
             style: GoogleFonts.montserrat(
               textStyle: TextStyle(
                 color: Colors.white,
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
+                fontSize: 30.0,
+                //fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          image: new Image.asset('assets/images/Logo.png'),
+          image: new Image.asset('assets/images/Logo.png' ),
           //backgroundColor: Color(0xFF9798CB),
           gradientBackground: LinearGradient(
             begin: Alignment.topLeft,

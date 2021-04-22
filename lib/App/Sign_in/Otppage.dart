@@ -220,10 +220,11 @@ class _OtppageState extends State<Otppage> {
           var Appmonth = datavalue[0]['fieldData']['App_month_list'];
           var Appyear = datavalue[0]['fieldData']['App_year_list'];
           var contact = datavalue[0]['fieldData']['Contact_Primary_key'];
-          var appDropDownMList =
+          /*  var appDropDownMList =
               datavalue[0]['fieldData']['App_month_list_drop'];
           var appDropDownYList =
-              datavalue[0]['fieldData']['App_year_list_drop'];
+              datavalue[0]['fieldData']['App_year_list_drop']; */
+          var monthyearList = datavalue[0]['fieldData']['Month_year_list'];
           print("AppMoth...$Appmonth");
           print("Appyear....$Appyear");
           print("contact...$contact");
@@ -232,8 +233,8 @@ class _OtppageState extends State<Otppage> {
           await prefs.setString("AppYear", Appyear);
           await prefs.setString("contact", contact);
           await prefs.setString('stringValue', rec);
-          await prefs.setString('app_dropdown_m_list', appDropDownMList);
-          await prefs.setString('app_dropdown_y_list', appDropDownYList);
+          await prefs.setString('Month_year_list', monthyearList);
+          /*    await prefs.setString('app_dropdown_y_list', appDropDownYList); */
           print("data recotp ....:$rec");
 
           // print(await response.stream.bytesToString());
@@ -250,26 +251,30 @@ class _OtppageState extends State<Otppage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('OTP verification page',style: GoogleFonts.montserrat(
-          textStyle: TextStyle(color: Colors.white,
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,),
-        ),),
+        title: Text(
+          'OTP verification page',
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         backgroundColor: Color(0xFF9798CB),
       ),
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              // stops:12,
-              colors: [
-                Color(0xFF9798CB),
-                Color(0xFFDDACD3),
-                Color(0xFFF48F9F),
-              ],
-            )
-        ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          // stops:12,
+          colors: [
+            Color(0xFF9798CB),
+            Color(0xFFDDACD3),
+            Color(0xFFF48F9F),
+          ],
+        )),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -278,11 +283,13 @@ class _OtppageState extends State<Otppage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Login To Continue..',
+                    'Login to Continue..',
                     style: GoogleFonts.openSans(
-                      textStyle: TextStyle(color: Colors.black,
+                      textStyle: TextStyle(
+                        color: Colors.black,
                         fontSize: 25.0,
-                        fontWeight: FontWeight.bold,),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -306,14 +313,13 @@ class _OtppageState extends State<Otppage> {
             ),
             SizedBox(height: 20),
             Container(
-              height: height/12,
+              height: height / 12,
               width: width / 2,
-
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-
                   side: BorderSide(color: Colors.black, width: 1),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
                 ),
                 onPressed: () async {
                   final String appMobileNumber =
@@ -345,11 +351,16 @@ class _OtppageState extends State<Otppage> {
                     );
                   }
                 },
-                child: Text("OK",style: GoogleFonts.montserrat(
-                  textStyle: TextStyle(color: Colors.white,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,),
-                ),),
+                child: Text(
+                  "OK",
+                  style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

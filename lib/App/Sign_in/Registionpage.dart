@@ -343,12 +343,12 @@ class _RegistionpageState extends State<Registionpage> {
       appBar: AppBar(
         backgroundColor: Color(0xFF9798CB),
         title: Text(
-          'Registration page',
+          'Registration ',
           style: GoogleFonts.montserrat(
             textStyle: TextStyle(
               color: Colors.white,
               fontSize: 25.0,
-              fontWeight: FontWeight.bold,
+              // fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -422,7 +422,7 @@ class _RegistionpageState extends State<Registionpage> {
                   width: width / 2,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      side: BorderSide(color: Colors.black, width: 1),
+                      side: BorderSide(color: Colors.black12, width: 1),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                     ),
@@ -441,7 +441,7 @@ class _RegistionpageState extends State<Registionpage> {
                         textStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 25.0,
-                          fontWeight: FontWeight.bold,
+                          //fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

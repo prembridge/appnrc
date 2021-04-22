@@ -31,14 +31,16 @@ class _selectpageState extends State<selectpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('select page',style: GoogleFonts.openSans(
+        title: Text('Login Options',style: GoogleFonts.openSans(
           textStyle: TextStyle(color: Colors.white,
             fontSize: 25.0,
-            fontWeight: FontWeight.bold,),
+            //fontWeight: FontWeight.bold,
+        ),
         ),),
         backgroundColor: Color(0xFF9798CB),
       ),
       body: Container(
+        width: 550,
         decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -61,12 +63,13 @@ class _selectpageState extends State<selectpage> {
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: Text(
-                    ' Login To Continue',
+                    ' Choose an option',
 
                     style: GoogleFonts.montserrat(
                       textStyle: TextStyle(color: Colors.black,
                         fontSize: 25.0,
-                        fontWeight: FontWeight.bold,),
+                        //fontWeight: FontWeight.bold,
+                      ),
                     ),
 
                   ),
@@ -114,11 +117,12 @@ class _selectpageState extends State<selectpage> {
                         side: BorderSide(color: Colors.black, width: 1),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                       ),
-                      child:Text( "Select passcode password",
+                      child:Text( "Setup passcode",
                       style: GoogleFonts.montserrat(
                         textStyle: TextStyle(color: Colors.white,
                           fontSize: 23.0,
-                          fontWeight: FontWeight.bold,),
+                          //fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -129,11 +133,12 @@ class _selectpageState extends State<selectpage> {
               height: 20,
             ),
             Text(
-              "Or",
+              "OR",
               style: GoogleFonts.montserrat(
           textStyle: TextStyle(color: Colors.black,
           fontSize: 20.0,
-         fontWeight: FontWeight.bold,),
+        // fontWeight: FontWeight.bold,
+          ),
          ),
             ),
             Column(
@@ -151,10 +156,11 @@ class _selectpageState extends State<selectpage> {
                         side: BorderSide(color: Colors.black, width: 1),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                       ),
-                      child:Text ("Select finger print to authenticate", style: GoogleFonts.montserrat(
+                      child:Text ("Use fingerprint ", style: GoogleFonts.montserrat(
                         textStyle: TextStyle(color: Colors.white,
                           fontSize: 20.0,
-                          fontWeight: FontWeight.bold,),
+                         // fontWeight: FontWeight.bold,
+                        ),
                       ),),
                     ),
                   ),

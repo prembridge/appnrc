@@ -250,13 +250,17 @@ class _HomepageState extends State<Homepage> {
       return (Scaffold(
           // resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            title: Text('homepage',style: GoogleFonts.montserrat(
-              textStyle: TextStyle(color: Colors.white,
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,),
-            ),),
+            title: Text(
+              'homepage',
+              style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             backgroundColor: Color(0xFF9798CB),
-
             actions: [
               IconButton(
                   icon: Icon(Icons.arrow_back_ios),
@@ -282,8 +286,8 @@ class _HomepageState extends State<Homepage> {
           ),
           body: futureAlbum != null
               ? Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     // stops:12,
@@ -292,8 +296,7 @@ class _HomepageState extends State<Homepage> {
                       Color(0xFFDDACD3),
                       Color(0xFFF48F9F),
                     ],
-                  )
-              ),
+                  )),
                   //color: Colors.blueGrey,
                   child: PageView(
                     pageSnapping: true,
@@ -348,32 +351,58 @@ class _HomepageState extends State<Homepage> {
                                                                 ),
                                                               );
                                                             },
-                                                            child:
-                                                                Text("Add New",style: GoogleFonts.montserrat(
-                                                                  textStyle: TextStyle(color: Colors.black,
-                                                                    fontSize: width /30,
-                                                                    fontWeight: FontWeight.bold,),
-                                                                ),),
+                                                            child: Text(
+                                                              "Add New",
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      width /
+                                                                          35,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
                                                         Container(
                                                           child: Text(
                                                             "Last Enter Month & year Report :-",
-                                                            style: GoogleFonts.montserrat(
-                                                              textStyle: TextStyle(color: Colors.black,
-                                                                fontSize: width / 35,
-                                                                fontWeight: FontWeight.bold,),
+                                                            style: GoogleFonts
+                                                                .montserrat(
+                                                              textStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize:
+                                                                    width / 35,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
                                                             ),
-
                                                           ),
                                                         ),
                                                         //SizedBox(width:5),
                                                         Text(
                                                           ('${e.fieldData.reportingMonth} ${e.fieldData.reportingYear} '),
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 35,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                       ]),
@@ -387,16 +416,15 @@ class _HomepageState extends State<Homepage> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                               gradient: LinearGradient(
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                                // stops:12,
-                                                colors: [
-                                                  Color(0xFF9798CB),
-                                                  Color(0xFFDDACD3),
-                                                  Color(0xFFF48F9F),
-                                                ],
-                                              )
-                                          ),
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            // stops:12,
+                                            colors: [
+                                              Color(0xFF9798CB),
+                                              Color(0xFFDDACD3),
+                                              Color(0xFFF48F9F),
+                                            ],
+                                          )),
                                           child: Column(
                                             children: [
                                               Expanded(
@@ -406,28 +434,40 @@ class _HomepageState extends State<Homepage> {
                                                   children: [
                                                     Text(
                                                       "Type :- ${e.fieldData.gatheringStatus}",
-                                                      style: GoogleFonts.montserrat(
-                                                        textStyle: TextStyle(color: Colors.black,
-                                                          fontSize: width / 35,
-                                                          fontWeight: FontWeight.bold,),
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: width / 28,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                     Spacer(),
                                                     Text(
                                                       "Name :- ${e.fieldData.fullName}",
-                                                      style: GoogleFonts.montserrat(
-                                                        textStyle: TextStyle(color: Colors.black,
-                                                          fontSize: width / 35,
-                                                          fontWeight: FontWeight.bold,),
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: width / 28,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                     Spacer(),
                                                     Text(
                                                       "Year Of Start :- ${e.fieldData.yearOfStart}",
-                                                      style: GoogleFonts.montserrat(
-                                                        textStyle: TextStyle(color: Colors.black,
-                                                          fontSize: width / 35,
-                                                          fontWeight: FontWeight.bold,),
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: width / 28,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -449,66 +489,130 @@ class _HomepageState extends State<Homepage> {
                                                       children: [
                                                         Text(
                                                           "State :- ${e.fieldData.state}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "District :- ${e.fieldData.district}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "Block :- ${e.fieldData.block}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "Colony :- ${e.fieldData.colony}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "Village :- ${e.fieldData.village}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "Habitation :- ${e.fieldData.habitation}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "Un.Habitation :- ${e.fieldData.unHabitation}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
                                                           "PIN :- ${e.fieldData.pin.toString()}",
-                                                          style: GoogleFonts.montserrat(
-                                                            textStyle: TextStyle(color: Colors.black,
-                                                              fontSize: width / 35,
-                                                              fontWeight: FontWeight.bold,),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            textStyle:
+                                                                TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize:
+                                                                  width / 28,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                           ),
                                                         ),
                                                         FormBuilder(
@@ -572,12 +676,18 @@ class _HomepageState extends State<Homepage> {
                                                   padding: EdgeInsets.all(
                                                       width / 40),
                                                   child: ElevatedButton(
-                                                    child: new Text('SAVE',
-                                                      style: GoogleFonts.montserrat(
-                                                        textStyle: TextStyle(color: Colors.black,
+                                                    child: new Text(
+                                                      'SAVE',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        textStyle: TextStyle(
+                                                          color: Colors.black,
                                                           fontSize: width / 25,
-                                                          fontWeight: FontWeight.bold,),
-                                                      ),),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
                                                     onPressed: () {
                                                       postForm(e);
                                                     },
@@ -595,17 +705,19 @@ class _HomepageState extends State<Homepage> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        Mediapage(
-                                                                          data:
-                                                                              e,
-                                                                        )));
+                                                                        Mediapage()));
                                                       },
                                                       child: new Text(
                                                         "MEDIA",
-                                                        style: GoogleFonts.montserrat(
-                                                          textStyle: TextStyle(color: Colors.black,
-                                                            fontSize: width / 25,
-                                                            fontWeight: FontWeight.bold,),
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                          textStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                width / 25,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),

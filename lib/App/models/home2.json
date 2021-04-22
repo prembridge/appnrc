@@ -1,0 +1,71 @@
+{
+    "response": {
+        "scriptError": "0",
+        "dataInfo": {
+            "database": "OA_Master",
+            "layout": "Media_storage_monthly_report",
+            "table": "Media_storage_monthly_report",
+            "totalRecordCount": 18361,
+            "foundCount": 14,
+            "returnedCount": 14
+        },
+        "data": [
+            {
+                "fieldData": {
+                    "Location_id": "2C3595DF-4075-A345-83EA-386AA2C460C6",
+                    "Fk_unique_id": "8C4365092",
+                    "Full_name": "Tek  Singh",
+                    "Leader_name": "Tek Singh",
+                    "Gathering": "MC",
+                    "Un_habbitation": "",
+                    "Village": "Bandal",
+                    "Colony": "",
+                    "Block": "Banjar",
+                    "District": "Kullu",
+                    "State": "HIMACHAL PRADESH",
+                    "Gathering_image": "",
+                    "Family_image": "",
+                    "Leader_image": "",
+                    "Community_image": "",
+                    "VCHU": "Bandal",
+                    "Location": "",
+                    "status": "Active"
+                },
+                "portalData": {},
+                "recordId": "31053",
+                "modId": "0"
+            },
+            {
+                "fieldData": {
+                    "Location_id": "7625C66B-6072-494A-A471-F395B03A3E0B",
+                    "Fk_unique_id": "8C4365092",
+                    "Full_name": "Tek  Singh",
+                    "Leader_name": "Tek Singh",
+                    "Gathering": "AV",
+                    "Un_habbitation": "",
+                    "Village": "Chanaldi",
+                    "Colony": "",
+                    "Block": "Banjar",
+                    "District": "Kullu",
+                    "State": "HIMACHAL PRADESH",
+                    "Gathering_image": "",
+                    "Family_image": "",
+                    "Leader_image": "",
+                    "Community_image": "",
+                    "VCHU": "Chanaldi",
+                    "Location": "",
+                    "status": "Active"
+                },
+                "portalData": {},
+                "recordId": "31054",
+                "modId": "0"
+            }
+        ]
+    },
+    "messages": [
+        {
+            "code": "0",
+            "message": "OK"
+        }
+    ]
+}
