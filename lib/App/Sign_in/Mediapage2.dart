@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/models/home2_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -264,7 +265,7 @@ class _Mediapage2State extends State<Mediapage2> {
               Navigator.of(context).pop(noOfImagesUploadeed);
             },
           ),
-          title: Text('Mediapage2'),
+          title: Center(child: Text('Add Media')),
         ),
         body: serviceStatus?.index == 2
             ? Container(
@@ -290,7 +291,7 @@ class _Mediapage2State extends State<Mediapage2> {
                       children: <Widget>[
                         Card(
                             elevation: 10,
-                            color: Colors.deepPurple,
+                            color: Colors.deepPurple.shade100,
                             child: Container(
                               child: new Column(
                                 mainAxisAlignment:
@@ -317,11 +318,11 @@ class _Mediapage2State extends State<Mediapage2> {
                                           Text("Camera")
                                         ],
                                       ),
-                                      Text(
-                                        "OR",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                      // Text(
+                                      //   "OR",
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.bold),
+                                      // ),
                                       Column(
                                         children: [
                                           IconButton(
@@ -341,10 +342,17 @@ class _Mediapage2State extends State<Mediapage2> {
                                   ),
                                   new Text(
                                     'Leaders',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: width / 10,
-                                    ),
+                                    style: GoogleFonts
+                                        .montserrat(
+                                      textStyle:
+                                      TextStyle(
+                                        color:
+                                        Colors.black,
+                                        fontSize:
+                                        width / 18,
+
+                                      ),
+                                  ),
                                   ),
                                   widget.fieldData.leaderImage == ""
                                       ? _leaderImage == null
@@ -366,7 +374,7 @@ class _Mediapage2State extends State<Mediapage2> {
                             )),
                         Card(
                           elevation: 10,
-                          color: Colors.purple,
+                          color: Colors.deepPurple.shade200,
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -389,11 +397,11 @@ class _Mediapage2State extends State<Mediapage2> {
                                       Text("Camera")
                                     ],
                                   ),
-                                  Text(
-                                    "OR",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
+                                  // Text(
+                                  //   "OR",
+                                  //   style:
+                                  //       TextStyle(fontWeight: FontWeight.bold),
+                                  // ),
                                   Column(
                                     children: [
                                       IconButton(
@@ -412,10 +420,17 @@ class _Mediapage2State extends State<Mediapage2> {
                                 ],
                               ),
                               new Text(
-                                'family',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: width / 30,
+                                'Family',
+                                style: GoogleFonts
+                                    .montserrat(
+                                  textStyle:
+                                  TextStyle(
+                                    color:
+                                    Colors.black,
+                                    fontSize:
+                                    width / 18,
+
+                                  ),
                                 ),
                               ),
                               widget.fieldData.familyImage == ""
@@ -436,7 +451,7 @@ class _Mediapage2State extends State<Mediapage2> {
                         ),
                         Card(
                           elevation: 10,
-                          color: Colors.purpleAccent,
+                          color: Colors.deepPurple.shade200,
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -459,11 +474,11 @@ class _Mediapage2State extends State<Mediapage2> {
                                       Text("Camera")
                                     ],
                                   ),
-                                  Text(
-                                    "OR",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
+                                  // Text(
+                                  //   "OR",
+                                  //   style:
+                                  //       TextStyle(fontWeight: FontWeight.bold),
+                                  // ),
                                   Column(
                                     children: [
                                       IconButton(
@@ -483,9 +498,16 @@ class _Mediapage2State extends State<Mediapage2> {
                               ),
                               new Text(
                                 'Community',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: width / 30,
+                                style: GoogleFonts
+                                    .montserrat(
+                                  textStyle:
+                                  TextStyle(
+                                    color:
+                                    Colors.black,
+                                    fontSize:
+                                    width / 18,
+
+                                  ),
                                 ),
                               ),
                               widget.fieldData.communityImage == ""
@@ -506,7 +528,7 @@ class _Mediapage2State extends State<Mediapage2> {
                         ),
                         Card(
                           elevation: 10,
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.deepPurple.shade100,
                           child: new Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
@@ -529,11 +551,11 @@ class _Mediapage2State extends State<Mediapage2> {
                                       Text("Camera")
                                     ],
                                   ),
-                                  Text(
-                                    "OR",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
+                                  // Text(
+                                  //   "OR",
+                                  //   style:
+                                  //       TextStyle(fontWeight: FontWeight.bold),
+                                  // ),
                                   Column(
                                     children: [
                                       IconButton(
@@ -553,9 +575,16 @@ class _Mediapage2State extends State<Mediapage2> {
                               ),
                               new Text(
                                 'Gathering',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: width / 30,
+                                style: GoogleFonts
+                                    .montserrat(
+                                  textStyle:
+                                  TextStyle(
+                                    color:
+                                    Colors.black,
+                                    fontSize:
+                                    width / 18,
+
+                                  ),
                                 ),
                               ),
                               widget.fieldData.gatheringImage == ""

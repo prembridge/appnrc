@@ -273,7 +273,7 @@ class _AddnewpageState extends State<Addnewpage> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Add New'),
+          title: Center(child: Text('Add New')),
         ),
         body: Container(
             decoration: BoxDecoration(
@@ -593,7 +593,9 @@ class _AddnewpageState extends State<Addnewpage> {
                                 child: Text("Save",style: GoogleFonts.montserrat(
                                   textStyle: TextStyle(color: Colors.white,
                                     fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,),
+
+
+                                    ),
                                 ),),
                               ),
                             ),

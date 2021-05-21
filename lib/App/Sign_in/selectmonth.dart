@@ -61,18 +61,21 @@ class _SelectmonthState extends State<Selectmonth> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     // {
     //   "dates":[{"year":2021,"month":[""]}]
     // }
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          " Select Month and year",
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+        title: Center(
+          child: Text(
+            " Add Report",
+            style: GoogleFonts.montserrat(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+              ),
             ),
           ),
         ),
@@ -94,28 +97,32 @@ class _SelectmonthState extends State<Selectmonth> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  SizedBox(height: height / 5),
                   Container(
                     child: Column(
                       children: [
                         Center(
                           child: Text(
-                            "Please select month & "
-                            "year to enter current  report",
+                            " Select Month & " "Year ",
                             style: GoogleFonts.montserrat(
                               textStyle: TextStyle(
                                 color: Colors.black,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
                               ),
                             ),
                           ),
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(20.0),
+                              padding: EdgeInsets.all(width / 30.0),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 20.0, horizontal: 10.0),
+                              color: Colors.white,
                               child: DropdownButton(
                                 value: _selectedYearValue,
+                                isDense: true,
                                 items: years
                                     .map((e) => DropdownMenuItem(
                                           value: e,
@@ -141,22 +148,27 @@ class _SelectmonthState extends State<Selectmonth> {
                                       await SharedPreferences.getInstance();
                                   prefs.setString('selYear', val);
                                 },
-                                hint: Text(
-                                  "Select Year",
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
+                                hint: Center(
+                                  child: Text(
+                                    "Select Year",
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 40),
+                            //SizedBox(width: 5),
                             Container(
-                              padding: EdgeInsets.all(20.0),
+                              padding: EdgeInsets.all(width / 30.0),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 20.0, horizontal: 10.0),
+                              color: Colors.white,
                               child: DropdownButton(
+                                isDense: true,
                                 value: _selectedMonthValue,
                                 items: months
                                     .map((e) => DropdownMenuItem(
@@ -178,7 +190,6 @@ class _SelectmonthState extends State<Selectmonth> {
                                     textStyle: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -192,21 +203,41 @@ class _SelectmonthState extends State<Selectmonth> {
                   Container(
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Homepage(
-                                          selectedMonth: _selectedMonthValue,
-                                          selectedYear: _selectedYearValue,
-                                        )));
-                          },
-                          child: Visibility(
-                            visible: _selectedMonthValue != null &&
-                                _selectedYearValue != null,
-                            child: PrimaryButton(
-                              btnText: "Ok",
+                        Visibility(
+                          visible: _selectedMonthValue != null &&
+                              _selectedYearValue != null,
+                          child: Container(
+                            height: height / 11,
+                            // width: width / 3.8,
+                            //color: Color(0xFF9798CB),
+                            padding: EdgeInsets.all(10.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                side:
+                                    BorderSide(color: Colors.black12, width: 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Homepage(
+                                              selectedMonth:
+                                                  _selectedMonthValue,
+                                              selectedYear: _selectedYearValue,
+                                            )));
+                              },
+                              child: Text(
+                                "Submit",
+                                style: GoogleFonts.montserrat(
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25.0,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -217,20 +248,42 @@ class _SelectmonthState extends State<Selectmonth> {
                   Container(
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                        Container(
+                          width: width / 5,
+                          height: width / 5,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: EdgeInsets.all(width / 60),
+                              primary: Color(0xFFDDACD3).withOpacity(0.8),
+                              elevation: 0.0,
+                            ),
+                            child: Image.asset(
+                              'assets/images/im.png',
+                              fit: BoxFit.fill,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage2(
-                                        // selectedMonth: _selectedMonthValue,
-                                        // selectedYear: _selectedYearValue,
-                                        )));
-                          },
-                          child: Text(
-                            "select media",
+                                  builder: (context) => HomePage2(),
+                                ),
+                              );
+                            },
                           ),
                         ),
+                        SizedBox(height: height / 70),
+                        Text(
+                          "Add Media",
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -241,22 +294,3 @@ class _SelectmonthState extends State<Selectmonth> {
     );
   }
 }
-
-// class DateMonthDropDown {
-//   String year;
-//   List<String> month;
-//
-//   DateMonthDropDown({this.year, this.month});
-//
-//   DateMonthDropDown.fromJson(Map<String, dynamic> json) {
-//     year = json['year'];
-//     month = json['month'].cast<String>();
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['year'] = this.year;
-//     data['month'] = this.month;
-//     return data;
-//   }
-// }

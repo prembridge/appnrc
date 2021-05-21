@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/selectmonth.dart';
 import 'package:flutter_app/App/Sign_in/selectpage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -251,13 +252,15 @@ class _OtppageState extends State<Otppage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'OTP verification page',
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
+        title: Center(
+          child: Text(
+            'Verification',
+            style: GoogleFonts.montserrat(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 25.0,
+               // fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -283,23 +286,26 @@ class _OtppageState extends State<Otppage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Login to Continue..',
+                    'Verify your OTP',
                     style: GoogleFonts.openSans(
                       textStyle: TextStyle(
                         color: Colors.black,
                         fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
+                       // fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
+                  child: FormBuilderTextField(
+                    keyboardType: TextInputType.phone,
                     controller: _appMobileNumbercontroller,
-                    decoration: new InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Enter OTP..',
+                      labelText: "Enter OTP",
+                      labelStyle: TextStyle(fontSize: 20),
+
                     ),
                   ),
                 ),
@@ -313,11 +319,11 @@ class _OtppageState extends State<Otppage> {
             ),
             SizedBox(height: 20),
             Container(
-              height: height / 12,
-              width: width / 2,
+              height: height /15,
+              width: width /2.82,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  side: BorderSide(color: Colors.black, width: 1),
+                  side: BorderSide(color: Colors.black12, width: 1),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                 ),
@@ -352,12 +358,12 @@ class _OtppageState extends State<Otppage> {
                   }
                 },
                 child: Text(
-                  "OK",
+                  "Submit",
                   style: GoogleFonts.montserrat(
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
+
                     ),
                   ),
                 ),

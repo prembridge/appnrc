@@ -114,8 +114,8 @@ class _LoginpageState extends State<Loginpage> {
               barrierDismissible: false,
               context: context,
               builder: (context) => Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       // stops:12,
@@ -124,51 +124,84 @@ class _LoginpageState extends State<Loginpage> {
                         Color(0xFFDDACD3),
                         Color(0xFFF48F9F),
                       ],
-                    )
-                ),
-                child: SplashScreen(
-                  seconds: 4,
-                  navigateAfterSeconds: new Scaffold(
-                    resizeToAvoidBottomInset: false,
-                    body: Otppage() ,
-                  ),
-                  title: new Text('Login successful',style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,),
-                  ),),
-                  image: new Image.asset('assets/images/sus.png'),
-                  //backgroundColor: Color(0xFF9798CB),
-                  gradientBackground: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    // stops:12,
-                    colors: [
-                      Color(0xFF9798CB),
-                      Color(0xFFDDACD3),
-                      Color(0xFFF48F9F),
-                    ],
-                  ),
-                  styleTextUnderTheLoader: new TextStyle(),
-                  photoSize: 200.0,
-                  loaderColor: Colors.brown,
+                    )),
+                    child: SplashScreen(
+                      seconds: 4,
+                      navigateAfterSeconds: new Scaffold(
+                        resizeToAvoidBottomInset: false,
+                        body: Otppage(),
+                      ),
 
-                  //     title: new Image.asset('assets/images/sus.png'),
-                  // content:Center(child: Text("Login successful ")),
-                  //     actions: [
-                  //       TextButton(
-                  //         onPressed: () => Navigator.of(context).pop(true),
-                  //         child: Text("OK"),
-                  //       )
-                  //     ],
+                      title: new Text(
+                        'Login successful',
+                        style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            //fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      image:
+                          new Image.asset('assets/images/sus.png', width: 150),
+                      //backgroundColor: Color(0xFF9798CB),
+                      gradientBackground: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        // stops:12,
+                        colors: [
+                          Color(0xFF9798CB),
+                          Color(0xFFDDACD3),
+                          Color(0xFFF48F9F),
+                        ],
+                      ),
+                      styleTextUnderTheLoader: new TextStyle(),
+                      photoSize: 150.0,
+                      loaderColor: Colors.brown,
+
+                      //     title: new Image.asset('assets/images/sus.png'),
+                      // content:Center(child: Text("Login successful ")),
+                      //     actions: [
+                      //       TextButton(
+                      //         onPressed: () => Navigator.of(context).pop(true),
+                      //         child: Text("OK"),
+                      //       )
+                      //     ],
                     ),
-              ));
+                  ));
           if (isShown)
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Otppage()));
         } else {
           print(response.reasonPhrase);
-          Toast.show("Check your Credentials", context, duration: 3);
+          showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                    child: Container(
+                      height: height / 2,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Check Your Credentials",
+                              style: TextStyle(fontSize: width / 20),
+                            ),
+                          ),
+                          Container(
+                            width: width / 2,
+                            child: Image.asset(
+                              'assets/images/fail.png',
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text("CLOSE"),
+                          )
+                        ],
+                      ),
+                    ),
+                  ));
           setState(() {
             isSending = false;
           });
@@ -184,38 +217,45 @@ class _LoginpageState extends State<Loginpage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Login page',
-            style: GoogleFonts.montserrat(
-            textStyle: TextStyle(color: Colors.white,
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,),
-        ),),
+          title: Center(
+            child: Text(
+              'Login',
+              style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                  // fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           backgroundColor: Color(0xFF9798CB),
         ),
         body: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                // stops:12,
-                colors: [
-                  Color(0xFF9798CB),
-                  Color(0xFFDDACD3),
-                  Color(0xFFF48F9F),
-                ],
-              )
-          ),
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            // stops:12,
+            colors: [
+              Color(0xFF9798CB),
+              Color(0xFFDDACD3),
+              Color(0xFFF48F9F),
+            ],
+          )),
           child: FormBuilder(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  " Continue to login",
+                  " Login to continue.. ",
                   style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(color: Colors.black,
+                    textStyle: TextStyle(
+                      color: Colors.black,
                       fontSize: 25.0,
-                      fontWeight: FontWeight.bold,),
+                      //  fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Padding(
@@ -226,6 +266,7 @@ class _LoginpageState extends State<Loginpage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Mobile No.",
+                      labelStyle: TextStyle(fontSize: 20),
                       prefixIcon: Icon(Icons.phone),
                     ),
                     validator: FormBuilderValidators.compose([
@@ -245,6 +286,7 @@ class _LoginpageState extends State<Loginpage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Password",
+                      labelStyle: TextStyle(fontSize: 20),
                       suffix: InkWell(
                         onTap: _togglePasswordView,
                         child: Icon(
@@ -258,14 +300,14 @@ class _LoginpageState extends State<Loginpage> {
                   ),
                 ),
                 Container(
-                  height: height/9,
-                  width: width / 2,
+                  height: height / 10,
+                  width: width / 3,
                   padding: EdgeInsets.all(10.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-
-                      side: BorderSide(color: Colors.black, width: 1),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                      side: BorderSide(color: Colors.black12, width: 1),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
                     ),
                     onPressed: !isSending
                         ? () async {
@@ -278,12 +320,18 @@ class _LoginpageState extends State<Loginpage> {
                             }
                           }
                         : null,
-                    child:
-                        isSending ? CircularProgressIndicator() : Text("Login" , style: GoogleFonts.montserrat(
-                          textStyle: TextStyle(color: Colors.white,
-                            fontSize: 23.0,
-                            fontWeight: FontWeight.bold,),
-                        ),),
+                    child: isSending
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "Login",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 23.0,
+                                //fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ],

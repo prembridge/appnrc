@@ -300,16 +300,20 @@ class _RegistionpageState extends State<Registionpage> {
                         body: Loginpage(),
                       ),
                       title: new Text(
-                        'Registration successful',
-                        style: GoogleFonts.montserrat(
+                        'Registration successful', style: GoogleFonts.montserrat(
                           textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
+                          // textAlign:TextAlign.center,
+                           // height: 20,
+                            //fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      image: new Image.asset('assets/images/sus.png'),
+                      image: new Image.asset(
+                        'assets/images/sus.png',
+                        width: 180,
+                      ),
                       //backgroundColor: Color(0xFF9798CB),
                       gradientBackground: LinearGradient(
                         begin: Alignment.topLeft,
@@ -331,7 +335,34 @@ class _RegistionpageState extends State<Registionpage> {
                 MaterialPageRoute(builder: (context) => Loginpage()));
         } else {
           print(response.reasonPhrase);
-          Toast.show("Check your Credentials", context, duration: 3);
+          showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                    child: Container(
+                      height: height /2,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Check Credentials",
+                              style: TextStyle(fontSize: width / 20),
+                            ),
+                          ),
+                          Container(
+                            width: width / 2,
+                            child: Image.asset(
+                              'assets/images/fail.png',
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text("CLOSE"),
+                          )
+                        ],
+                      ),
+                    ),
+                  ));
         }
         return true;
       } catch (e) {
@@ -342,13 +373,15 @@ class _RegistionpageState extends State<Registionpage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF9798CB),
-        title: Text(
-          'Registration ',
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 25.0,
-              // fontWeight: FontWeight.bold,
+        title: Center(
+          child: Text(
+            'Registration ',
+            style: GoogleFonts.montserrat(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 25.0,
+                // fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -385,6 +418,7 @@ class _RegistionpageState extends State<Registionpage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Mobile No.",
+                      labelStyle: TextStyle(fontSize: 20),
                       prefixIcon: Icon(Icons.phone),
                     ),
                     validator: FormBuilderValidators.compose([
@@ -404,6 +438,7 @@ class _RegistionpageState extends State<Registionpage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Password",
+                      labelStyle: TextStyle(fontSize: 20),
                       suffix: InkWell(
                         onTap: _togglePasswordView,
                         child: Icon(
@@ -418,8 +453,8 @@ class _RegistionpageState extends State<Registionpage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
-                  height: height / 9,
-                  width: width / 2,
+                  height: height /10,
+                  width: width /2.8,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       side: BorderSide(color: Colors.black12, width: 1),
@@ -440,7 +475,7 @@ class _RegistionpageState extends State<Registionpage> {
                       style: GoogleFonts.montserrat(
                         textStyle: TextStyle(
                           color: Colors.white,
-                          fontSize: 25.0,
+                          fontSize: 20.0,
                           //fontWeight: FontWeight.bold,
                         ),
                       ),

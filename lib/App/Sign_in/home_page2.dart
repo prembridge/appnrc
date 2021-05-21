@@ -97,13 +97,15 @@ class _HomePage2State extends State<HomePage2> {
         final width = (constraints.maxWidth) * 0.1;
         return Scaffold(
             appBar: AppBar(
-              title: Text(
-                'HomePage 2',
-                style: GoogleFonts.openSans(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
+              title: Center(
+                child: Text(
+                  'Media',
+                  style: GoogleFonts.openSans(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+
+                    ),
                   ),
                 ),
               ),
@@ -257,11 +259,11 @@ class _FieldsCardState extends State<FieldsCard> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                width: widget.width * 3,
+                width: widget.width * 4,
                 child: Row(
                   children: [
                     ElevatedButton(
-                        onPressed: widget.onTap, child: Text("Media")),
+                        onPressed: widget.onTap, child: Text("Add Media")),
                     Spacer(),
                     Text("$imageCount /4"),
                     Spacer(),
