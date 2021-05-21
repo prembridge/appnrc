@@ -89,45 +89,51 @@ class _selectpageState extends State<selectpage> {
               ],
             ),
             SizedBox(height: 20),
-            Column(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: isPinSet == null || !isPinSet
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => passcodsetepage(),
-                            ),
-                          );
-                        }
-                      : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => passcodepage(),
-                            ),
-                          );
-                        },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shadowColor: Color(0xFF9798CB),
-                        side: BorderSide(color: Colors.black, width: 1),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      ),
-                      child:Text( "Setup passcode",
-                      style: GoogleFonts.montserrat(
-                        textStyle: TextStyle(color: Colors.white,
-                          fontSize: 23.0,
-                          //fontWeight: FontWeight.bold,
+            Container(
+
+              child: Column(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: isPinSet == null || !isPinSet
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => passcodsetepage(),
+                              ),
+                            );
+                          }
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => passcodepage(),
+                              ),
+                            );
+                          },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shadowColor: Color(0xFF9798CB),
+                          side: BorderSide(color: Colors.black, width: 1),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
+                        child:Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text( "Setup passcode",
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(color: Colors.white,
+                              fontSize: 25.0,
+                              //fontWeight: FontWeight.bold,
+                            ),
+                          ),
                       ),
+                        ),
                     ),
                   ),
-                ),
-                )],
+                  )],
+              ),
             ),
             SizedBox(
               height: 20,
@@ -142,6 +148,7 @@ class _selectpageState extends State<selectpage> {
          ),
             ),
             Column(
+
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
@@ -149,19 +156,25 @@ class _selectpageState extends State<selectpage> {
                         MaterialPageRoute(builder: (context) => Pinpage()));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(19.0),
+
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         shadowColor: Color(0xFF9798CB),
                         side: BorderSide(color: Colors.black, width: 1),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                       ),
-                      child:Text ("Use fingerprint ", style: GoogleFonts.montserrat(
-                        textStyle: TextStyle(color: Colors.white,
-                          fontSize: 20.0,
-                         // fontWeight: FontWeight.bold,
-                        ),
-                      ),),
+                      child:Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text ("Use fingerprint ", style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(color: Colors.white,
+                            fontSize: 25.0,
+
+
+                            // fontWeight: FontWeight.bold,
+                          ),
+                        ),),
+                      ),
                     ),
                   ),
                 ),

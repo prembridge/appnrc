@@ -192,7 +192,7 @@ class _HomepageState extends State<Homepage> {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $tokenresult'
         };
-        git init
+
         if (_formKey.currentState.saveAndValidate()) {
           var x = _formKey.currentState.value;
 
@@ -254,8 +254,19 @@ class _HomepageState extends State<Homepage> {
 
     Widget pageIndex() {
       if (controller.hasClients) {
-        return Text(
-            "${(controller.page + 1).toInt()} Of ${futureAlbum.response.dataInfo.foundCount}");
+        return  Center(
+          child: Center(
+            child: Text(
+                "${(controller.page + 1).toInt()} of ${futureAlbum.response.dataInfo.foundCount}",
+              style: GoogleFonts
+                .montserrat(
+            textStyle: TextStyle(
+            color: Colors.white,
+              fontSize:
+              width /18,
+            ),),
+          ),
+        ));
       }
       return Container(
         child: futureAlbum != null
@@ -347,7 +358,7 @@ class _HomepageState extends State<Homepage> {
                                     child: Column(
                                       children: [
                                         Expanded(
-                                            flex: 2,
+                                            flex:2,
                                             child: Container(
                                               child: CircleAvatar(
                                                 backgroundImage: AssetImage(
@@ -356,6 +367,7 @@ class _HomepageState extends State<Homepage> {
                                               ),
                                             )),
                                         Expanded(
+
                                           child: Container(
                                             width: width,
                                             child: Row(
@@ -380,45 +392,24 @@ class _HomepageState extends State<Homepage> {
                                                         style: GoogleFonts
                                                             .montserrat(
                                                           textStyle: TextStyle(
-                                                            color: Colors.black,
+                                                            color: Colors.white,
                                                             fontSize:
-                                                                width / 35,
+                                                                width /28,
                                                           ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      " Previous Report :-",
-                                                      style: GoogleFonts
-                                                          .montserrat(
-                                                        textStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: width / 25,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  //SizedBox(width:5),
-                                                  Text(
-                                                    ('${e.value.fieldData.reportingMonth} ${e.value.fieldData.reportingYear} '),
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      textStyle: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: width / 25,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ]),
+
+                                                ],
+                                            ),
                                           ),
                                         )
                                       ],
                                     ),
                                   )),
                               Expanded(
-                                  flex: 9,
+                                  flex: 12,
                                   child: Container(
                                     decoration: BoxDecoration(
                                         gradient: LinearGradient(
@@ -434,42 +425,77 @@ class _HomepageState extends State<Homepage> {
                                     child: Column(
                                       children: [
                                         Expanded(
-                                            child: Container(
-                                          padding: EdgeInsets.all(20.0),
+                                          child: Container(
+                                          padding: EdgeInsets.all(18.0),
                                           child: Row(
                                             children: [
                                               Text(
-                                                "Type :- ${e.value.fieldData.gatheringStatus}",
-                                                style: GoogleFonts.montserrat(
+                                                " Previous Report :-",
+                                                style: GoogleFonts
+                                                    .montserrat(
                                                   textStyle: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: width / 28,
+                                                    fontSize: width /28,
                                                   ),
                                                 ),
                                               ),
-                                              Spacer(),
+
                                               Text(
-                                                "Name :- ${e.value.fieldData.fullName}",
-                                                style: GoogleFonts.montserrat(
+                                                ('${e.value.fieldData.reportingMonth} ${e.value.fieldData.reportingYear} '),
+                                                style:
+                                                GoogleFonts.montserrat(
                                                   textStyle: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: width / 28,
                                                   ),
                                                 ),
                                               ),
-                                              Spacer(),
-                                              Text(
-                                                "Year Of Start :- ${e.value.fieldData.yearOfStart}",
-                                                style: GoogleFonts.montserrat(
-                                                  textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: width / 28,
-                                                  ),
-                                                ),
-                                              ),
+
                                             ],
                                           ),
-                                        )),
+                                        ),
+
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(18.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "Type :- ${e.value.fieldData.gatheringStatus}",
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: width / 28,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                Text(
+                                                  "Name :- ${e.value.fieldData.fullName}",
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: width / 28,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                Text(
+                                                  "Year of Start :- ${e.value.fieldData.yearOfStart}",
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: width / 28,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+
+                                        ),
+
                                         Expanded(
                                             flex: 6,
                                             child: Container(
@@ -618,17 +644,17 @@ class _HomepageState extends State<Homepage> {
                                             MainAxisAlignment.spaceAround,
                                         children: <Widget>[
                                           Container(
-                                            padding: EdgeInsets.all(10.0),
-                                            height: height /11,
-                                            width: width /3,
+                                            padding: EdgeInsets.all(7.0),
+                                            height: height /7,
+                                            width: width /4,
                                             //padding: EdgeInsets.all(width / 40),
                                             child: ElevatedButton(
                                               child: Text(
                                                 !isLastPage ? 'Next' : 'Save',
                                                 style: GoogleFonts.montserrat(
                                                   textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: width /25,
+                                                    color: Colors.white,
+                                                    fontSize: width /22,
                                                   ),
                                                 ),
                                               ),
