@@ -73,8 +73,10 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
           ),
-          image: new Image.asset('assets/images/Logo.png' ,width: 250,),
-
+          image: new Image.asset(
+            'assets/images/Logo.png',
+            width: 250,
+          ),
           gradientBackground: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

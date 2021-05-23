@@ -74,7 +74,7 @@ class _passcodepageState extends State<passcodepage> {
   Widget build(BuildContext context) {
     return myPass != null
         ? LockScreen(
-            title: " Re-Enter Pin",
+            title: " Confirm PIN",
             passLength: myPass.length,
             // fingerPrintImage: "assets/images/fin.png",
             bgImage: "assets/images/Black.png",

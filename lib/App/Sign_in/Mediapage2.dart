@@ -260,7 +260,7 @@ class _Mediapage2State extends State<Mediapage2> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop(noOfImagesUploadeed);
             },
@@ -303,6 +303,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
+                                      Text(
+                                        'Leaders',
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: width / 18,
+                                          ),
+                                        ),
+                                      ),
                                       Column(
                                         children: [
                                           IconButton(
@@ -318,41 +327,7 @@ class _Mediapage2State extends State<Mediapage2> {
                                           Text("Camera")
                                         ],
                                       ),
-                                      // Text(
-                                      //   "OR",
-                                      //   style: TextStyle(
-                                      //       fontWeight: FontWeight.bold),
-                                      // ),
-                                      Column(
-                                        children: [
-                                          IconButton(
-                                              icon: Icon(
-                                                Icons.photo,
-                                                size: 40,
-                                                color: Colors.black,
-                                              ),
-                                              onPressed: () async {
-                                                await getImage(
-                                                    false, 'Leader_image');
-                                              }),
-                                          Text("Gallery")
-                                        ],
-                                      ),
                                     ],
-                                  ),
-                                  new Text(
-                                    'Leaders',
-                                    style: GoogleFonts
-                                        .montserrat(
-                                      textStyle:
-                                      TextStyle(
-                                        color:
-                                        Colors.black,
-                                        fontSize:
-                                        width / 18,
-
-                                      ),
-                                  ),
                                   ),
                                   widget.fieldData.leaderImage == ""
                                       ? _leaderImage == null
@@ -382,6 +357,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
+                                  new Text(
+                                    'Family',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: width / 18,
+                                      ),
+                                    ),
+                                  ),
                                   Column(
                                     children: [
                                       IconButton(
@@ -402,7 +386,7 @@ class _Mediapage2State extends State<Mediapage2> {
                                   //   style:
                                   //       TextStyle(fontWeight: FontWeight.bold),
                                   // ),
-                                  Column(
+                                  /*  Column(
                                     children: [
                                       IconButton(
                                           icon: Icon(
@@ -416,22 +400,8 @@ class _Mediapage2State extends State<Mediapage2> {
                                           }),
                                       Text("Gallery")
                                     ],
-                                  ),
+                                  ), */
                                 ],
-                              ),
-                              new Text(
-                                'Family',
-                                style: GoogleFonts
-                                    .montserrat(
-                                  textStyle:
-                                  TextStyle(
-                                    color:
-                                    Colors.black,
-                                    fontSize:
-                                    width / 18,
-
-                                  ),
-                                ),
                               ),
                               widget.fieldData.familyImage == ""
                                   ? _familyImage == null
@@ -459,6 +429,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
+                                  new Text(
+                                    'Community',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: width / 18,
+                                      ),
+                                    ),
+                                  ),
                                   Column(
                                     children: [
                                       IconButton(
@@ -479,7 +458,7 @@ class _Mediapage2State extends State<Mediapage2> {
                                   //   style:
                                   //       TextStyle(fontWeight: FontWeight.bold),
                                   // ),
-                                  Column(
+                                  /*  Column(
                                     children: [
                                       IconButton(
                                           icon: Icon(
@@ -493,22 +472,8 @@ class _Mediapage2State extends State<Mediapage2> {
                                           }),
                                       Text("Gallery")
                                     ],
-                                  ),
+                                  ), */
                                 ],
-                              ),
-                              new Text(
-                                'Community',
-                                style: GoogleFonts
-                                    .montserrat(
-                                  textStyle:
-                                  TextStyle(
-                                    color:
-                                    Colors.black,
-                                    fontSize:
-                                    width / 18,
-
-                                  ),
-                                ),
                               ),
                               widget.fieldData.communityImage == ""
                                   ? _communityImage == null
@@ -536,6 +501,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
+                                  new Text(
+                                    'Gathering',
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: width / 18,
+                                      ),
+                                    ),
+                                  ),
                                   Column(
                                     children: [
                                       new IconButton(
@@ -556,7 +530,7 @@ class _Mediapage2State extends State<Mediapage2> {
                                   //   style:
                                   //       TextStyle(fontWeight: FontWeight.bold),
                                   // ),
-                                  Column(
+                                  /*    Column(
                                     children: [
                                       IconButton(
                                           icon: Icon(
@@ -570,22 +544,8 @@ class _Mediapage2State extends State<Mediapage2> {
                                           }),
                                       Text("Gallery")
                                     ],
-                                  ),
+                                  ), */
                                 ],
-                              ),
-                              new Text(
-                                'Gathering',
-                                style: GoogleFonts
-                                    .montserrat(
-                                  textStyle:
-                                  TextStyle(
-                                    color:
-                                    Colors.black,
-                                    fontSize:
-                                    width / 18,
-
-                                  ),
-                                ),
                               ),
                               widget.fieldData.gatheringImage == ""
                                   ? _gatheringImage == null
