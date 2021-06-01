@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/App/Sign_in/Login.dart';
 import 'package:flutter_app/App/Sign_in/Pinpage.dart';
-import 'package:flutter_app/App/Sign_in/passcodepage.dart';
+import 'package:flutter_lock_screen/flutter_lock_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './App/Sign_in/Registionpage.dart';
-import 'App/Sign_in/locationPermitionScreen.dart';
+import 'App/Sign_in/passcodepage.dart';
 import 'App/Sign_in/selectpage.dart';
-import 'App/Sign_in/sign_in page.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,6 +33,7 @@ class _MyAppState extends State<MyApp> {
   MaterialColor primeColor = MaterialColor(0xFF9798CB, color);
 
   bool isFirstime;
+  bool isPinSet;
   @override
   void initState() {
     super.initState();
@@ -45,7 +44,8 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      isFirstime = prefs.getBool("isFirstime");
+      isFirstime = prefs.getBool("isFirstime") ?? true;
+      isPinSet = prefs.getBool("isPinSet") ?? false;
     });
   }
 
@@ -57,7 +57,14 @@ class _MyAppState extends State<MyApp> {
       home: Container(
         child: SplashScreen(
           seconds: 4,
-          navigateAfterSeconds: new Scaffold(
+          navigateAfterSeconds:
+              /*  new Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: isFirstime == null || isFirstime
+                ? Registionpage()
+                : selectpage(),
+          ), */
+              Scaffold(
             resizeToAvoidBottomInset: false,
             body: isFirstime == null || isFirstime
                 ? Registionpage()

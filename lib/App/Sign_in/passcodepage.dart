@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/App/Sign_in/Login.dart';
+import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 //import 'package:flutter_app/App/Sign_in/Homepage.dart';
 
 import 'package:flutter_lock_screen/flutter_lock_screen.dart';
@@ -84,7 +85,7 @@ class _passcodepageState extends State<passcodepage> {
             fingerVerify: false,
             borderColor: Colors.white,
             showWrongPassDialog: true,
-            wrongPassContent: "Wrong pass please try again.",
+            wrongPassContent: "PIN Mismatch Please try again.",
             wrongPassTitle: "Opps!",
             wrongPassCancelButtonText: "Cancel",
             passCodeVerify: (passcode) async {
@@ -100,7 +101,7 @@ class _passcodepageState extends State<passcodepage> {
               Navigator.of(context).pushReplacement(
                   new MaterialPageRoute(builder: (BuildContext context) {
                 return isFirstime
-                    ? Selectmonth()
+                    ? LifecycleWatcher(afterCoorectPin: Selectmonth())
                     : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
               }));
             })

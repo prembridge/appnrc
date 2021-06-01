@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/App/Sign_in/passcodepage.dart';
+import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 import 'package:flutter_app/App/Sign_in/selectmonth.dart';
 import 'package:flutter_app/App/models/response_model.dart' as resm;
 import 'package:flutter_app/App/models/response_model.dart';
@@ -210,7 +212,7 @@ class _HomepageState extends State<Homepage> {
               "Gathering_Status": prevData.fieldData.gatheringStatus,
               "New_BPT": x['New_BPT'],
               "Bel_Added": x['Bel_Added'],
-              "Reporting_Month": widget.selectedMonth.trim(),
+              "Reporting_Month": widget.selectedMonth?.trim(),
               "Reporting_Year": widget.selectedYear,
               "Un_Habitation": prevData.fieldData.unHabitation,
               "Average_Attendance": x['Average_Attendance'],
@@ -1103,3 +1105,65 @@ class TextInputWidget extends StatelessWidget {
     );
   }
 }
+/*
+class LifecycleWatcher extends StatefulWidget {
+  final String selectedMonth;
+  final String selectedYear;
+  LifecycleWatcher({this.selectedMonth, this.selectedYear});
+  @override
+  _LifecycleWatcherState createState() => _LifecycleWatcherState();
+}
+
+class _LifecycleWatcherState extends State<LifecycleWatcher>
+    with WidgetsBindingObserver {
+  AppLifecycleState _lastLifecycleState;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      _lastLifecycleState = state;
+    });
+  }
+
+  Widget build(BuildContext context) {
+    Widget child = Container();
+    if (_lastLifecycleState != null) {
+      print(_lastLifecycleState);
+      switch (_lastLifecycleState) {
+        case AppLifecycleState.resumed:
+          //Navigator.of(context).pop();
+          child = PinEntryScreen(
+            afterScreen: Homepage(),
+          );
+          break;
+        case AppLifecycleState.inactive:
+          child = Container(color: Colors.green);
+          break;
+        case AppLifecycleState.paused:
+          child = Container(color: Colors.orange);
+          break;
+        case AppLifecycleState.detached:
+          child = Container(color: Colors.blue);
+          break;
+      }
+      return child;
+    }
+    return Homepage(
+      selectedMonth: widget.selectedMonth,
+      selectedYear: widget.selectedYear,
+    );
+  }
+}
+*/

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
+import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'Homepage1.dart';
@@ -9,6 +9,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_page2.dart';
+import './pinentry_screen.dart';
 
 class Selectmonth extends StatefulWidget {
   @override
@@ -221,13 +222,17 @@ class _SelectmonthState extends State<Selectmonth> {
                               ),
                               onPressed: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Homepage(
-                                              selectedMonth:
-                                                  _selectedMonthValue,
-                                              selectedYear: _selectedYearValue,
-                                            )));
+                                  context,
+                                  MaterialPageRoute(
+                                    maintainState: true,
+                                    builder: (context) => LifecycleWatcher(
+                                      afterCoorectPin: Homepage(
+                                        selectedMonth: _selectedMonthValue,
+                                        selectedYear: _selectedYearValue,
+                                      ),
+                                    ),
+                                  ),
+                                );
                               },
                               child: Text(
                                 "Submit",
@@ -268,7 +273,10 @@ class _SelectmonthState extends State<Selectmonth> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage2(),
+                                  maintainState: true,
+                                  builder: (context) => LifecycleWatcher(
+                                    afterCoorectPin: HomePage2(),
+                                  ),
                                 ),
                               );
                             },

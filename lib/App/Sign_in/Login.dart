@@ -272,8 +272,10 @@ class _LoginpageState extends State<Loginpage> {
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(context),
                       FormBuilderValidators.numeric(context),
-                      FormBuilderValidators.maxLength(context, 10),
-                      FormBuilderValidators.minLength(context, 10),
+                      FormBuilderValidators.maxLength(context, 10,
+                          errorText: "Enter a valid 10 digit mobile number"),
+                      FormBuilderValidators.minLength(context, 10,
+                          errorText: "Enter a valid 10 digit mobile number"),
                     ]),
                     maxLength: 10,
                   ),

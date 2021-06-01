@@ -300,12 +300,13 @@ class _RegistionpageState extends State<Registionpage> {
                         body: Loginpage(),
                       ),
                       title: new Text(
-                        'Registration successful', style: GoogleFonts.montserrat(
+                        'Registration successful',
+                        style: GoogleFonts.montserrat(
                           textStyle: TextStyle(
                             color: Colors.white,
                             fontSize: 20.0,
-                          // textAlign:TextAlign.center,
-                           // height: 20,
+                            // textAlign:TextAlign.center,
+                            // height: 20,
                             //fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -339,7 +340,7 @@ class _RegistionpageState extends State<Registionpage> {
               context: context,
               builder: (context) => Dialog(
                     child: Container(
-                      height: height /2,
+                      height: height / 2,
                       child: Column(
                         children: [
                           Padding(
@@ -453,8 +454,8 @@ class _RegistionpageState extends State<Registionpage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
-                  height: height /10,
-                  width: width /2.8,
+                  height: height / 10,
+                  width: width / 2.8,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       side: BorderSide(color: Colors.black12, width: 1),

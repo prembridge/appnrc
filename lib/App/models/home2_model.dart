@@ -1,11 +1,11 @@
 class FieldDataModel {
   FieldData fieldData;
-  String recordId;
-  String modId;
+  dynamic recordId;
+  dynamic modId;
 
   FieldDataModel({this.fieldData, this.recordId, this.modId});
 
-  FieldDataModel.fromJson(Map<String, dynamic> json) {
+  FieldDataModel.fromJson(Map<dynamic, dynamic> json) {
     fieldData = json['fieldData'] != null
         ? new FieldData.fromJson(json['fieldData'])
         : null;
@@ -13,8 +13,8 @@ class FieldDataModel {
     modId = json['modId'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Map<dynamic, dynamic> toJson() {
+    final Map<dynamic, dynamic> data = new Map<dynamic, dynamic>();
     if (this.fieldData != null) {
       data['fieldData'] = this.fieldData.toJson();
     }
@@ -25,24 +25,24 @@ class FieldDataModel {
 }
 
 class FieldData {
-  String locationId;
-  String fkUniqueId;
-  String fullName;
-  String leaderName;
-  String gathering;
-  String unHabbitation;
-  String village;
-  String colony;
-  String block;
-  String district;
-  String state;
-  String gatheringImage;
-  String familyImage;
-  String leaderImage;
-  String communityImage;
-  String vCHU;
-  String location;
-  String status;
+  dynamic locationId;
+  dynamic fkUniqueId;
+  dynamic fullName;
+  dynamic leaderName;
+  dynamic gathering;
+  dynamic unHabbitation;
+  dynamic village;
+  dynamic colony;
+  dynamic block;
+  dynamic district;
+  dynamic state;
+  dynamic gatheringImage;
+  dynamic familyImage;
+  dynamic leaderImage;
+  dynamic communityImage;
+  dynamic vCHU;
+  dynamic location;
+  dynamic status;
 
   FieldData(
       {this.locationId,
@@ -64,7 +64,7 @@ class FieldData {
       this.location,
       this.status});
 
-  FieldData.fromJson(Map<String, dynamic> json) {
+  FieldData.fromJson(Map<dynamic, dynamic> json) {
     locationId = json['Location_id'];
     fkUniqueId = json['Fk_unique_id'];
     fullName = json['Full_name'];
@@ -85,8 +85,8 @@ class FieldData {
     status = json['status'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Map<dynamic, dynamic> toJson() {
+    final Map<dynamic, dynamic> data = new Map<dynamic, dynamic>();
     data['Location_id'] = this.locationId;
     data['Fk_unique_id'] = this.fkUniqueId;
     data['Full_name'] = this.fullName;

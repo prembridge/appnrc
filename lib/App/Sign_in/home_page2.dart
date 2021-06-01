@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/Mediapage2.dart';
+import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 import 'package:flutter_app/App/models/home2_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -104,7 +105,6 @@ class _HomePage2State extends State<HomePage2> {
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25.0,
-
                     ),
                   ),
                 ),
@@ -139,10 +139,13 @@ class _HomePage2State extends State<HomePage2> {
                             onTap: () async {
                               await Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => Mediapage2(
-                                    fieldData: fieldData[index].fieldData,
-                                    recordId: fieldData[index].recordId,
-                                  ),
+                                  maintainState: true,
+                                  builder: (context) => LifecycleWatcher(
+                                    afterCoorectPin: Mediapage2(
+                                      fieldData: fieldData[index].fieldData,
+                                      recordId: fieldData[index].recordId,
+                                    ),
+                                  ), /* */
                                 ),
                               );
                               setState(() {
@@ -243,11 +246,11 @@ class _FieldsCardState extends State<FieldsCard> {
                     fields("Gathering", widget.fieldData.gathering),
                     fields("Full Name", widget.fieldData.fullName),
                     fields("State", widget.fieldData.state),
-                    fields("district", widget.fieldData.district),
+                    fields("District", widget.fieldData.district),
                     fields("Village", widget.fieldData.village),
                     fields("Block", widget.fieldData.block),
                     fields("Colony", widget.fieldData.colony),
-                    fields("unHabbitation", widget.fieldData.unHabbitation)
+                    fields("UnHabbitation", widget.fieldData.unHabbitation)
                   ],
                 )),
           ),

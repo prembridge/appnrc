@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 import 'package:flutter_app/App/Sign_in/selectmonth.dart';
 import 'package:flutter_app/App/Sign_in/selectpage.dart';
 import 'package:flutter_app/App/Sign_in/sign_in%20page.dart';
@@ -9,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'dart:convert';
 import 'dart:async';
+
+import 'package:toast/toast.dart';
 
 Album albumFromJson(String str) => Album.fromJson(json.decode(str));
 
@@ -177,6 +180,9 @@ class _OtppageState extends State<Otppage> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     Future<bool> fetchAlbum(String appMobileNumber) async {
+      if (appMobileNumber.length != 4) {
+        return false;
+      }
       try {
         log('testing......');
         final http.Response token = await http.post(
@@ -201,7 +207,7 @@ class _OtppageState extends State<Otppage> {
 
         var raw = jsonEncode({
           "query": [
-            {"App_otp": appMobileNumber}
+            {"App_otp": "=" + appMobileNumber}
           ]
         });
         var request = http.Request(
@@ -259,7 +265,7 @@ class _OtppageState extends State<Otppage> {
               textStyle: TextStyle(
                 color: Colors.white,
                 fontSize: 25.0,
-               // fontWeight: FontWeight.bold,
+                // fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -291,7 +297,7 @@ class _OtppageState extends State<Otppage> {
                       textStyle: TextStyle(
                         color: Colors.black,
                         fontSize: 25.0,
-                       // fontWeight: FontWeight.bold,
+                        // fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -299,13 +305,13 @@ class _OtppageState extends State<Otppage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FormBuilderTextField(
+                    maxLength: 4,
                     keyboardType: TextInputType.phone,
                     controller: _appMobileNumbercontroller,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Enter OTP",
                       labelStyle: TextStyle(fontSize: 20),
-
                     ),
                   ),
                 ),
@@ -319,8 +325,8 @@ class _OtppageState extends State<Otppage> {
             ),
             SizedBox(height: 20),
             Container(
-              height: height /15,
-              width: width /2.82,
+              height: height / 15,
+              width: width / 2.82,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   side: BorderSide(color: Colors.black12, width: 1),
@@ -333,18 +339,22 @@ class _OtppageState extends State<Otppage> {
                   print('appMobileNumber:$appMobileNumber');
                   final bool user = await fetchAlbum(appMobileNumber);
                   if (user) {
-                    return Navigator.push(
+                    Navigator.of(context).pop();
+                    return Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            isFirstime ? selectpage() : Selectmonth(),
+                        builder: (context) => isFirstime
+                            ? selectpage()
+                            : LifecycleWatcher(
+                                afterCoorectPin: Selectmonth(),
+                              ),
                       ),
                     );
                   } else {
                     await showDialog(
                       context: context,
                       builder: (context) => new AlertDialog(
-                        title: new Text("please enrter Vaild OTP.."),
+                        title: new Text("Please enter a valid OTP.."),
                         actions: [
                           FlatButton(
                             child: Text("Close"),
@@ -363,7 +373,6 @@ class _OtppageState extends State<Otppage> {
                     textStyle: TextStyle(
                       color: Colors.white,
                       fontSize: 25.0,
-
                     ),
                   ),
                 ),

@@ -35,8 +35,8 @@ class Message {
     this.message,
   });
 
-  String code;
-  String message;
+  dynamic code;
+  dynamic message;
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
         code: json["code"],
@@ -80,7 +80,7 @@ class Datum {
   FieldData fieldData;
   PortalData portalData;
   dynamic recordId;
-  String modId;
+  dynamic modId;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         fieldData: FieldData.fromJson(json["fieldData"]),
@@ -122,27 +122,27 @@ class FieldData {
     this.foundCount,
   });
 
-  String gatheringStatus;
-  String fullName;
-  String leader;
+  dynamic gatheringStatus;
+  dynamic fullName;
+  dynamic leader;
   dynamic yearOfStart;
   dynamic pin;
-  String unHabitation;
-  String habitation;
-  String village;
-  String colony;
-  String block;
-  String district;
-  String state;
+  dynamic unHabitation;
+  dynamic habitation;
+  dynamic village;
+  dynamic colony;
+  dynamic block;
+  dynamic district;
+  dynamic state;
   dynamic belAdded;
   dynamic averageAttendance;
   dynamic newBpt;
-  String reportingMonth;
+  dynamic reportingMonth;
   dynamic reportingYear;
-  String fkContactId;
-  String appContainerField1;
+  dynamic fkContactId;
+  dynamic appContainerField1;
   dynamic recordId;
-  String foundCount;
+  dynamic foundCount;
 
   factory FieldData.fromJson(Map<String, dynamic> json) => FieldData(
         gatheringStatus: json["Gathering_Status"],
@@ -211,9 +211,9 @@ class DataInfo {
     this.returnedCount,
   });
 
-  String database;
-  String layout;
-  String table;
+  dynamic database;
+  dynamic layout;
+  dynamic table;
   dynamic totalRecordCount;
   dynamic foundCount;
   dynamic returnedCount;
