@@ -278,10 +278,8 @@ class _RegistionpageState extends State<Registionpage> {
           // return albumFromJson(request.body);
 
           await prefs.setBool("isFirstime", true);
-          var isShown = await showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => Container(
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (_) => Container(
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -295,10 +293,9 @@ class _RegistionpageState extends State<Registionpage> {
                     )),
                     child: SplashScreen(
                       seconds: 4,
-                      navigateAfterSeconds: new Scaffold(
-                        resizeToAvoidBottomInset: false,
-                        body: Loginpage(),
-                      ),
+
+                      navigateAfterSeconds: Loginpage(),
+
                       title: new Text(
                         'Registration successful',
                         style: GoogleFonts.montserrat(
@@ -330,10 +327,7 @@ class _RegistionpageState extends State<Registionpage> {
                       photoSize: 200.0,
                       loaderColor: Colors.brown,
                     ),
-                  ));
-          if (isShown)
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Loginpage()));
+                  )));
         } else {
           print(response.reasonPhrase);
           showDialog(
@@ -493,5 +487,14 @@ class _RegistionpageState extends State<Registionpage> {
     setState(() {
       _isHidden = !_isHidden;
     });
+  }
+}
+
+class RegisterSplashScreen extends StatelessWidget {
+  const RegisterSplashScreen({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SplashScreen();
   }
 }

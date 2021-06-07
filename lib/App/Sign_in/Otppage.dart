@@ -343,12 +343,12 @@ class _OtppageState extends State<Otppage> {
                     return Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => isFirstime
-                            ? selectpage()
-                            : LifecycleWatcher(
+                          builder: (context) => isFirstime
+                              ? selectpage()
+                              : /* LifecycleWatcher(
                                 afterCoorectPin: Selectmonth(),
-                              ),
-                      ),
+                              ), */
+                              Selectmonth()),
                     );
                   } else {
                     await showDialog(

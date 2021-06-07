@@ -124,11 +124,10 @@ class _HomepageState extends State<Homepage> {
   }
 
   void init() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("isFirstime", false);
-
-    futureAlbum = await fetchAlbum();
-    setState(() {});
+    var x = await fetchAlbum();
+    setState(() {
+      futureAlbum = x;
+    });
   }
 
   @override

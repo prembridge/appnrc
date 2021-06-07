@@ -37,6 +37,7 @@ class _selectpageState extends State<selectpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'Login Options',
           style: GoogleFonts.openSans(
@@ -66,6 +67,7 @@ class _selectpageState extends State<selectpage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Column(
+              // mainAxisAlignment: Main,
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(bottom: 20),

@@ -140,11 +140,13 @@ class _HomePage2State extends State<HomePage2> {
                               await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   maintainState: true,
-                                  builder: (context) => LifecycleWatcher(
-                                    afterCoorectPin: Mediapage2(
-                                      fieldData: fieldData[index].fieldData,
-                                      recordId: fieldData[index].recordId,
-                                    ),
+                                  builder: (context) =>
+                                      /*  LifecycleWatcher(
+                                    afterCoorectPin: */
+                                      Mediapage2(
+                                    fieldData: fieldData[index].fieldData,
+                                    recordId: fieldData[index].recordId,
+                                    // ),
                                   ), /* */
                                 ),
                               );
@@ -250,7 +252,7 @@ class _FieldsCardState extends State<FieldsCard> {
                     fields("Village", widget.fieldData.village),
                     fields("Block", widget.fieldData.block),
                     fields("Colony", widget.fieldData.colony),
-                    fields("UnHabbitation", widget.fieldData.unHabbitation)
+                    fields("Un-Habitation ", widget.fieldData.unHabbitation)
                   ],
                 )),
           ),

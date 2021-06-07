@@ -95,9 +95,7 @@ class _passcodepageState extends State<PinEntryScreen> {
               Navigator.of(context).pushReplacement(new MaterialPageRoute(
                   maintainState: true,
                   builder: (BuildContext context) {
-                    return LifecycleWatcher(
-                      afterCoorectPin: widget.afterScreen,
-                    );
+                    return widget.afterScreen;
                   }));
             })
         : Center(
@@ -116,7 +114,7 @@ class LifecycleWatcher extends StatefulWidget {
 class _LifecycleWatcherState extends State<LifecycleWatcher>
     with WidgetsBindingObserver {
   AppLifecycleState _lastLifecycleState;
-  bool wasinactive = false;
+  bool wasInactive = false;
   int count = 0;
   @override
   void initState() {
@@ -139,50 +137,17 @@ class _LifecycleWatcherState extends State<LifecycleWatcher>
 
   Widget build(BuildContext context) {
     log(_lastLifecycleState.toString());
-    /*  Widget child = Container();
-    if (_lastLifecycleState != null) {
-      print(_lastLifecycleState);
-      switch (_lastLifecycleState) {
-        case AppLifecycleState.resumed:
-          child = PinEntryScreen(
-            afterScreen: widget.afterCoorectPin,
-          );
-          break;
-        case AppLifecycleState.inactive:
-          child = Container(color: Colors.green);
-          break;
-        case AppLifecycleState.paused:
-          child = Container(color: Colors.orange);
-          break;
-        case AppLifecycleState.detached:
-          child = Container(color: Colors.blue);
-          break;
-      }
-      return child;
+    Widget child = widget.afterCoorectPin;
+    /*  if (_lastLifecycleState == AppLifecycleState.paused) {
+      wasInactive = false;
+      // count = 0;
     } */
-    if (_lastLifecycleState == AppLifecycleState.inactive) {
-      setState(() {
-        wasinactive = true;
-      });
+    /*  if (_lastLifecycleState == AppLifecycleState.inactive) {
+      wasInactive = true;
+    } */
+    if (_lastLifecycleState == AppLifecycleState.resumed && !wasInactive) {
+      child = PinEntryScreen(afterScreen: widget.afterCoorectPin);
     }
-    if (_lastLifecycleState == AppLifecycleState.paused) {
-      setState(() {
-        wasinactive = false;
-      });
-    }
-    if (_lastLifecycleState == AppLifecycleState.resumed && !wasinactive) {
-      setState(() {
-        wasinactive = false;
-        count = count + 1;
-      });
-      if (count == 1) {
-        return PinEntryScreen(
-          afterScreen: widget.afterCoorectPin,
-        );
-      }
-      return widget.afterCoorectPin;
-    }
-
-    return widget.afterCoorectPin;
+    return child;
   }
 }

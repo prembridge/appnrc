@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -37,6 +38,8 @@ class _SelectmonthState extends State<Selectmonth> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //var value = prefs.getString('AppMonth');
     //print("Appmonth..$value");
+
+    await prefs.setBool("isFirstime", false);
     setState(() {
       _email = (prefs.getString('AppMonth'));
 
@@ -69,14 +72,14 @@ class _SelectmonthState extends State<Selectmonth> {
     // }
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            " Add Report",
-            style: GoogleFonts.montserrat(
-              textStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-              ),
+        //leading: Container(),
+        centerTitle: true,
+        title: Text(
+          " Add Report",
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
             ),
           ),
         ),
@@ -225,11 +228,13 @@ class _SelectmonthState extends State<Selectmonth> {
                                   context,
                                   MaterialPageRoute(
                                     maintainState: true,
-                                    builder: (context) => LifecycleWatcher(
-                                      afterCoorectPin: Homepage(
-                                        selectedMonth: _selectedMonthValue,
-                                        selectedYear: _selectedYearValue,
-                                      ),
+                                    builder: (context) =>
+                                        /* LifecycleWatcher(
+                                      afterCoorectPin:  */
+                                        Homepage(
+                                      selectedMonth: _selectedMonthValue,
+                                      selectedYear: _selectedYearValue,
+                                      // ),
                                     ),
                                   ),
                                 );
@@ -273,11 +278,12 @@ class _SelectmonthState extends State<Selectmonth> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  maintainState: true,
-                                  builder: (context) => LifecycleWatcher(
+                                    maintainState: true,
+                                    builder: (context) =>
+                                        /* LifecycleWatcher(
                                     afterCoorectPin: HomePage2(),
-                                  ),
-                                ),
+                                  ), */
+                                        HomePage2()),
                               );
                             },
                           ),

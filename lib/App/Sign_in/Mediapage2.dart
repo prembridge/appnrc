@@ -340,6 +340,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                             )
                                       : Image.network(
                                           widget.fieldData.leaderImage,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            var x = loadingProgress;
+                                            if (x?.cumulativeBytesLoaded !=
+                                                x?.expectedTotalBytes) {
+                                              return CircularProgressIndicator();
+                                            }
+                                            return child;
+                                          },
                                           height: 100,
                                           width: 100,
                                         ),
@@ -414,6 +423,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                         )
                                   : Image.network(
                                       widget.fieldData.familyImage,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        var x = loadingProgress;
+                                        if (x?.cumulativeBytesLoaded !=
+                                            x?.expectedTotalBytes) {
+                                          return CircularProgressIndicator();
+                                        }
+                                        return child;
+                                      },
                                       height: 100,
                                       width: 100,
                                     ),
@@ -486,6 +504,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                         )
                                   : Image.network(
                                       widget.fieldData.communityImage,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        var x = loadingProgress;
+                                        if (x?.cumulativeBytesLoaded !=
+                                            x?.expectedTotalBytes) {
+                                          return CircularProgressIndicator();
+                                        }
+                                        return child;
+                                      },
                                       height: 100,
                                       width: 100,
                                     ),
@@ -559,6 +586,15 @@ class _Mediapage2State extends State<Mediapage2> {
                                   : Image.network(
                                       widget.fieldData.gatheringImage,
                                       height: 100,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        var x = loadingProgress;
+                                        if (x?.cumulativeBytesLoaded !=
+                                            x?.expectedTotalBytes) {
+                                          return CircularProgressIndicator();
+                                        }
+                                        return child;
+                                      },
                                       width: 100,
                                     ),
                             ],
@@ -601,8 +637,18 @@ class _Mediapage2State extends State<Mediapage2> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title: Text("Success"),
-                                              content: Text("Sent !!"),
+                                              title: Text(
+                                                  "Successfully  Uploaded Images"),
+                                              //content: Text("Successfully  Uploaded Images"),
+                                              actions: [
+                                                ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("OK"),
+                                                )
+                                              ],
                                             );
                                           });
                                       setState(() {

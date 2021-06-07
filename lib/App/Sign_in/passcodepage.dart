@@ -101,7 +101,10 @@ class _passcodepageState extends State<passcodepage> {
               Navigator.of(context).pushReplacement(
                   new MaterialPageRoute(builder: (BuildContext context) {
                 return isFirstime
-                    ? LifecycleWatcher(afterCoorectPin: Selectmonth())
+                    ? /* LifecycleWatcher(
+                        afterCoorectPin: Selectmonth(),
+                      ) */
+                    Selectmonth()
                     : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
               }));
             })
