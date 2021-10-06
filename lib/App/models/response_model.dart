@@ -98,29 +98,29 @@ class Datum {
 }
 
 class FieldData {
-  FieldData({
-    this.gatheringStatus,
-    this.fullName,
-    this.leader,
-    this.yearOfStart,
-    this.pin,
-    this.unHabitation,
-    this.habitation,
-    this.village,
-    this.colony,
-    this.block,
-    this.district,
-    this.state,
-    this.belAdded,
-    this.averageAttendance,
-    this.newBpt,
-    this.reportingMonth,
-    this.reportingYear,
-    this.fkContactId,
-    this.appContainerField1,
-    this.recordId,
-    this.foundCount,
-  });
+  FieldData(
+      {this.gatheringStatus,
+      this.fullName,
+      this.leader,
+      this.yearOfStart,
+      this.pin,
+      this.unHabitation,
+      this.habitation,
+      this.village,
+      this.colony,
+      this.block,
+      this.district,
+      this.state,
+      this.belAdded,
+      this.averageAttendance,
+      this.newBpt,
+      this.reportingMonth,
+      this.reportingYear,
+      this.fkContactId,
+      this.appContainerField1,
+      this.recordId,
+      this.foundCount,
+      this.team});
 
   dynamic gatheringStatus;
   dynamic fullName;
@@ -143,6 +143,7 @@ class FieldData {
   dynamic appContainerField1;
   dynamic recordId;
   dynamic foundCount;
+  dynamic team;
 
   factory FieldData.fromJson(Map<String, dynamic> json) => FieldData(
         gatheringStatus: json["Gathering_Status"],
@@ -166,6 +167,7 @@ class FieldData {
         appContainerField1: json["App_container_field1"],
         recordId: json["Record_id"],
         foundCount: json["Found_count"],
+        team: json["Team"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -190,6 +192,7 @@ class FieldData {
         "App_container_field1": appContainerField1,
         "Record_id": recordId,
         "Found_count": foundCount,
+        "Team": team,
       };
 }
 

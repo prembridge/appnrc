@@ -334,8 +334,7 @@ class _AddnewpageState extends State<Addnewpage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 child: new FormBuilderTextField(
-                                  validator:
-                                      FormBuilderValidators.required(context),
+                                  validator: FormBuilderValidators.required(context),
                                   controller: _Fullnamecontroller,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
@@ -348,11 +347,13 @@ class _AddnewpageState extends State<Addnewpage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
+
                                 child: new FormBuilderTextField(
                                   controller: _yearOfStartcontroller,
                                   //readOnly: true,
                                   enabled: false,
                                   decoration: InputDecoration(
+
                                     border: OutlineInputBorder(),
                                     labelText: "Year of Start",
                                   ),
@@ -551,24 +552,16 @@ class _AddnewpageState extends State<Addnewpage> {
                                   final String avg = _avgcontroller.text;
                                   final String type = _typecontroller.text;
                                   final String state = _Statecontroller.text;
-                                  final String district =
-                                      _districtcontroller.text;
+                                  final String district = _districtcontroller.text;
                                   final String block = _blockcontroller.text;
                                   final String colony = _colonycontroller.text;
-                                  final String village =
-                                      _villagecontroller.text;
-                                  final String fullname =
-                                      _Fullnamecontroller.text;
-                                  final String yearOfStart =
-                                      _yearOfStartcontroller.text;
-                                  final String monthOfStart =
-                                      _monthOfStartcontroller.text;
-                                  final String belAdded =
-                                      _belAddedcontroller.text;
-                                  final String habitation =
-                                      _habitationcontroller.text;
-                                  final String unhabitation =
-                                      _unhabitationcontroller.text;
+                                  final String village = _villagecontroller.text;
+                                  final String fullname = _Fullnamecontroller.text;
+                                  final String yearOfStart = _yearOfStartcontroller.text;
+                                  final String monthOfStart = _monthOfStartcontroller.text;
+                                  final String belAdded = _belAddedcontroller.text;
+                                  final String habitation = _habitationcontroller.text;
+                                  final String unhabitation = _unhabitationcontroller.text;
                                   final String pin = _pincontroller.text;
                                   final Album user = await fetchAlbum(
                                       avg,
