@@ -1,41 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/App/Sign_in/passcodepage.dart';
+import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
+import 'package:flutter_app/App/Sign_in/selectmonth.dart';
 import 'package:flutter_app/App/models/response_model.dart' as resm;
 import 'package:flutter_app/App/models/response_model.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as storage;
 import 'package:google_fonts/google_fonts.dart';
 import 'Homeedit.dart';
+import 'Mediapage.dart';
+import 'Savepage.dart';
 import 'Addnewpage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
-import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+
+import 'home_page2.dart';
+
+int _count;
 
 Future<resm.Welcome> fetchAlbum() async {
-  Dio dio = Dio();
-  dio.interceptors.add(
-      DioCacheManager(CacheConfig(baseUrl: "https://nrcoperations.co.in"))
-          .interceptor);
   Welcome x;
   try {
     log('testing......');
 
-    final token = await dio.post(
+    final http.Response token = await http.post(
       'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-      options: Options(
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-        },
-      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+      },
     );
-
     log('token:$token');
 
-    Map<String, dynamic> responsetoken = jsonDecode(token.toString());
+    Map<String, dynamic> responsetoken = jsonDecode(token.body);
     var result = responsetoken['response'];
     var tokenresult = result['token'];
 
@@ -121,6 +122,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+
     init();
   }
 
@@ -250,8 +252,6 @@ class _HomepageState extends State<Homepage> {
           }
         }
       } catch (e) {
-        //TODO STORE THE CURRENT PAYLOAD LOCAL STORAGE
-
         print(e);
       }
     }
