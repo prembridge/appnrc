@@ -16,33 +16,33 @@ import 'package:dio/dio.dart';
 
 Future<resm.Welcome> fetchAlbum() async {
   var dio = Dio();
-  dio.interceptors.add(DioCacheManager(CacheConfig(
-    baseUrl: "nrcoperations.co.in",
-  )).interceptor);
+  dio.interceptors.add(DioCacheManager(
+    CacheConfig(
+      baseUrl: "http://nrcoperations.co.in",
+      defaultMaxStale: Duration(days: 10),
+    ),
+  ).interceptor);
   Welcome x;
   try {
     log('testing......');
-dasdhjashdjashdj
+
     final token = await dio.post(
         'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-        options: Options(
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-          },
-        ));
-    log('token:${token.data}');
+        options: buildCacheOptions(Duration(days: 7),
+            maxStale: Duration(days: 2),
+            forceRefresh: true,
+            options: Options(
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+              },
+            )));
 
-    Map<String, dynamic> responsetoken = jsonDecode(token.data);
-    var result = responsetoken['response'];
-    var tokenresult = result['token'];
-
-    log('result...in field:$responsetoken');
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $tokenresult'
+      'Authorization': 'Bearer ${token.data['response']['token']}'
     };
     var raw = jsonEncode({
       "query": [
@@ -53,21 +53,23 @@ dasdhjashdjashdj
         }
       ]
     });
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_report_app_dis/_find'));
-    request.body = raw;
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      var res = await response.stream.bytesToString();
-      print(res);
-      // return resm.Welcome.fromJson(json.decode(res));
-      x = resm.welcomeFromJson(res);
+    var request = await dio.post(
+        'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_report_app_dis/_find',
+        options: buildCacheOptions(Duration(days: 7),
+            maxStale: Duration(days: 2),
+            options: Options(headers: headers),
+            forceRefresh: true),
+        data: raw);
+    //request.body = raw;
+
+    if (request.statusCode == 200) {
+      var res = await request.data;
+      //  print(res.runtimeType);
+      x = resm.Welcome.fromJson(res);
+      //  x = resm.welcomeFromJson(res);
       //return x;
     } else {
-      print(response.reasonPhrase);
+      print(request.statusMessage);
     }
     return x;
   } catch (e) {
