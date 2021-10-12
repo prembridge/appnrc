@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/Pinpage.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+
 import 'package:flutter_lock_screen/flutter_lock_screen.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import './App/Sign_in/Registionpage.dart';
 import 'App/Sign_in/passcodepage.dart';
@@ -16,7 +16,7 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulHookWidget {
+class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -55,8 +55,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final network = useProvider(netProvider);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: primeColor),
