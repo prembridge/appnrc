@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_app/App/models/response_model.dart' as resm;
 import 'package:flutter_app/App/models/response_model.dart';
+import 'package:flutter_app/App/providers/network_provider.dart';
+import 'package:flutter_app/App/services/nonetwork_service.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'Homeedit.dart';
 import 'Addnewpage.dart';
 import 'package:http/http.dart' as http;
@@ -96,7 +103,7 @@ class MyWidget extends StatelessWidget {
   }
 }
 
-class Homepage extends StatefulWidget {
+class Homepage extends StatefulHookWidget {
   final String selectedMonth;
   final String selectedYear;
 
@@ -136,6 +143,8 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final net = useProvider(netProvider);
+    print(net);
     void showDialogOfSuccess(bool isItLastPage) async {
       setState(() {
         showNext = true;
@@ -174,36 +183,14 @@ class _HomepageState extends State<Homepage> {
     }
 
     Future<void> postForm(Datum prevData, bool isItLastPage) async {
+      String formData = "";
+      String postUrl =
+          'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records';
       try {
-        log('testing......');
-        final http.Response token = await http.post(
-          'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-          },
-        );
-        log('token...:$token');
-
-        Map<String, dynamic> responsetoke = jsonDecode(token.body);
-        var result = responsetoke['response'];
-        var tokenresult = result['token'];
-
-        log('result...in field:$tokenresult');
-
-        var headers = {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $tokenresult'
-        };
-
         if (_formKey.currentState.saveAndValidate()) {
+          log('testing......');
           var x = _formKey.currentState.value;
-
-          var request = http.Request(
-              'POST',
-              Uri.parse(
-                  'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records'));
-          var raw = jsonEncode({
+          formData = jsonEncode({
             "fieldData": {
               "State": prevData.fieldData.state,
               "District": prevData.fieldData.district,
@@ -226,8 +213,30 @@ class _HomepageState extends State<Homepage> {
               "fk_Report_id_New": ""
             }
           });
-          log(raw);
-          request.body = raw;
+          final http.Response token = await http.post(
+            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+            },
+          );
+          log('token...:$token');
+
+          Map<String, dynamic> responsetoke = jsonDecode(token.body);
+          var result = responsetoke['response'];
+          var tokenresult = result['token'];
+
+          log('result...in field:$tokenresult');
+
+          var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $tokenresult'
+          };
+
+          var request = http.Request('POST', Uri.parse('$postUrl'));
+
+          log(formData);
+          request.body = formData;
           request.headers.addAll(headers);
           http.StreamedResponse response = await request.send();
 
@@ -250,7 +259,11 @@ class _HomepageState extends State<Homepage> {
             print(response.reasonPhrase);
           }
         }
-      } catch (e) {
+      } on SocketException catch (e) {
+        var noNetwork = NoNetworkService();
+        noNetwork.storeFailedPostRequestData(formData, postUrl);
+        print(await noNetwork.readAllData());
+        noNetwork.clean();
         print(e);
       }
     }
