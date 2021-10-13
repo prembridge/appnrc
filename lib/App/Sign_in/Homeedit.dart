@@ -11,6 +11,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
+import 'package:toast/toast.dart';
+
 /* Future<resm.Welcome> fetchAlbum() async {
   Welcome x;
   try {
@@ -149,54 +151,64 @@ class _HomeeditState extends State<Homeedit> {
         if (_formKey.currentState.saveAndValidate()) {
           var formData = _formKey.currentState.value;
 
-          var request = http.Request(
-              'POST',
-              Uri.parse(
-                  'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records'));
-          var raw = jsonEncode({
-            "fieldData": {
-              "State": formData['state'],
-              "District": formData['district'],
-              "Block": formData['block'],
-              "Colony": formData['colony'],
-              "Village": formData['village'],
-              "Gathering_Status": formData['gatering_status'],
-              "New_BPT": widget.fieldData.newBpt,
-              "Bel_Added": widget.fieldData.belAdded,
-              "Reporting_Month": widget.selectedMonth?.trim(),
-              "Reporting_Year": widget.selectedYear,
-              "Un_Habitation": formData['unHabitation'],
-              "Average_Attendance": widget.fieldData.averageAttendance,
-              "Year_of_Start": formData['yearOfStart'],
-              "Pin": formData['pin'],
-              "Habitation": formData['habitation'],
-              "Town": "",
-              "Full_Name": formData['name'],
-              "fk_Contact_Id": widget.fieldData.fkContactId,
-              "fk_Report_id_New": "",
-              "Team": widget.fieldData.team
-            }
-          });
-          log(raw);
-          request.body = raw;
-          request.headers.addAll(headers);
-          http.StreamedResponse response = await request.send();
-
-          if (response.statusCode == 200) {
-            var res = await response.stream.bytesToString();
-            //var responses =res
-            // print(responses);
-            var x = json.decode(res);
-            print(x);
-            final prefs = await SharedPreferences.getInstance();
-            final String recordId = x['response']['recordId'];
-            prefs.setString('recordId', recordId);
-            print("Sent");
-
-            return true;
+          if (formData['village'] == "" && formData['colony'] == "") {
+            Toast.show(
+              "Enter colony or village both cannot be empty",
+              context,
+              duration: Toast.LENGTH_LONG,
+              backgroundColor: Colors.transparent,
+              textColor: Colors.red,
+            );
           } else {
-            print(response.reasonPhrase);
-            return false;
+            var request = http.Request(
+                'POST',
+                Uri.parse(
+                    'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records'));
+            var raw = jsonEncode({
+              "fieldData": {
+                "State": formData['state'],
+                "District": formData['district'],
+                "Block": formData['block'],
+                "Colony": formData['colony'],
+                "Village": formData['village'],
+                "Gathering_Status": formData['gatering_status'],
+                "New_BPT": widget.fieldData.newBpt,
+                "Bel_Added": widget.fieldData.belAdded,
+                "Reporting_Month": widget.selectedMonth?.trim(),
+                "Reporting_Year": widget.selectedYear,
+                "Un_Habitation": formData['unHabitation'],
+                "Average_Attendance": widget.fieldData.averageAttendance,
+                "Year_of_Start": formData['yearOfStart'],
+                "Pin": formData['pin'],
+                "Habitation": formData['habitation'],
+                "Town": "",
+                "Full_Name": formData['name'],
+                "fk_Contact_Id": widget.fieldData.fkContactId,
+                "fk_Report_id_New": "",
+                "Team": widget.fieldData.team
+              }
+            });
+            log(raw);
+            request.body = raw;
+            request.headers.addAll(headers);
+            http.StreamedResponse response = await request.send();
+
+            if (response.statusCode == 200) {
+              var res = await response.stream.bytesToString();
+              //var responses =res
+              // print(responses);
+              var x = json.decode(res);
+              print(x);
+              final prefs = await SharedPreferences.getInstance();
+              final String recordId = x['response']['recordId'];
+              prefs.setString('recordId', recordId);
+              print("Sent");
+
+              return true;
+            } else {
+              print(response.reasonPhrase);
+              return false;
+            }
           }
         } else {
           return false;
@@ -215,7 +227,7 @@ class _HomeeditState extends State<Homeedit> {
         appBar: AppBar(backgroundColor: Color(0xFF9798CB)),
         body: SingleChildScrollView(
           child: Container(
-            height: height * 1.4,
+            height: height * 1.3,
             width: width,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -429,7 +441,7 @@ class _HomeeditState extends State<Homeedit> {
                         DataCell(
                           FormBuilderTextField(
                             name: 'colony',
-                            validator: FormBuilderValidators.required(context),
+                            // validator: FormBuilderValidators.required(context),
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                             ),
@@ -458,7 +470,7 @@ class _HomeeditState extends State<Homeedit> {
                         DataCell(
                           FormBuilderTextField(
                             name: 'village',
-                            validator: FormBuilderValidators.required(context),
+                            // validator: FormBuilderValidators.required(context),
                             initialValue: "${widget.fieldData.village}",
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -516,7 +528,7 @@ class _HomeeditState extends State<Homeedit> {
                         DataCell(
                           FormBuilderTextField(
                             name: 'unHabitation',
-                            validator: FormBuilderValidators.required(context),
+                            // validator: FormBuilderValidators.required(context),
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                             ),
@@ -597,6 +609,7 @@ class _HomeeditState extends State<Homeedit> {
                   //     ],
                   //   ),
                   // ),
+                  Spacer(),
                   Container(
                     child: ElevatedButton(
                         child: Text(
@@ -616,7 +629,6 @@ class _HomeeditState extends State<Homeedit> {
                               Navigator.of(context).pop();
                             }
                           }
-
                         }
                         //controller.jumpToPage(15);
 

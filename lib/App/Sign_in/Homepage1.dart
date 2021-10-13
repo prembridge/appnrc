@@ -6,6 +6,7 @@ import 'package:flutter_app/App/models/response_model.dart' as resm;
 import 'package:flutter_app/App/models/response_model.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toast/toast.dart';
 import 'Homeedit.dart';
 import 'Mediapage.dart';
 import 'Savepage.dart';
@@ -250,6 +251,14 @@ class _HomepageState extends State<Homepage> {
           } else {
             print(response.reasonPhrase);
           }
+        } else {
+          Toast.show(
+            "The entries abouve cannot be empty",
+            context,
+            duration: Toast.LENGTH_LONG,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.red,
+          );
         }
       } catch (e) {
         print(e);
@@ -341,7 +350,7 @@ class _HomepageState extends State<Homepage> {
                           e.key;
                       return SingleChildScrollView(
                         child: Container(
-                          height: height * 1.2,
+                          height: height * 1.4,
                           width: width,
                           child: Column(
                             children: [
@@ -792,6 +801,7 @@ class _HomepageState extends State<Homepage> {
                                   ),
                                 ),
                               ),
+                              Spacer(),
                               SizedBox(height: height * 0.18),
                               FormBuilder(
                                 key: _formKey,
@@ -826,10 +836,12 @@ class _HomepageState extends State<Homepage> {
                                   ],
                                 ),
                               ),
+                              Spacer(flex: 2),
                               Expanded(
                                   flex: 1,
                                   child: Container(
                                     width: width,
+                                    // color: Colors.orange,
                                     child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
@@ -856,37 +868,9 @@ class _HomepageState extends State<Homepage> {
                                               },
                                             ),
                                           ),
-                                          // Visibility(
-                                          //   visible: viewVisible,
-                                          //   child: Container(
-                                          //     padding: EdgeInsets.all(
-                                          //         width / 40),
-                                          //     child: ElevatedButton(
-                                          //       onPressed: () {
-                                          //         Navigator.push(
-                                          //             context,
-                                          //             MaterialPageRoute(
-                                          //                 builder:
-                                          //                     (context) =>
-                                          //                         Mediapage()));
-                                          //       },
-                                          //       child: new Text(
-                                          //         "MEDIA",
-                                          //         style: GoogleFonts
-                                          //             .montserrat(
-                                          //           textStyle: TextStyle(
-                                          //             color: Colors.black,
-                                          //             fontSize:
-                                          //                 width / 25,
-                                          //
-                                          //           ),
-                                          //         ),
-                                          //       ),
-                                          //     ),
-                                          //   ),
-                                          // )
                                         ]),
-                                  ))
+                                  )),
+                              SizedBox(height: height / 35)
                             ],
                           ),
                         ),
@@ -920,7 +904,7 @@ class TextInputWidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: height / 30,
+            height: height / 20,
             child: Text(
               prevData,
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -928,11 +912,11 @@ class TextInputWidget extends StatelessWidget {
           ),
           Container(
             width: width / 4,
-            height: height / 15,
+            height: height / 8,
             child: new FormBuilderTextField(
               name: name,
               autocorrect: true,
-              validator: FormBuilderValidators.required(context),
+              validator: FormBuilderValidators.required(context, errorText: ""),
               keyboardType: TextInputType.number,
               decoration: new InputDecoration(
                 border: OutlineInputBorder(),

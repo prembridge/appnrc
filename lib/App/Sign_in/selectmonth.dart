@@ -216,13 +216,13 @@ class _SelectmonthState extends State<Selectmonth> {
                             //color: Color(0xFF9798CB),
                             padding: EdgeInsets.all(10.0),
                             child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                side:
-                                    BorderSide(color: Colors.black12, width: 1),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
+                              // style: ElevatedButton.styleFrom(
+                              //   side:
+                              //       BorderSide(color: Colors.black12, width: 1),
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: BorderRadius.circular(30),
+                              //   ),
+                              // ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -239,12 +239,13 @@ class _SelectmonthState extends State<Selectmonth> {
                                   ),
                                 );
                               },
+
                               child: Text(
                                 "Submit",
                                 style: GoogleFonts.montserrat(
                                   textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 25.0,
+                                    fontSize: width / 22,
                                   ),
                                 ),
                               ),
