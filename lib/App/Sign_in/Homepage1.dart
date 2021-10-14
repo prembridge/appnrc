@@ -870,7 +870,7 @@ class _HomepageState extends State<Homepage> {
                                           ),
                                         ]),
                                   )),
-                              SizedBox(height: height / 35)
+                              SizedBox(height: height / 55)
                             ],
                           ),
                         ),
