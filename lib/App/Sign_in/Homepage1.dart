@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/App/models/response_model.dart' as resm;
 import 'package:flutter_app/App/models/response_model.dart';
 import 'package:flutter_app/App/providers/network_provider.dart';
+import 'package:flutter_app/App/providers/post_provider.dart';
 import 'package:flutter_app/App/services/nonetwork_service.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:toast/toast.dart';
 import 'Homeedit.dart';
 import 'Addnewpage.dart';
 import 'package:http/http.dart' as http;
@@ -137,6 +139,11 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       futureAlbum = x;
     });
+    var postP = context.read(postNotifier.state);
+    print(postP.totalRecord);
+    if (postP.totalRecord > 0) {
+      Toast.show("msg", context);
+    }
   }
 
   @override
@@ -144,15 +151,16 @@ class _HomepageState extends State<Homepage> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final net = useProvider(netProvider);
-    print(net);
-    void showDialogOfSuccess(bool isItLastPage) async {
+    final post = useProvider(postNotifier);
+
+    void showDialogOfSuccess(bool isItLastPage, String message) async {
       setState(() {
         showNext = true;
       });
       return await showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: Text("Successfully Saved"),
+          title: Text("$message"),
           content: isItLastPage
               ? Container(
                   height: height / 10,
@@ -250,7 +258,7 @@ class _HomepageState extends State<Homepage> {
             final String recordId = x['response']['recordId'];
             prefs.setString('recordId', recordId);
             print("Sent");
-            showDialogOfSuccess(isItLastPage);
+            showDialogOfSuccess(isItLastPage, "Successfully Saved");
             _formKey.currentState.reset();
             setState(() {
               viewVisible = true;
@@ -262,8 +270,13 @@ class _HomepageState extends State<Homepage> {
       } on SocketException catch (e) {
         var noNetwork = NoNetworkService();
         noNetwork.storeFailedPostRequestData(formData, postUrl);
-        print(await noNetwork.readAllData());
-        noNetwork.clean();
+        log("Save to local device");
+        showDialogOfSuccess(isItLastPage, "Successfully Saved locally");
+        _formKey.currentState.reset();
+        setState(() {
+          viewVisible = true;
+        });
+        _formKey.currentState.reset();
         print(e);
       }
     }

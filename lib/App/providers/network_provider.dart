@@ -15,15 +15,15 @@ class NetStatus extends StateNotifier<ConnectivityResult> {
 final netStatus =
     StateNotifierProvider<NetStatus, ConnectivityResult>((ref) => NetStatus());
  */
-final netProvider = StreamProvider<String>((ref) async* {
+final netProvider = StreamProvider<ConnectivityResult>((ref) async* {
   // Open the connection
   final net = Connectivity().onConnectivityChanged;
 
   // Close the connection when the stream is destroyed
 
   // Parse the value received and emit a Message instance
-  print(net);
+
   await for (final value in net) {
-    yield value.toString();
+    yield value;
   }
 });
