@@ -278,16 +278,15 @@ class _AddnewpageState extends State<Addnewpage> {
         body: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  // stops:12,
-                  colors: [
-                    Color(0xFF9798CB),
-                    Color(0xFFDDACD3),
-                    Color(0xFFF48F9F),
-                  ],
-                )
-            ),
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              // stops:12,
+              colors: [
+                Color(0xFF9798CB),
+                Color(0xFFDDACD3),
+                Color(0xFFF48F9F),
+              ],
+            )),
             child: selMonth != null && selYear != null
                 ? Scrollbar(
                     child: SingleChildScrollView(
@@ -299,42 +298,48 @@ class _AddnewpageState extends State<Addnewpage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                   alignment: Alignment.bottomLeft,
-                                  child:  DropdownButton<String>(
-                                  value: dropdownValue,
-                                  underline: Container(),
-                                  onChanged: (String newValue) {
-                                    setState(() {
-                                      dropdownValue = newValue;
-                                    });
-                                  },
-                                  items: <String>['MC', 'PC', 'HC', 'AV','AC']
-                                      .map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-
-                                )
-                                // child: new FormBuilderTextField(
-                                //   controller: _typecontroller,
-                                //   validator:
-                                //       FormBuilderValidators.required(context),
-                                //   decoration: InputDecoration(
-                                //     border: OutlineInputBorder(),
-                                //     labelText: "Type",
-                                //   ),
-                                //
-                                //   //hintText: 'Type',
-                                // ),
-                              ),
+                                  child: DropdownButton<String>(
+                                    value: dropdownValue,
+                                    underline: Container(),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        dropdownValue = newValue;
+                                      });
+                                    },
+                                    items: <String>[
+                                      'MC',
+                                      'PC',
+                                      'HC',
+                                      'AV',
+                                      'AC'
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  )
+                                  // child: new FormBuilderTextField(
+                                  //   controller: _typecontroller,
+                                  //   validator:
+                                  //       FormBuilderValidators.required(context),
+                                  //   decoration: InputDecoration(
+                                  //     border: OutlineInputBorder(),
+                                  //     labelText: "Type",
+                                  //   ),
+                                  //
+                                  //   //hintText: 'Type',
+                                  // ),
+                                  ),
                             ),
                             SizedBox(height: 5),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
                                 child: new FormBuilderTextField(
-                                  validator: FormBuilderValidators.required(context),
+                                  validator:
+                                      FormBuilderValidators.required(context),
                                   controller: _Fullnamecontroller,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
@@ -347,13 +352,11 @@ class _AddnewpageState extends State<Addnewpage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-
                                 child: new FormBuilderTextField(
                                   controller: _yearOfStartcontroller,
                                   //readOnly: true,
                                   enabled: false,
                                   decoration: InputDecoration(
-
                                     border: OutlineInputBorder(),
                                     labelText: "Year of Start",
                                   ),
@@ -545,23 +548,31 @@ class _AddnewpageState extends State<Addnewpage> {
                                 : Text("The user ${_user.fieldData.state}"), */
                             Container(
                               padding: const EdgeInsets.all(10.0),
-                              width: width / 2,
+                              width: width / 3.5,
                               child: ElevatedButton(
                                 onPressed: () async {
                                   final String newBpt = _newbptcontroller.text;
                                   final String avg = _avgcontroller.text;
                                   final String type = _typecontroller.text;
                                   final String state = _Statecontroller.text;
-                                  final String district = _districtcontroller.text;
+                                  final String district =
+                                      _districtcontroller.text;
                                   final String block = _blockcontroller.text;
                                   final String colony = _colonycontroller.text;
-                                  final String village = _villagecontroller.text;
-                                  final String fullname = _Fullnamecontroller.text;
-                                  final String yearOfStart = _yearOfStartcontroller.text;
-                                  final String monthOfStart = _monthOfStartcontroller.text;
-                                  final String belAdded = _belAddedcontroller.text;
-                                  final String habitation = _habitationcontroller.text;
-                                  final String unhabitation = _unhabitationcontroller.text;
+                                  final String village =
+                                      _villagecontroller.text;
+                                  final String fullname =
+                                      _Fullnamecontroller.text;
+                                  final String yearOfStart =
+                                      _yearOfStartcontroller.text;
+                                  final String monthOfStart =
+                                      _monthOfStartcontroller.text;
+                                  final String belAdded =
+                                      _belAddedcontroller.text;
+                                  final String habitation =
+                                      _habitationcontroller.text;
+                                  final String unhabitation =
+                                      _unhabitationcontroller.text;
                                   final String pin = _pincontroller.text;
                                   final Album user = await fetchAlbum(
                                       avg,
@@ -583,13 +594,15 @@ class _AddnewpageState extends State<Addnewpage> {
                                     _user = user;
                                   });
                                 },
-                                child: Text("Save",style: GoogleFonts.montserrat(
-                                  textStyle: TextStyle(color: Colors.white,
-                                    fontSize: 20.0,
-
-
+                                child: Text(
+                                  "Save",
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
                                     ),
-                                ),),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
