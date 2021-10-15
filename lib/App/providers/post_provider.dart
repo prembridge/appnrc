@@ -8,10 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'network_provider.dart';
 
-class PostNotifier extends StateNotifier<LocalRecords> {
+class PostNotifier extends StateNotifier<AsyncValue<LocalRecords>> {
   final ProviderReference ref;
-  PostNotifier({this.ref})
-      : super(LocalRecords(totalRecord: 0, uploadedREcords: 0)) {
+  PostNotifier({this.ref}) : super(AsyncLoading()) {
     postData();
   }
   Future<void> postData() async {
@@ -19,20 +18,21 @@ class PostNotifier extends StateNotifier<LocalRecords> {
     if (x.data.value != ConnectivityResult.none) {
       final noNet = NoNetworkService();
       var storedData = await noNet.readAllData();
-      state = LocalRecords(
-          totalRecord: storedData.entries.length, uploadedREcords: 0);
+      state = AsyncData(LocalRecords(
+          totalRecord: storedData.entries.length, uploadedREcords: 0));
       for (var post in storedData.entries) {
-        int uploadedRecords = 0;
+        int uploadedRecords = 1;
         log(post.value);
         if (await postDataToServer(post.key, post.value)) {
           uploadedRecords = uploadedRecords + 1;
-          state = LocalRecords(
+          state = AsyncData(LocalRecords(
             totalRecord: storedData.entries.length,
             uploadedREcords: uploadedRecords,
-          );
+          ));
         }
       }
     }
+    state = AsyncError("online state");
   }
 
   Future<bool> postDataToServer(String postUrl, String body) async {
@@ -69,6 +69,7 @@ class PostNotifier extends StateNotifier<LocalRecords> {
         var x = json.decode(res);
         var noNetwork = NoNetworkService();
         await noNetwork.cleanEntry(postUrl);
+        state = AsyncError("all uploaded");
         log(x.toString());
         return true;
       } else {
@@ -78,6 +79,7 @@ class PostNotifier extends StateNotifier<LocalRecords> {
     } on SocketException catch (e) {
       var noNetwork = NoNetworkService();
       noNetwork.storeFailedPostRequestData(postUrl, postUrl);
+      state = AsyncData(LocalRecords(totalRecord: 0, uploadedREcords: 0));
       return false;
     }
   }
