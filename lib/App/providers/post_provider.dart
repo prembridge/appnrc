@@ -15,13 +15,13 @@ class PostNotifier extends StateNotifier<AsyncValue<LocalRecords>> {
   }
   Future<void> postData() async {
     var x = ref.watch(netProvider);
+    int uploadedRecords = 1;
     if (x.data.value != ConnectivityResult.none) {
       final noNet = NoNetworkService();
       var storedData = await noNet.readAllData();
       state = AsyncData(LocalRecords(
           totalRecord: storedData.entries.length, uploadedREcords: 0));
       for (var post in storedData.entries) {
-        int uploadedRecords = 1;
         log(post.value);
         if (await postDataToServer(post.key, post.value)) {
           uploadedRecords = uploadedRecords + 1;

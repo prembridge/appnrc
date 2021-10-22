@@ -408,8 +408,15 @@ class _HomepageState extends State<Homepage> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  Addnewpage(),
+                                                              builder:
+                                                                  (context) =>
+                                                                      Addnewpage(
+                                                                selectedMonth:
+                                                                    widget
+                                                                        .selectedMonth,
+                                                                selectedYear: widget
+                                                                    .selectedYear,
+                                                              ),
                                                             ),
                                                           );
                                                         },
@@ -983,8 +990,8 @@ class _HomepageState extends State<Homepage> {
                       //color: Colors.orange,
                       child: Column(
                         children: [
-                          /*   Text(
-                              "Out of ${value.uploadedREcords} ${value.uploadedREcords} no of records synced !!"), */
+                          Text(
+                              "${value.uploadedREcords} records synced out of  ${value.totalRecord} records"),
                           LinearProgressIndicator()
                         ],
                       ),
