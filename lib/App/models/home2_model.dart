@@ -36,9 +36,9 @@ class FieldData {
   dynamic block;
   dynamic district;
   dynamic state;
-  dynamic gatheringImage;
-  dynamic familyImage;
-  dynamic leaderImage;
+  String gatheringImage;
+  String familyImage;
+  String leaderImage;
   dynamic communityImage;
   dynamic vCHU;
   dynamic location;

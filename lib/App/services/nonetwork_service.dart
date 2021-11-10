@@ -11,6 +11,11 @@ class NoNetworkService {
     await _storage.write(key: '$postUrl----${DateTime.now()}', value: formData);
   }
 
+  Future<void> storeFailedFileUploadRequest(
+      String filePath, String postUrl) async {
+    await _storage.write(key: '$postUrl----${DateTime.now()}', value: filePath);
+  }
+
   Future<Map<String, String>> readAllData() async {
     return await _storage.readAll();
   }

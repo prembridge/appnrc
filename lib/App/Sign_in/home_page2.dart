@@ -1,13 +1,15 @@
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/App/Sign_in/Mediapage2.dart';
-import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
 import 'package:flutter_app/App/models/home2_model.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as se;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 class HomePage2 extends StatefulWidget {
   @override
@@ -17,28 +19,33 @@ class HomePage2 extends StatefulWidget {
 class _HomePage2State extends State<HomePage2> {
   List<FieldDataModel> fieldData;
   Future<List<FieldDataModel>> fetchfieldData() async {
+    var dio = Dio();
+    dio.interceptors.add(DioCacheManager(
+      CacheConfig(
+        baseUrl: "http://nrcoperations.co.in",
+        defaultMaxStale: Duration(days: 10),
+      ),
+    ).interceptor);
     try {
       log('testing......');
 
-      final http.Response token = await http.post(
-        'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-        },
-      );
-      log('token:$token');
+      final token = await dio.post(
+          'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+          options: buildCacheOptions(Duration(days: 7),
+              maxStale: Duration(days: 2),
+              forceRefresh: true,
+              options: Options(
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+                },
+              )));
 
-      Map<String, dynamic> responsetoken = jsonDecode(token.body);
-      var result = responsetoken['response'];
-      var tokenresult = result['token'];
-
-      log('result...in field:$responsetoken');
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       var headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $tokenresult'
+        'Authorization': 'Bearer ${token.data['response']['token']}'
       };
       var raw = jsonEncode({
         "query": [
@@ -49,26 +56,31 @@ class _HomePage2State extends State<HomePage2> {
         "script": "to_check_id_there_r_new_loc",
         "script.param": prefs.getString('contact')
       });
-      var request = http.Request(
-          'POST',
-          Uri.parse(
-              'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Media_storage_monthly_report/_find'));
-      request.body = raw;
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send();
-      if (response.statusCode == 200) {
-        var res = await response.stream.bytesToString();
-        log(res);
-        var x = json.decode(res);
-        var y = List.from(x['response']['data']);
+      var request = await dio.post(
+          'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/Media_storage_monthly_report/_find',
+          options: buildCacheOptions(Duration(days: 7),
+              maxStale: Duration(days: 2),
+              options: Options(headers: headers),
+              forceRefresh: true),
+          data: raw);
+
+      if (request.statusCode == 200) {
+        var res = await request.data;
+
+        //  var x = json.decode(res);
+        var y = List.from(res['response']['data']);
         // var recordid = List.from(y['fieldData']['recordId']);
 
         // print(recordid);
         var fields = y.map((e) => FieldDataModel.fromJson(e)).toList();
-
+        for (var item in fields) {
+          // log("${item.fieldData.locationId} =======>> ${item.fieldData.familyImage} ");
+          log("${item.fieldData.toJson()} ");
+        }
         return fields;
+        // return fields;
       } else {
-        print(response.reasonPhrase);
+        // print(request.reasonPhrase);
         return null;
       }
     } catch (e) {
@@ -80,6 +92,7 @@ class _HomePage2State extends State<HomePage2> {
   @override
   void initState() {
     getFieldData();
+
     super.initState();
   }
 
