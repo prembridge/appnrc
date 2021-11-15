@@ -36,6 +36,7 @@ dependencies:
   flutter_secure_storage: ^4.2.1
   cached_network_image: ^2.5.1
   flutter_cache_manager: ^2.1.2
+  path: ^1.8.0
 
 dev_dependencies:
   flutter_test:

@@ -4,14 +4,19 @@ import 'package:flutter_app/App/Sign_in/Mediapage2.dart';
 import 'package:flutter_app/App/models/home2_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as se;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
+import '../providers/post_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class HomePage2 extends StatefulWidget {
+class HomePage2 extends StatefulHookWidget {
   @override
   _HomePage2State createState() => _HomePage2State();
 }
@@ -105,26 +110,28 @@ class _HomePage2State extends State<HomePage2> {
 
   @override
   Widget build(BuildContext context) {
+    final post = useProvider(postNotifier.state);
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final height = (constraints.maxHeight) * 0.1;
         final width = (constraints.maxWidth) * 0.1;
         return Scaffold(
-            appBar: AppBar(
-              title: Center(
-                child: Text(
-                  'Media',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                    ),
+          appBar: AppBar(
+            title: Center(
+              child: Text(
+                'Media',
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.0,
                   ),
                 ),
               ),
-              backgroundColor: Color(0xFF9798CB),
             ),
-            body: fieldData != null
+            backgroundColor: Color(0xFF9798CB),
+          ),
+          body: Stack(children: [
+            fieldData != null
                 ? Container(
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -173,7 +180,33 @@ class _HomePage2State extends State<HomePage2> {
                         );
                       },
                     ))
-                : Center(child: CircularProgressIndicator()));
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
+            Align(
+              alignment: Alignment.center,
+              child: post.when(
+                data: (value) => AlertDialog(
+                  title: Text("Syncing with server"),
+                  content: Container(
+                    height: width * 4,
+                    width: width * 4,
+                    //color: Colors.orange,44
+                    child: Column(
+                      children: [
+                        Text(
+                            "${value.uploadedREcords} records synced out of  ${value.totalRecord} records"),
+                        LinearProgressIndicator()
+                      ],
+                    ),
+                  ),
+                ),
+                loading: () => CircularProgressIndicator(),
+                error: (__, _) => Container(),
+              ),
+            ),
+          ]),
+        );
       },
     );
   }

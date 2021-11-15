@@ -19,10 +19,14 @@ class PostNotifier extends StateNotifier<AsyncValue<LocalRecords>> {
     if (x.data.value != ConnectivityResult.none) {
       final noNet = NoNetworkService();
       var storedData = await noNet.readAllData();
-      state = AsyncData(LocalRecords(
-          totalRecord: storedData.entries.length, uploadedREcords: 0));
+      state = AsyncData(
+        LocalRecords(
+          totalRecord: storedData.entries.length,
+          uploadedREcords: 0,
+        ),
+      );
       for (var post in storedData.entries) {
-        log(post.value);
+        // log(post.value);
         if (await postDataToServer(post.key, post.value)) {
           uploadedRecords = uploadedRecords + 1;
           state = AsyncData(LocalRecords(
@@ -33,6 +37,14 @@ class PostNotifier extends StateNotifier<AsyncValue<LocalRecords>> {
       }
     }
     state = AsyncError("online state");
+  }
+
+  bool isFIleType(String type) {
+    var x = type.split(",").last;
+    if (x == "1") {
+      return true;
+    }
+    return false;
   }
 
   Future<bool> postDataToServer(String postUrl, String body) async {
@@ -56,25 +68,52 @@ class PostNotifier extends StateNotifier<AsyncValue<LocalRecords>> {
         'Authorization': 'Bearer $tokenresult'
       };
 
-      var request = http.Request(
-          'POST', Uri.parse('${postUrl.toString().split('-')[0]}'));
+      if (isFIleType(postUrl.toString())) {
+        var url = postUrl
+            .toString()
+            .split('-')[0]
+            .replaceAll(",0", "")
+            .replaceAll(",1", "");
 
-      request.body = body;
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send();
+        var request = http.MultipartRequest('POST', Uri.parse('$url'));
+        request.files.add(await http.MultipartFile.fromPath('upload', body));
+        request.headers.addAll(headers);
+        http.StreamedResponse response = await request.send();
+        if (response.statusCode == 200) {
+          var res = await response.stream.bytesToString();
+          var x = json.decode(res);
+          var noNetwork = NoNetworkService();
+          await noNetwork.cleanEntry(postUrl);
+          state = AsyncError("all uploaded");
+          log(x.toString());
 
-      if (response.statusCode == 200) {
-        var res = await response.stream.bytesToString();
-
-        var x = json.decode(res);
-        var noNetwork = NoNetworkService();
-        await noNetwork.cleanEntry(postUrl);
-        state = AsyncError("all uploaded");
-        log(x.toString());
-        return true;
+          return true;
+        } else {
+          log(response.reasonPhrase);
+          return false;
+        }
       } else {
-        log(response.reasonPhrase);
-        return false;
+        var request = http.Request(
+            'POST',
+            Uri.parse(
+                '${postUrl.toString().split('-')[0].replaceAll(",0", "").replaceAll(",1", "")}'));
+        request.body = body;
+        request.headers.addAll(headers);
+        http.StreamedResponse response = await request.send();
+
+        if (response.statusCode == 200) {
+          var res = await response.stream.bytesToString();
+
+          var x = json.decode(res);
+          var noNetwork = NoNetworkService();
+          await noNetwork.cleanEntry(postUrl);
+          state = AsyncError("all uploaded");
+          log(x.toString());
+          return true;
+        } else {
+          log(response.reasonPhrase);
+          return false;
+        }
       }
     } on SocketException catch (e) {
       var noNetwork = NoNetworkService();
