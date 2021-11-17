@@ -609,8 +609,8 @@ class _Mediapage2State extends State<Mediapage2> {
                                       });
 
                                       _communityImage != null
-                                          ? await uploadimage(
-                                              'Family_image', _communityImage)
+                                          ? await uploadimage('Community_image',
+                                              _communityImage)
                                           : null;
                                       _familyImage != null
                                           ? await uploadimage(
