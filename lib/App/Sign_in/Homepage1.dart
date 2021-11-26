@@ -225,7 +225,8 @@ class _HomepageState extends State<Homepage> {
               "Town": "",
               "Full_Name": prevData.fieldData.fullName,
               "fk_Contact_Id": prevData.fieldData.fkContactId,
-              "fk_Report_id_New": ""
+              "fk_Report_id_New": "",
+              "Team": prevData.fieldData.team
             }
           });
           log(raw);

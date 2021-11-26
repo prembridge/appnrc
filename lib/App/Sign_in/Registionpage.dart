@@ -470,7 +470,7 @@ class _RegistionpageState extends State<Registionpage> {
                       style: GoogleFonts.montserrat(
                         textStyle: TextStyle(
                           color: Colors.white,
-                          fontSize: 20.0,
+                          fontSize: 18.0,
                           //fontWeight: FontWeight.bold,
                         ),
                       ),
