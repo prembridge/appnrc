@@ -453,7 +453,7 @@ class _AddnewpageState extends State<Addnewpage> {
                                   : Text("The user ${_user.fieldData.state}"), */
                               Container(
                                 padding: const EdgeInsets.all(10.0),
-                                width: width / 2,
+                                width: width / 3.5,
                                 height: height / 9,
                                 child: ElevatedButton(
                                   onPressed: () async {

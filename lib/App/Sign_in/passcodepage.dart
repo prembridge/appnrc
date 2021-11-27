@@ -1,27 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/App/Sign_in/Login.dart';
 import 'package:flutter_app/App/Sign_in/pinentry_screen.dart';
+import 'package:flutter_app/App/providers/network_provider.dart';
 //import 'package:flutter_app/App/Sign_in/Homepage.dart';
 
 import 'package:flutter_lock_screen/flutter_lock_screen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 //import 'Homepage.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'selectmonth.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: passcodepage(
-      title: "Deneme",
-    ),
-  ));
-}
-
-class passcodepage extends StatefulWidget {
+class passcodepage extends StatefulHookWidget {
   passcodepage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -73,44 +69,51 @@ class _passcodepageState extends State<passcodepage> {
 
   @override
   Widget build(BuildContext context) {
-    return myPass != null
-        ? LockScreen(
-            title: " Confirm PIN",
-            passLength: myPass.length,
-            // fingerPrintImage: "assets/images/fin.png",
-            bgImage: "assets/images/Black.png",
-            showFingerPass: false,
-            //bgImage:false,
-            numColor: Colors.blue,
-            fingerVerify: false,
-            borderColor: Colors.white,
-            showWrongPassDialog: true,
-            wrongPassContent: "PIN Mismatch Please try again.",
-            wrongPassTitle: "Opps!",
-            wrongPassCancelButtonText: "Cancel",
-            passCodeVerify: (passcode) async {
-              for (int i = 0; i < myPass.length; i++) {
-                if (passcode[i] != myPass[i]) {
-                  return false;
+    final netP = useProvider(netProvider);
+    return netP.when(
+      data: (value) => myPass != null
+          ? LockScreen(
+              title: " Confirm PIN",
+              passLength: myPass.length,
+              // fingerPrintImage: "assets/images/fin.png",
+              bgImage: "assets/images/Black.png",
+              showFingerPass: false,
+              //bgImage:false,
+              numColor: Colors.blue,
+              fingerVerify: false,
+              borderColor: Colors.white,
+              showWrongPassDialog: true,
+              wrongPassContent: "PIN Mismatch Please try again.",
+              wrongPassTitle: "Opps!",
+              wrongPassCancelButtonText: "Cancel",
+              passCodeVerify: (passcode) async {
+                for (int i = 0; i < myPass.length; i++) {
+                  if (passcode[i] != myPass[i]) {
+                    return false;
+                  }
                 }
-              }
 
-              return true;
-            },
-            onSuccess: () {
-              Navigator.of(context).pushReplacement(
-                  new MaterialPageRoute(builder: (BuildContext context) {
-                return isFirstime
-                    ? /* LifecycleWatcher(
+                return true;
+              },
+              onSuccess: () {
+                Navigator.of(context).pushReplacement(
+                    new MaterialPageRoute(builder: (BuildContext context) {
+                  return isFirstime || value == ConnectivityResult.none
+                      ? /* LifecycleWatcher(
                         afterCoorectPin: Selectmonth(),
                       ) */
-                    Selectmonth()
-                    : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
-              }));
-            })
-        : Center(
-            child: CircularProgressIndicator(),
-          );
+                      Selectmonth()
+                      : Loginpage(); //FIRST TIME SELECT Select month next time LOGIN
+                }));
+              })
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
+      loading: () => Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stackTrace) => Container(),
+    );
   }
 }
 

@@ -512,7 +512,7 @@ class _HomeeditState extends State<Homeedit> {
                         DataCell(
                           FormBuilderTextField(
                             name: 'unHabitation',
-                            validator: FormBuilderValidators.required(context),
+                            //validator: FormBuilderValidators.required(context),
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                             ),

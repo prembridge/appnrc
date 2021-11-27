@@ -328,11 +328,12 @@ class _OtppageState extends State<Otppage> {
               height: height / 15,
               width: width / 2.82,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  side: BorderSide(color: Colors.black12, width: 1),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)),
-                ),
+                // style: ElevatedButton.styleFrom(
+                //   side: BorderSide(color: Colors.black12, width: 1),
+                //   shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(30)
+                //       ),
+                // ),
                 onPressed: () async {
                   final String appMobileNumber =
                       _appMobileNumbercontroller.text;
