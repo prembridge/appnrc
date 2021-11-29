@@ -196,7 +196,7 @@ class _HomeeditState extends State<Homeedit> {
           log("Save to local device");
 
           _formKey.currentState.reset();
-          await showDialogOfSuccess("Successfully stored Locally");
+          await showDialogOfSuccess("Successfully stored ");
           Navigator.of(context).pop();
           print(e);
         }
@@ -454,7 +454,7 @@ class _HomeeditState extends State<Homeedit> {
                         DataCell(
                           FormBuilderTextField(
                             name: 'village',
-                            validator: FormBuilderValidators.required(context),
+                            // validator: FormBuilderValidators.required(context),
                             initialValue: "${widget.fieldData.village}",
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -484,7 +484,7 @@ class _HomeeditState extends State<Homeedit> {
                           FormBuilderTextField(
                             name: 'habitation',
                             initialValue: "${widget.fieldData.habitation}",
-                            validator: FormBuilderValidators.required(context),
+                            // validator: FormBuilderValidators.required(context),
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                             ),

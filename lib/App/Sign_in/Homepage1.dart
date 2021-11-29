@@ -213,7 +213,8 @@ class _HomepageState extends State<Homepage> {
               "Town": "",
               "Full_Name": prevData.fieldData.fullName,
               "fk_Contact_Id": prevData.fieldData.fkContactId,
-              "fk_Report_id_New": ""
+              "fk_Report_id_New": "",
+              "Team": prevData.fieldData.team
             }
           });
           final http.Response token = await http.post(
@@ -266,7 +267,7 @@ class _HomepageState extends State<Homepage> {
         var noNetwork = NoNetworkService();
         noNetwork.storeFailedPostRequestData(formData, postUrl);
         log("Save to local device");
-        showDialogOfSuccess(isItLastPage, "Successfully Saved locally");
+        showDialogOfSuccess(isItLastPage, "Successfully Saved ");
         _formKey.currentState.reset();
         setState(() {
           viewVisible = true;

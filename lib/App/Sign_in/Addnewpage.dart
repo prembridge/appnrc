@@ -165,7 +165,7 @@ class _AddnewpageState extends State<Addnewpage> {
           log("Save to local device");
 
           _formKey.currentState.reset();
-          await showDialogOfSuccess("Successfully stored Locally");
+          await showDialogOfSuccess("Successfully stored ");
           Navigator.of(context).pop();
           print(e);
         }
