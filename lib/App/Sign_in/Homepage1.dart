@@ -118,7 +118,6 @@ class Homepage extends StatefulHookWidget {
 class _HomepageState extends State<Homepage> {
   bool viewVisible = false;
   bool showNext = false;
-  bool showError = false;
   SharedPreferences preferences;
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -194,100 +193,97 @@ class _HomepageState extends State<Homepage> {
       if (_formKey.currentState.saveAndValidate()) {
         log('testing......');
         var x = _formKey.currentState.value;
-        if (x['Bel_Added'] != null &&
-            x['New_BPT'] != null &&
-            x['Average_Attendance'] != null) {
-          setState(() {
-            showError = false;
-          });
-          try {
-            formData = jsonEncode({
-              "fieldData": {
-                "State": prevData.fieldData.state,
-                "District": prevData.fieldData.district,
-                "Block": prevData.fieldData.block,
-                "Colony": prevData.fieldData.colony,
-                "Village": prevData.fieldData.village,
-                "Gathering_Status": prevData.fieldData.gatheringStatus,
-                "New_BPT": x['New_BPT'],
-                "Bel_Added": x['Bel_Added'],
-                "Reporting_Month": widget.selectedMonth?.trim(),
-                "Reporting_Year": widget.selectedYear,
-                "Un_Habitation": prevData.fieldData.unHabitation,
-                "Average_Attendance": x['Average_Attendance'],
-                "Year_of_Start": prevData.fieldData.yearOfStart,
-                "Pin": prevData.fieldData.pin,
-                "Habitation": prevData.fieldData.habitation,
-                "Town": "",
-                "Full_Name": prevData.fieldData.fullName,
-                "fk_Contact_Id": prevData.fieldData.fkContactId,
-                "fk_Report_id_New": "",
-                "Team": prevData.fieldData.team
-              }
-            });
-            final http.Response token = await http.post(
-              'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-              headers: <String, String>{
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-              },
-            );
-            log('token...:$token');
 
-            Map<String, dynamic> responsetoke = jsonDecode(token.body);
-            var result = responsetoke['response'];
-            var tokenresult = result['token'];
-
-            log('result...in field:$tokenresult');
-
-            var headers = {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $tokenresult'
-            };
-
-            var request = http.Request('POST', Uri.parse('$postUrl'));
-
-            log(formData);
-            request.body = formData;
-            request.headers.addAll(headers);
-            http.StreamedResponse response = await request.send();
-
-            if (response.statusCode == 200) {
-              var res = await response.stream.bytesToString();
-              //var responses =res
-              // print(responses);
-              var x = json.decode(res);
-              print(x);
-              final prefs = await SharedPreferences.getInstance();
-              final String recordId = x['response']['recordId'];
-              prefs.setString('recordId', recordId);
-              print("Sent");
-              showDialogOfSuccess(isItLastPage, "Successfully Saved");
-              _formKey.currentState.reset();
-              setState(() {
-                viewVisible = true;
-              });
-            } else {
-              print(response.reasonPhrase);
+        try {
+          formData = jsonEncode({
+            "fieldData": {
+              "State": prevData.fieldData.state,
+              "District": prevData.fieldData.district,
+              "Block": prevData.fieldData.block,
+              "Colony": prevData.fieldData.colony,
+              "Village": prevData.fieldData.village,
+              "Gathering_Status": prevData.fieldData.gatheringStatus,
+              "New_BPT": x['New_BPT'],
+              "Bel_Added": x['Bel_Added'],
+              "Reporting_Month": widget.selectedMonth?.trim(),
+              "Reporting_Year": widget.selectedYear,
+              "Un_Habitation": prevData.fieldData.unHabitation,
+              "Average_Attendance": x['Average_Attendance'],
+              "Year_of_Start": prevData.fieldData.yearOfStart,
+              "Pin": prevData.fieldData.pin,
+              "Habitation": prevData.fieldData.habitation,
+              "Town": "",
+              "Full_Name": prevData.fieldData.fullName,
+              "fk_Contact_Id": prevData.fieldData.fkContactId,
+              "fk_Report_id_New": "",
+              "Team": prevData.fieldData.team
             }
-          } on SocketException catch (e) {
-            var noNetwork = NoNetworkService();
-            noNetwork.storeFailedPostRequestData(formData, postUrl);
-            log("Save to local device");
-            showDialogOfSuccess(isItLastPage, "Successfully Saved ");
+          });
+          final http.Response token = await http.post(
+            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+            },
+          );
+          log('token...:$token');
+
+          Map<String, dynamic> responsetoke = jsonDecode(token.body);
+          var result = responsetoke['response'];
+          var tokenresult = result['token'];
+
+          log('result...in field:$tokenresult');
+
+          var headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $tokenresult'
+          };
+
+          var request = http.Request('POST', Uri.parse('$postUrl'));
+
+          log(formData);
+          request.body = formData;
+          request.headers.addAll(headers);
+          http.StreamedResponse response = await request.send();
+
+          if (response.statusCode == 200) {
+            var res = await response.stream.bytesToString();
+            //var responses =res
+            // print(responses);
+            var x = json.decode(res);
+            print(x);
+            final prefs = await SharedPreferences.getInstance();
+            final String recordId = x['response']['recordId'];
+            prefs.setString('recordId', recordId);
+            print("Sent");
+            showDialogOfSuccess(isItLastPage, "Successfully Saved");
             _formKey.currentState.reset();
             setState(() {
               viewVisible = true;
             });
-            _formKey.currentState.reset();
-            print(e);
+          } else {
+            print(response.reasonPhrase);
           }
-        } else {
-          showError = true;
-          setState(() {});
+        } on SocketException catch (e) {
+          var noNetwork = NoNetworkService();
+          noNetwork.storeFailedPostRequestData(formData, postUrl);
+          log("Save to local device");
+          showDialogOfSuccess(isItLastPage, "Successfully Saved ");
+          _formKey.currentState.reset();
+          setState(() {
+            viewVisible = true;
+          });
+          _formKey.currentState.reset();
+          print(e);
         }
       } else {
-        //TODO NO SAVE
+        Toast.show(
+          "The entries abobve cannot be empty",
+          context,
+          duration: Toast.LENGTH_LONG,
+          backgroundColor: Colors.transparent,
+          textColor: Colors.red,
+        );
       }
     }
 
@@ -379,7 +375,7 @@ class _HomepageState extends State<Homepage> {
                               e.key;
                           return SingleChildScrollView(
                             child: Container(
-                              height: height * 1.2,
+                              height: height * 1.3,
                               width: width,
                               child: Column(
                                 children: [
@@ -922,8 +918,8 @@ class _HomepageState extends State<Homepage> {
                                     ),
                                   ),
                                   // SizedBox(height: height * 0.18),
-                                  Spacer(),
-                                  Visibility(
+                                  Spacer(flex: 2),
+                                  /*   Visibility(
                                     visible: showError,
                                     child: Container(
                                         // color: Colors.red,
@@ -937,7 +933,7 @@ class _HomepageState extends State<Homepage> {
                                         ),
                                         height: height * 0.03,
                                         width: width),
-                                  ),
+                                  ), */
                                   Expanded(
                                       flex: 1,
                                       child: Container(
