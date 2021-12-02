@@ -118,6 +118,7 @@ class Homepage extends StatefulHookWidget {
 class _HomepageState extends State<Homepage> {
   bool viewVisible = false;
   bool showNext = false;
+  bool showError = false;
   SharedPreferences preferences;
   final _formKey = GlobalKey<FormBuilderState>();
 
@@ -189,91 +190,104 @@ class _HomepageState extends State<Homepage> {
       String formData = "";
       String postUrl =
           'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records';
-      try {
-        if (_formKey.currentState.saveAndValidate()) {
-          log('testing......');
-          var x = _formKey.currentState.value;
-          formData = jsonEncode({
-            "fieldData": {
-              "State": prevData.fieldData.state,
-              "District": prevData.fieldData.district,
-              "Block": prevData.fieldData.block,
-              "Colony": prevData.fieldData.colony,
-              "Village": prevData.fieldData.village,
-              "Gathering_Status": prevData.fieldData.gatheringStatus,
-              "New_BPT": x['New_BPT'],
-              "Bel_Added": x['Bel_Added'],
-              "Reporting_Month": widget.selectedMonth?.trim(),
-              "Reporting_Year": widget.selectedYear,
-              "Un_Habitation": prevData.fieldData.unHabitation,
-              "Average_Attendance": x['Average_Attendance'],
-              "Year_of_Start": prevData.fieldData.yearOfStart,
-              "Pin": prevData.fieldData.pin,
-              "Habitation": prevData.fieldData.habitation,
-              "Town": "",
-              "Full_Name": prevData.fieldData.fullName,
-              "fk_Contact_Id": prevData.fieldData.fkContactId,
-              "fk_Report_id_New": "",
-              "Team": prevData.fieldData.team
-            }
+      _formKey.currentState.validate();
+      if (_formKey.currentState.saveAndValidate()) {
+        log('testing......');
+        var x = _formKey.currentState.value;
+        if (x['Bel_Added'] != null &&
+            x['New_BPT'] != null &&
+            x['Average_Attendance'] != null) {
+          setState(() {
+            showError = false;
           });
-          final http.Response token = await http.post(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-            headers: <String, String>{
+          try {
+            formData = jsonEncode({
+              "fieldData": {
+                "State": prevData.fieldData.state,
+                "District": prevData.fieldData.district,
+                "Block": prevData.fieldData.block,
+                "Colony": prevData.fieldData.colony,
+                "Village": prevData.fieldData.village,
+                "Gathering_Status": prevData.fieldData.gatheringStatus,
+                "New_BPT": x['New_BPT'],
+                "Bel_Added": x['Bel_Added'],
+                "Reporting_Month": widget.selectedMonth?.trim(),
+                "Reporting_Year": widget.selectedYear,
+                "Un_Habitation": prevData.fieldData.unHabitation,
+                "Average_Attendance": x['Average_Attendance'],
+                "Year_of_Start": prevData.fieldData.yearOfStart,
+                "Pin": prevData.fieldData.pin,
+                "Habitation": prevData.fieldData.habitation,
+                "Town": "",
+                "Full_Name": prevData.fieldData.fullName,
+                "fk_Contact_Id": prevData.fieldData.fkContactId,
+                "fk_Report_id_New": "",
+                "Team": prevData.fieldData.team
+              }
+            });
+            final http.Response token = await http.post(
+              'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+              },
+            );
+            log('token...:$token');
+
+            Map<String, dynamic> responsetoke = jsonDecode(token.body);
+            var result = responsetoke['response'];
+            var tokenresult = result['token'];
+
+            log('result...in field:$tokenresult');
+
+            var headers = {
               'Content-Type': 'application/json',
-              'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-            },
-          );
-          log('token...:$token');
+              'Authorization': 'Bearer $tokenresult'
+            };
 
-          Map<String, dynamic> responsetoke = jsonDecode(token.body);
-          var result = responsetoke['response'];
-          var tokenresult = result['token'];
+            var request = http.Request('POST', Uri.parse('$postUrl'));
 
-          log('result...in field:$tokenresult');
+            log(formData);
+            request.body = formData;
+            request.headers.addAll(headers);
+            http.StreamedResponse response = await request.send();
 
-          var headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $tokenresult'
-          };
-
-          var request = http.Request('POST', Uri.parse('$postUrl'));
-
-          log(formData);
-          request.body = formData;
-          request.headers.addAll(headers);
-          http.StreamedResponse response = await request.send();
-
-          if (response.statusCode == 200) {
-            var res = await response.stream.bytesToString();
-            //var responses =res
-            // print(responses);
-            var x = json.decode(res);
-            print(x);
-            final prefs = await SharedPreferences.getInstance();
-            final String recordId = x['response']['recordId'];
-            prefs.setString('recordId', recordId);
-            print("Sent");
-            showDialogOfSuccess(isItLastPage, "Successfully Saved");
+            if (response.statusCode == 200) {
+              var res = await response.stream.bytesToString();
+              //var responses =res
+              // print(responses);
+              var x = json.decode(res);
+              print(x);
+              final prefs = await SharedPreferences.getInstance();
+              final String recordId = x['response']['recordId'];
+              prefs.setString('recordId', recordId);
+              print("Sent");
+              showDialogOfSuccess(isItLastPage, "Successfully Saved");
+              _formKey.currentState.reset();
+              setState(() {
+                viewVisible = true;
+              });
+            } else {
+              print(response.reasonPhrase);
+            }
+          } on SocketException catch (e) {
+            var noNetwork = NoNetworkService();
+            noNetwork.storeFailedPostRequestData(formData, postUrl);
+            log("Save to local device");
+            showDialogOfSuccess(isItLastPage, "Successfully Saved ");
             _formKey.currentState.reset();
             setState(() {
               viewVisible = true;
             });
-          } else {
-            print(response.reasonPhrase);
+            _formKey.currentState.reset();
+            print(e);
           }
+        } else {
+          showError = true;
+          setState(() {});
         }
-      } on SocketException catch (e) {
-        var noNetwork = NoNetworkService();
-        noNetwork.storeFailedPostRequestData(formData, postUrl);
-        log("Save to local device");
-        showDialogOfSuccess(isItLastPage, "Successfully Saved ");
-        _formKey.currentState.reset();
-        setState(() {
-          viewVisible = true;
-        });
-        _formKey.currentState.reset();
-        print(e);
+      } else {
+        //TODO NO SAVE
       }
     }
 
@@ -871,7 +885,7 @@ class _HomepageState extends State<Homepage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: height * 0.18),
+                                  SizedBox(height: height * 0.3),
                                   FormBuilder(
                                     key: _formKey,
                                     child: Row(
@@ -907,6 +921,23 @@ class _HomepageState extends State<Homepage> {
                                       ],
                                     ),
                                   ),
+                                  // SizedBox(height: height * 0.18),
+                                  Spacer(),
+                                  Visibility(
+                                    visible: showError,
+                                    child: Container(
+                                        // color: Colors.red,
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "ERROR: The entries above cannot be empty !!",
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        height: height * 0.03,
+                                        width: width),
+                                  ),
                                   Expanded(
                                       flex: 1,
                                       child: Container(
@@ -941,35 +972,6 @@ class _HomepageState extends State<Homepage> {
                                                   },
                                                 ),
                                               ),
-                                              // Visibility(
-                                              //   visible: viewVisible,
-                                              //   child: Container(
-                                              //     padding: EdgeInsets.all(
-                                              //         width / 40),
-                                              //     child: ElevatedButton(
-                                              //       onPressed: () {
-                                              //         Navigator.push(
-                                              //             context,
-                                              //             MaterialPageRoute(
-                                              //                 builder:
-                                              //                     (context) =>
-                                              //                         Mediapage()));
-                                              //       },
-                                              //       child: new Text(
-                                              //         "MEDIA",
-                                              //         style: GoogleFonts
-                                              //             .montserrat(
-                                              //           textStyle: TextStyle(
-                                              //             color: Colors.black,
-                                              //             fontSize:
-                                              //                 width / 25,
-                                              //
-                                              //           ),
-                                              //         ),
-                                              //       ),
-                                              //     ),
-                                              //   ),
-                                              // )
                                             ]),
                                       ))
                                 ],
@@ -1042,7 +1044,11 @@ class TextInputWidget extends StatelessWidget {
             child: new FormBuilderTextField(
               name: name,
               autocorrect: true,
-              validator: FormBuilderValidators.required(context),
+              validator: FormBuilderValidators.required(context, errorText: ""),
+              valueTransformer: (value) {
+                if (value == "") return null;
+                return value;
+              },
               keyboardType: TextInputType.number,
               decoration: new InputDecoration(
                 border: OutlineInputBorder(),
