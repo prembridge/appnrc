@@ -14,6 +14,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
+import 'package:toast/toast.dart';
+
 /* Future<resm.Welcome> fetchAlbum() async {
   Welcome x;
   try {
@@ -120,85 +122,100 @@ class _HomeeditState extends State<Homeedit> {
         String postUrl =
             'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records';
         var formData = _formKey.currentState.value;
-        var raw = jsonEncode({
-          "fieldData": {
-            "State": formData['state'],
-            "District": formData['district'],
-            "Block": formData['block'],
-            "Colony": formData['colony'],
-            "Village": formData['village'],
-            "Gathering_Status": formData['gatering_status'],
-            "New_BPT": widget.fieldData.newBpt,
-            "Bel_Added": widget.fieldData.belAdded,
-            "Reporting_Month": widget.selectedMonth?.trim(),
-            "Reporting_Year": widget.selectedYear,
-            "Un_Habitation": formData['unHabitation'],
-            "Average_Attendance": widget.fieldData.averageAttendance,
-            "Year_of_Start": formData['yearOfStart'],
-            "Pin": formData['pin'],
-            "Habitation": formData['habitation'],
-            "Town": "",
-            "Full_Name": formData['name'],
-            "fk_Contact_Id": widget.fieldData.fkContactId,
-            "fk_Report_id_New": "",
-            "Team": widget.fieldData.team
-          }
-        });
-        try {
-          log('testing......');
-          final http.Response token = await http.post(
-            'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
-            },
+
+        if (formData['village'] == "" && formData['colony'] == "") {
+          Toast.show(
+            "Enter colony or village both cannot be empty",
+            context,
+            duration: Toast.LENGTH_LONG,
+            backgroundColor: Colors.transparent,
+            textColor: Colors.red,
           );
-          log('token...:$token');
+        } else {
+          var raw = jsonEncode({
+            "fieldData": {
+              "State": formData['state'],
+              "District": formData['district'],
+              "Block": formData['block'],
+              "Colony": formData['colony'],
+              "Village": formData['village'],
+              "Gathering_Status": formData['gatering_status'],
+              "New_BPT": widget.fieldData.newBpt,
+              "Bel_Added": widget.fieldData.belAdded,
+              "Reporting_Month": widget.selectedMonth?.trim(),
+              "Reporting_Year": widget.selectedYear,
+              "Un_Habitation": formData['unHabitation'],
+              "Average_Attendance": widget.fieldData.averageAttendance,
+              "Year_of_Start": formData['yearOfStart'],
+              "Pin": formData['pin'],
+              "Habitation": formData['habitation'],
+              "Town": "",
+              "Full_Name": formData['name'],
+              "fk_Contact_Id": widget.fieldData.fkContactId,
+              "fk_Report_id_New": "",
+              "Team": widget.fieldData.team
+            }
+          });
+          try {
+            log('testing......');
+            final http.Response token = await http.post(
+                'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/sessions',
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Basic c3VzaGlsOkphY29iNw==',
+                });
+            log('token...:$token');
 
-          Map<String, dynamic> responsetoke = jsonDecode(token.body);
-          var result = responsetoke['response'];
-          var tokenresult = result['token'];
+            Map<String, dynamic> responsetoke = jsonDecode(token.body);
+            var result = responsetoke['response'];
+            var tokenresult = result['token'];
 
-          log('result...in field:$tokenresult');
+            log('result...in field:$tokenresult');
 
-          var headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $tokenresult'
-          };
-          var request = http.Request('POST', Uri.parse('$postUrl'));
+            var headers = {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $tokenresult'
+            };
+            var request = http.Request('POST', Uri.parse('$postUrl'));
 
-          log(raw);
-          request.body = raw;
-          request.headers.addAll(headers);
-          http.StreamedResponse response = await request.send();
+            log(raw);
+            request.body = raw;
+            request.headers.addAll(headers);
+            http.StreamedResponse response = await request.send();
 
-          if (response.statusCode == 200) {
-            var res = await response.stream.bytesToString();
-            //var responses =res
-            // print(responses);
-            var x = json.decode(res);
-            print(x);
-            final prefs = await SharedPreferences.getInstance();
-            final String recordId = x['response']['recordId'];
-            prefs.setString('recordId', recordId);
-            print("Sent");
+            if (response.statusCode == 200) {
+              var res = await response.stream.bytesToString();
+              //var responses =res
+              // print(responses);
+              var x = json.decode(res);
+              print(x);
+              final prefs = await SharedPreferences.getInstance();
+              final String recordId = x['response']['recordId'];
+              prefs.setString('recordId', recordId);
+              print("Sent");
 
-            await showDialogOfSuccess("Successfully Updated");
+              await showDialogOfSuccess("Successfully Updated");
+
+              Navigator.of(context).pop();
+              return true;
+            } else {
+              print(response.reasonPhrase);
+              return false;
+              // await showDialogOfSuccess("Successfully Updated");
+
+            }
+          } on SocketException catch (e) {
+            var noNetwork = NoNetworkService();
+            noNetwork.storeFailedPostRequestData(raw, postUrl);
+            log("Save to local device");
+
+            _formKey.currentState.reset();
+            await showDialogOfSuccess("Successfully stored ");
+
             Navigator.of(context).pop();
-          } else {
-            print(response.reasonPhrase);
-            // await showDialogOfSuccess("Successfully Updated");
-
+            print(e);
+            return true;
           }
-        } on SocketException catch (e) {
-          var noNetwork = NoNetworkService();
-          noNetwork.storeFailedPostRequestData(raw, postUrl);
-          log("Save to local device");
-
-          _formKey.currentState.reset();
-          await showDialogOfSuccess("Successfully stored ");
-          Navigator.of(context).pop();
-          print(e);
         }
       }
     }
@@ -211,7 +228,7 @@ class _HomeeditState extends State<Homeedit> {
         appBar: AppBar(backgroundColor: Color(0xFF9798CB)),
         body: SingleChildScrollView(
           child: Container(
-            height: height * 1.4,
+            height: height * 1.3,
             width: width,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -593,7 +610,9 @@ class _HomeeditState extends State<Homeedit> {
                   //     ],
                   //   ),
                   // ),
+                  Spacer(),
                   Container(
+                    padding: EdgeInsets.all(8),
                     child: ElevatedButton(
                         child: Text(
                           'Save',
@@ -610,7 +629,9 @@ class _HomeeditState extends State<Homeedit> {
                         //controller.jumpToPage(15);
 
                         ),
-                  )
+                  ),
+                  // SizedBox(height: height * 0.5)
+                  //Spacer(),
                 ],
               ),
             ),
