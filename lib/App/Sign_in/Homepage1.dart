@@ -190,7 +190,7 @@ class _HomepageState extends State<Homepage> {
       String formData = "";
       String postUrl =
           'https://nrcoperations.co.in/fmi/data/vLatest/databases/OA_Master/layouts/General_Report_app/records';
-      _formKey.currentState.validate();
+
       if (_formKey.currentState.saveAndValidate()) {
         log('testing......');
         var x = _formKey.currentState.value;
